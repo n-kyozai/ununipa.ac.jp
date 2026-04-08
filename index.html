@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KKU Portal Site</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind 設定 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#857251', // テーマのベースカラー
+                        secondary: '#ceA964',
+                        bglight: '#f7f4ee', // 背景の薄い色
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', '"Open Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Roboto', 'Open Sans', sans-serif; 
+            color: #212121; 
+        }
+        
+        /* ヒーローヘッダーの背景画像（元のソースから抽出したURL） */
+        .bg-primary-img {
+            background-image: url('https://lh3.googleusercontent.com/sitesv/APaQ0SR5P6-0rg_Y9P7r4HGHSh1y2Uilww-rnpYQiVIdxE4fyby_pD2PGgATyujwnZuq_b3sf-i45qMS4EcnyNHhKsPaL0wvuirm9D4pBe7Rm9sPSFUjsUS4XkNtdYu3FJpu_7Y8gBcDpjT_AFJToUbaK1kXr-iZORg61vUA4L8X3gCUZN9lkdZUSgRtppE=w16383');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-overlay {
+            background-color: rgba(33, 33, 33, 0.5);
+        }
+        
+        /* スクロールバーのカスタマイズ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-white">
+
+    <!-- サイドバー (全デバイス共通ドロワー) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col h-full shadow-lg">
+        <div class="p-6">
+            <a href="#" class="text-primary text-xl font-bold tracking-wider">KKU Portal Site</a>
+            <div class="w-16 h-1 border-b-2 border-primary mt-6 mb-2"></div>
+        </div>
+        <div class="flex-1 overflow-y-auto px-4 pb-6">
+            <!-- 階層化表示のみ（サイドバー機能ゼロ） -->
+            <nav class="space-y-2 text-sm text-gray-700">
+                <div class="py-2 px-3 bg-gray-100 rounded font-bold text-gray-900">
+                    ホーム
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- モバイル・PC共通オーバーレイ -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
+
+    <!-- メインコンテンツ -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- トップバー -->
+        <header class="bg-white shadow-sm z-10 flex items-center justify-between px-4 py-3">
+            <div class="flex items-center">
+                <button id="menu-btn" class="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-full focus:outline-none">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <span class="text-primary text-lg font-bold">KKU Portal Site</span>
+            </div>
+            <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto pb-10">
+            <!-- ヒーローヘッダー (建物画像) -->
+            <div class="relative bg-primary-img h-[250px] sm:h-[310px] flex flex-col items-center justify-center text-center px-4">
+                <div class="absolute inset-0 hero-overlay"></div>
+                <div class="relative z-10 text-white space-y-4">
+                    <h1 class="text-3xl sm:text-4xl font-bold tracking-wider">KKU Portal Site</h1>
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+                
+                <!-- 総合共通科目 -->
+                <section>
+                    <div class="flex items-center mb-6">
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">総合共通科目</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">スポーツの文化</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">現代国家と法</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">暮らしと経済</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">生命と地球</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">英語Ⅰ</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">英語Ⅱ</a>
+                        <span class="block text-gray-800">英語コミュニケーションⅠ</span>
+                        <span class="block text-gray-800">英語コミュニケーションⅡ</span>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">韓国語Ⅰ</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">韓国語Ⅱ</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">健康の科学</a>
+                    </div>
+                </section>
+
+                <!-- 専門教育科目［学部共通科目］ -->
+                <section>
+                    <div class="flex items-center mb-6">
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">専門教育科目［学部共通科目］</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経済学概論</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経営学概論</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">マクロ経済学入門</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">ミクロ経済学入門</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">統計学入門</a>
+                    </div>
+                </section>
+
+                <!-- 専門教育科目［学科共通科目］ -->
+                <section>
+                    <div class="flex items-center mb-6">
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">専門教育科目［学科共通科目］</h3>
+                    </div>
+                    <div class="space-y-2 text-gray-800">
+                        <p>ミクロ経済学</p>
+                        <p>マクロ経済学</p>
+                        <p>人口学</p>
+                        <p>民法(総則・物権)</p>
+                        <p>経済史</p>
+                        <p>地域経済論</p>
+                        <p>経済政策入門</p>
+                        <p>日本経済論</p>
+                        <p>日本経済史</p>
+                        <p>経済学史</p>
+                        <p>環境経済学入門</p>
+                        <p>経済統計</p>
+                        <p>統計学</p>
+                    </div>
+                </section>
+
+                <!-- 自由選択科目（教職含む） -->
+                <section>
+                    <div class="flex items-center mb-6">
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">自由選択科目（教職含む）</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">【教職ガイダンス】</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教職論</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育原論</a>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育心理学</a>
+                        <span class="block text-gray-800">教育制度論</span>
+                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">特別支援教育概論</a>
+                        <span class="block text-gray-800">教職一般教養Ⅰ・Ⅱ</span>
+                        <div class="flex flex-wrap gap-3 pl-4 pt-1">
+                            <a href="#" class="text-primary hover:underline underline-offset-2">社会</a>
+                            <a href="#" class="text-primary hover:underline underline-offset-2">国語</a>
+                            <a href="#" class="text-primary hover:underline underline-offset-2">英語</a>
+                            <a href="#" class="text-primary hover:underline underline-offset-2">数学</a>
+                            <a href="#" class="text-primary hover:underline underline-offset-2">理科</a>
+                        </div>
+                        <a href="#" class="block text-primary hover:underline underline-offset-2 pl-4">特設ページ</a>
+                        <span class="block text-gray-800">教職教養基礎Ⅰ</span>
+                        <span class="block text-gray-800">教職教養基礎Ⅱ</span>
+                    </div>
+                </section>
+
+                <!-- 自由選択科目 -->
+                <section>
+                    <div class="flex items-center mb-2">
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">自由選択科目</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-6 font-medium">（卒業要件単位に含まれない科目）</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <p class="font-bold text-gray-800 mb-2">［教科に関する専門教育科目］</p>
+                            <div class="space-y-1">
+                                <a href="#" class="block text-primary hover:underline underline-offset-2">日本史</a>
+                                <a href="#" class="block text-primary hover:underline underline-offset-2">西洋史</a>
+                                <a href="#" class="block text-primary hover:underline underline-offset-2">東洋史</a>
+                                <span class="block text-gray-800">自然地理学概論</span>
+                                <span class="block text-gray-800">地誌学</span>
+                                <span class="block text-gray-800">人文地理学概論</span>
+                                <span class="block text-gray-800">法律学概論(国際法を含む。)</span>
+                                <span class="block text-gray-800">哲学概論</span>
+                                <span class="block text-gray-800">倫理学概論</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="font-bold text-gray-800 mb-2">［教職に関する専門教育科目］</p>
+                            <div class="space-y-1">
+                                <a href="#" class="block text-primary hover:underline underline-offset-2">教育課程論</a>
+                                <span class="block text-gray-800">道徳教育指導法</span>
+                                <span class="block text-gray-800">教育方法論(情報通信技術の活用を含む。)</span>
+                                <span class="block text-gray-800">特別活動・総合的な学習の時間指導法</span>
+                                <span class="block text-gray-800">生徒・進路指導論</span>
+                                <span class="block text-gray-800">教育相談</span>
+                                <span class="block text-gray-800">社会科・地理歴史教育法</span>
+                                <span class="block text-gray-800">社会科・公民科教育法</span>
+                                <span class="block text-gray-800">教育実習Ⅰ（中・高）</span>
+                                <span class="block text-gray-800">教育実習Ⅱ（中・高）</span>
+                                <span class="block text-gray-800">教育実習事前事後指導（中・高）</span>
+                                <span class="block text-gray-800">教職実践演習（小・中・高）</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- フッター -->
+            <footer class="bg-primary text-white pt-10 pb-6 text-center mt-10">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="text-[11px] space-y-1 opacity-80">
+                        <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+                        <p>QRコードは(株)デンソーウェーブの登録商標です</p>
+                        <p>このサイトは非公式サイトです</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- スクリプト -->
+    <script>
+        // Lucide Icons の初期化
+        lucide.createIcons();
+
+        // ------------------------------
+        // 1. サイドバー（モバイル用）の開閉
+        // ------------------------------
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+    </script>
+</body>
+</html>
