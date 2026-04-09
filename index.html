@@ -40,8 +40,9 @@
         
         /* ヒーローヘッダーの背景画像 */
         .bg-primary-img {
-            /* GitHubリポジトリにアップロードした画像ファイルのパス（相対パス）を指定します */
-            background-image: url('./2026-04-08_23h41_28.png');
+            /* プレビュー用にダミー画像を指定（元の画像が読み込めないため） */
+            background-color: #857251;
+            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
         }
@@ -85,7 +86,7 @@
                 <button id="menu-btn" class="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-full focus:outline-none">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
-                <span class="text-primary text-lg font-bold">KKU Portal Site</span>
+                <span class="text-primary text-lg font-bold text-primary">KKU Portal Site</span>
             </div>
             <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-full">
                 <i data-lucide="search" class="w-5 h-5"></i>
@@ -94,7 +95,6 @@
 
         <main class="flex-1 overflow-y-auto pb-10">
             <!-- ヒーローヘッダー (建物画像) -->
-            <!-- 修正箇所: 誤ったクラス指定と属性を修正し、bg-primary-imgとrelativeを追加 -->
             <div class="bg-primary-img relative h-[250px] sm:h-[310px] flex flex-col items-center justify-center text-center px-4">
                 <div class="absolute inset-0 hero-overlay"></div>
                 <div class="relative z-10 text-white space-y-4">
@@ -109,8 +109,7 @@
                     <div class="flex items-center mb-6">
                         <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">総合共通科目</h3>
                     </div>
-                    <div class="space-y-2">
-                        <!-- 修正箇所: 閉じタグの不一致を修正 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                         <span class="block text-gray-800">ことばと日本文化</span>
                         <span class="block text-gray-800">スポーツの文化</span>
                         <span class="block text-gray-800">スポーツと異文化</span>
@@ -128,8 +127,8 @@
                         <span class="block text-gray-800">日本語表現法Ⅲ</span>
                         <span class="block text-gray-800">英語Ⅰ</span>
                         <span class="block text-gray-800">英語Ⅱ</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">英語コミュニケーションⅠ</a>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">英語コミュニケーションⅡ</a>
+                        <a href="./english-communication-1/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">英語コミュニケーションⅠ</a>
+                        <a href="./english-communication-2/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">英語コミュニケーションⅡ</a>
                         <span class="block text-gray-800">実用英語</span>
                         <span class="block text-gray-800">中国語Ⅰ</span>
                         <span class="block text-gray-800">中国語Ⅱ</span>
@@ -150,7 +149,7 @@
                     <div class="flex items-center mb-6">
                         <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">専門教育科目［学部共通科目］</h3>
                     </div>
-                    <div class="space-y-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                         <span class="block text-gray-800">経済学概論</span>
                         <span class="block text-gray-800">経営学概論</span>
                         <span class="block text-gray-800">簿記入門</span>
@@ -163,27 +162,26 @@
                 <!-- 専門教育科目［学科共通科目］ -->
                 <section>
                     <div class="flex items-center mb-6">
-                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">総合共通科目</h3>
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">専門教育科目［学科共通科目］</h3>
                     </div>
-                    <div class="space-y-2">
-                        <!-- 修正箇所: 閉じタグの不一致を修正 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                         <span class="block text-gray-800">ミクロ経済学</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">マクロ経済学</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">人口学</span>
+                        <a href="./macroeconomics/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">マクロ経済学</a>
+                        <a href="./demography/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">人口学</a>
                         <span class="block text-gray-800">金融論入門</span>
                         <span class="block text-gray-800">財政学入門</span>
                         <span class="block text-gray-800">会計入門</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">会社法</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">民法(総則・物権)</span>
+                        <a href="./corporate-law/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">会社法</a>
+                        <a href="./civil-law-general/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">民法(総則・物権)</a>
                         <span class="block text-gray-800">日本経済論入門</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経済史</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">地域経済論</span>
+                        <a href="./economic-history/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経済史</a>
+                        <a href="./regional-economics/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">地域経済論</a>
                         <span class="block text-gray-800">経済政策入門</span>
                         <span class="block text-gray-800">金融論</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">財政学</span>
+                        <a href="./public-finance/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">財政学</a>
                         <span class="block text-gray-800">民法(債権)</span>
-                        <span class="block text-gray-800">日本経済論</a>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経営史</span>
+                        <span class="block text-gray-800">日本経済論</span>
+                        <a href="./business-history/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経営史</a>
                         <span class="block text-gray-800">経済政策</span>
                         <span class="block text-gray-800">租税制度</span>
                         <span class="block text-gray-800">公共経済学入門</span>
@@ -207,13 +205,12 @@
                 <!-- 専門教育科目［領域科目］ -->
                 <section>
                     <div class="flex items-center mb-6">
-                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">総合共通科目</h3>
+                        <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">専門教育科目［領域科目］</h3>
                     </div>
-                    <div class="space-y-2">
-                        <!-- 修正箇所: 閉じタグの不一致を修正 -->
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">日本経済史</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経済学史</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">環境経済学入門</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
+                        <a href="./japanese-economic-history/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">日本経済史</a>
+                        <a href="./history-of-economics/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">経済学史</a>
+                        <a href="./intro-to-environmental-economics/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">環境経済学入門</a>
                         <span class="block text-gray-800">近代日本経済史</span>
                         <span class="block text-gray-800">西洋経済史</span>
                         <span class="block text-gray-800">東洋経済史</span>
@@ -243,7 +240,7 @@
                         <span class="block text-gray-800">FP3級演習Ⅱ</span>
                         <span class="block text-gray-800">FP2級演習Ⅰ</span>
                         <span class="block text-gray-800">FP2級演習Ⅱ</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">非営利組織論</span>
+                        <a href="./non-profit-organization/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">非営利組織論</a>
                         <span class="block text-gray-800">憲法</span>
                         <span class="block text-gray-800">公共マネジメント論</span>
                         <span class="block text-gray-800">地方自治体の財政</span>
@@ -274,7 +271,7 @@
                         <span class="block text-gray-800">ISO内部監査員(品質マネジメント)</span>
                         <span class="block text-gray-800">スポーツビジネス入門</span>
                         <span class="block text-gray-800">イベント論</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">スポーツコーチング</span>
+                        <a href="./sports-coaching/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">スポーツコーチング</a>
                         <span class="block text-gray-800">スポーツと法</span>
                         <span class="block text-gray-800">スポーツビジネス実践</span>
                         <span class="block text-gray-800">スポーツビジネスインターンシップ</span>
@@ -287,7 +284,7 @@
                         <span class="block text-gray-800">データサイエンス演習</span>
                         <span class="block text-gray-800">経済統計</span>
                         <span class="block text-gray-800">統計学</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">プログラミング基礎</span>
+                        <a href="./programming-basics/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">プログラミング基礎</a>
                         <span class="block text-gray-800">MOS演習Ⅰ</span>
                         <span class="block text-gray-800">MOS演習Ⅱ</span>
                     </div>
@@ -298,17 +295,17 @@
                     <div class="flex items-center mb-6">
                         <h3 class="text-primary text-xl font-bold border-b-2 border-primary pb-2 pr-8">自由選択科目（教職含む）</h3>
                     </div>
-                    <div class="space-y-2">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                         <span class="block text-gray-800">教職ガイダンス</span>
                         <span class="block text-gray-800">教職論</span>
                         <span class="block text-gray-800">教育原論</span>
                         <span class="block text-gray-800">教育心理学</span>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育制度論</a>
+                        <a href="./educational-systems/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育制度論</a>
                         <span class="block text-gray-800">特別支援教育概論</span>
                         <span class="block text-gray-800">教職一般教養Ⅰ・Ⅱ</span>
                         <a href="https://n-kyozai.github.io/n-kyozai/general/index.html" class="block text-primary hover:underline underline-offset-2 pl-4">特設ページ</a>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教職教養基礎Ⅰ</a>
-                        <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教職教養基礎Ⅱ</a>
+                        <a href="./teaching-profession-basics-1/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教職教養基礎Ⅰ</a>
+                        <a href="./teaching-profession-basics-2/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教職教養基礎Ⅱ</a>
                     </div>
                 </section>
 
@@ -322,30 +319,30 @@
                     <div class="space-y-6">
                         <div>
                             <p class="font-bold text-gray-800 mb-2">［教科に関する専門教育科目］</p>
-                            <div class="space-y-1">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                                 <span class="block text-gray-800">日本史</span>
                                 <span class="block text-gray-800">西洋史</span>
                                 <span class="block text-gray-800">東洋史</span>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">自然地理学概論</a>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">地誌学</a>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">人文地理学概論</a>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">法律学概論(国際法を含む。)</a>
+                                <a href="./physical-geography/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">自然地理学概論</a>
+                                <a href="./regional-geography/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">地誌学</a>
+                                <a href="./human-geography/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">人文地理学概論</a>
+                                <a href="./introduction-to-law/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">法律学概論(国際法を含む。)</a>
                                 <span class="block text-gray-800">哲学概論</span>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">倫理学概論</a>
+                                <a href="./introduction-to-ethics/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">倫理学概論</a>
                             </div>
                         </div>
                         
                         <div>
                             <p class="font-bold text-gray-800 mb-2">［教職に関する専門教育科目］</p>
-                            <div class="space-y-1">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                                 <span class="block text-gray-800">教育課程論</span>
                                 <span class="block text-gray-800">道徳教育指導法</span>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育方法論(情報通信技術の活用を含む。)</a>
+                                <a href="./teaching-methods/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育方法論(情報通信技術の活用を含む。)</a>
                                 <span class="block text-gray-800">特別活動・総合的な学習の時間指導法</span>
                                 <span class="block text-gray-800">生徒・進路指導論</span>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育相談</a>
+                                <a href="./educational-counseling/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">教育相談</a>
                                 <span class="block text-gray-800">社会科・地理歴史教育法</span>
-                                <a href="#" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">社会科・公民科教育法</a>
+                                <a href="./civics-education-methods/index.html" class="block text-primary hover:text-[#976b25] hover:underline underline-offset-2">社会科・公民科教育法</a>
                                 <span class="block text-gray-800">教育実習Ⅰ（中・高）</span>
                                 <span class="block text-gray-800">教育実習Ⅱ（中・高）</span>
                                 <span class="block text-gray-800">教育実習事前事後指導（中・高）</span>
@@ -370,6 +367,11 @@
         </main>
     </div>
 
+    <!-- 画面上部へ戻るボタン -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50 hover:bg-[#6d5d42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        <i data-lucide="arrow-up" class="w-7 h-7"></i>
+    </button>
+
     <!-- スクリプト -->
     <script>
         // Lucide Icons の初期化
@@ -389,6 +391,31 @@
 
         menuBtn.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
+
+        // ------------------------------
+        // 2. 画面上部へ戻るボタンの制御
+        // ------------------------------
+        const mainElement = document.querySelector('main');
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        // スクロール量を検知してボタンをフェードイン/フェードアウト
+        mainElement.addEventListener('scroll', () => {
+            if (mainElement.scrollTop > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100');
+            } else {
+                backToTopBtn.classList.remove('opacity-100');
+                backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // クリック時にスムーズに一番上へスクロール
+        backToTopBtn.addEventListener('click', () => {
+            mainElement.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
 
     </script>
 </body>
