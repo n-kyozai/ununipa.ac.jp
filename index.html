@@ -68,8 +68,11 @@
         <div class="flex-1 overflow-y-auto px-4 pb-6">
             <!-- 階層化表示のみ（サイドバー機能ゼロ） -->
             <nav class="space-y-2 text-sm text-gray-700">
-                <div class="py-2 px-3 bg-gray-100 rounded font-bold text-gray-900">
-                    ホーム
+                <!-- 修正箇所: auto-resize-textを追加し、自動リサイズ対応の構造に変更 -->
+                <div class="flex items-center flex-nowrap gap-1 py-2 px-3 bg-gray-100 rounded font-bold text-gray-900 overflow-hidden">
+                    <div class="min-w-0 flex-1">
+                        <span class="auto-resize-text block w-full whitespace-nowrap overflow-hidden text-ellipsis" data-max-size="14" data-min-size="11">ホーム</span>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -416,6 +419,41 @@
                 behavior: 'smooth'
             });
         });
+
+        // ------------------------------
+        // 3. テキストの自動リサイズ機能
+        // ------------------------------
+        function adjustFontSize() {
+            const elements = document.querySelectorAll('.auto-resize-text');
+            const windowWidth = window.innerWidth;
+
+            elements.forEach(el => {
+                // デバイスサイズに応じた最大フォントサイズの決定
+                let maxSize = parseInt(el.getAttribute('data-max-size') || '36');
+                if (el.hasAttribute('data-max-size-sm') && windowWidth < 640) {
+                    maxSize = parseInt(el.getAttribute('data-max-size-sm'));
+                } else if (el.hasAttribute('data-max-size-md') && windowWidth >= 640) {
+                    maxSize = parseInt(el.getAttribute('data-max-size-md'));
+                }
+                
+                // 最小フォントサイズの設定（これ以上は小さくならない）
+                const minSize = parseInt(el.getAttribute('data-min-size') || '12');
+                
+                // 一旦最大サイズに戻す
+                el.style.fontSize = maxSize + 'px';
+                
+                // 要素が親コンテナからはみ出す場合、1pxずつフォントサイズを縮小する
+                let currentSize = maxSize;
+                while (el.scrollWidth > el.clientWidth && currentSize > minSize) {
+                    currentSize -= 1;
+                    el.style.fontSize = currentSize + 'px';
+                }
+            });
+        }
+
+        // 初期表示時と画面リサイズ時に文字サイズ調整を実行
+        window.addEventListener('load', adjustFontSize);
+        window.addEventListener('resize', adjustFontSize);
 
     </script>
 </body>
