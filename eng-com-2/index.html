@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科目名 - KKU Portal Site</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind 設定 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#857251', // テーマのベースカラー
+                        secondary: '#ceA964',
+                        bglight: '#f7f4ee', // 背景の薄い色
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', '"Open Sans"', 'sans-serif'],
+                        // タイトル用に少し雰囲気の違うフォントファミリーを追加（任意）
+                        serif: ['"Noto Serif JP"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Roboto', 'Open Sans', sans-serif; 
+            color: #212121; 
+            background-color: #fcfbf9; /* 全体の背景をほんの少しだけグレーにしてカードを際立たせる */
+        }
+        
+        /* スクロールバーのカスタマイズ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- サイドバー (全デバイス共通ドロワー) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col h-full shadow-lg">
+        <div class="p-6">
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/" class="text-primary text-xl font-bold tracking-wider">KKU Portal Site</a>
+            <div class="w-16 h-1 border-b-2 border-primary mt-6 mb-2"></div>
+        </div>
+        <div class="flex-1 overflow-y-auto px-4 pb-6">
+            <!-- 階層化表示 -->
+            <nav class="space-y-2 text-sm text-gray-700">
+                <div class="flex items-center space-x-1 py-2 px-3 bg-gray-50 rounded border border-gray-100">
+                    <a href="https://n-kyozai.github.io/ununipa.ac.jp/" class="text-primary hover:underline hover:text-[#6d5d42] font-bold transition-colors">ホーム</a>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400"></i>
+                    <span class="font-bold text-gray-900">科目名</span>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- モバイル・PC共通オーバーレイ -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
+
+    <!-- メインコンテンツ -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <!-- トップバー -->
+        <header class="bg-white shadow-sm z-10 flex items-center justify-between px-4 py-3">
+            <div class="flex items-center">
+                <button id="menu-btn" class="p-2 mr-2 text-gray-600 hover:bg-gray-100 rounded-full focus:outline-none">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <!-- 修正箇所: spanタグをaタグに変更し、リンクを追加しました -->
+                <a href="https://n-kyozai.github.io/ununipa.ac.jp/" class="text-primary text-lg font-bold hover:opacity-80 transition-opacity">KKU Portal Site</a>
+            </div>
+            <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto pb-10">
+            
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10">
+                
+                <!-- ページタイトル -->
+                <div class="mb-10">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 font-serif tracking-wide flex items-center">
+                        <i data-lucide="book-open" class="w-8 h-8 mr-3 text-primary"></i>
+                        科目名
+                    </h1>
+                    <div class="w-full h-1 bg-primary mt-4 opacity-80"></div>
+                </div>
+
+                <div class="space-y-12">
+                    
+                    <!-- セクション1: 講義資料（前半） -->
+                    <section>
+                        <!-- カテゴリ見出し -->
+                        <div class="bg-gray-100 py-3 px-4 rounded-md flex items-center mb-6 shadow-sm border border-gray-200">
+                            <div class="w-1.5 h-6 bg-primary rounded-sm mr-3"></div>
+                            <h2 class="text-lg font-bold text-gray-800 tracking-wider">講義コンテンツ（前半）</h2>
+                        </div>
+                        
+                        <!-- カードグリッド -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <!-- 第1回 -->
+                            <a href="./lesson01/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第1回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+                            
+                            <!-- 第2回 -->
+                            <a href="./lesson02/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第2回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第3回 -->
+                            <a href="./lesson03/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第3回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第4回 -->
+                            <a href="./lesson04/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第4回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第5回 -->
+                            <a href="./lesson05/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第5回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第6回 -->
+                            <a href="./lesson06/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第6回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第7回 -->
+                            <a href="./lesson07/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第7回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- セクション2: 講義資料（後半） -->
+                    <section>
+                        <!-- カテゴリ見出し -->
+                        <div class="bg-gray-100 py-3 px-4 rounded-md flex items-center mb-6 shadow-sm border border-gray-200">
+                            <div class="w-1.5 h-6 bg-primary rounded-sm mr-3"></div>
+                            <h2 class="text-lg font-bold text-gray-800 tracking-wider">講義コンテンツ（後半）</h2>
+                        </div>
+                        
+                        <!-- カードグリッド -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <!-- 第8回 -->
+                            <a href="./lesson08/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第8回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+                            
+                            <!-- 第9回 -->
+                            <a href="./lesson09/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第9回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第10回 -->
+                            <a href="./lesson10/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第10回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第11回 -->
+                            <a href="./lesson11/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第11回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第12回 -->
+                            <a href="./lesson12/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第12回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第13回 -->
+                            <a href="./lesson13/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第13回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第14回 -->
+                            <a href="./lesson14/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第14回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+
+                            <!-- 第15回 -->
+                            <a href="./lesson15/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-4 pr-10 hover:border-primary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-primary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2">
+                                    <h3 class="font-bold text-gray-900 text-[15px] group-hover:text-primary transition-colors">第15回 ◯◯◯◯◯</h3>
+                                    <p class="text-xs text-gray-500 mt-1.5">-------</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-primary transition-colors"></i>
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- セクション3: 特集・演習・まとめ -->
+                    <section>
+                        <!-- カテゴリ見出し -->
+                        <div class="bg-gray-100 py-3 px-4 rounded-md flex items-center mb-6 shadow-sm border border-gray-200">
+                            <div class="w-1.5 h-6 bg-secondary rounded-sm mr-3"></div> <!-- アクセントカラーを変更して区別 -->
+                            <h2 class="text-lg font-bold text-gray-800 tracking-wider">特集・演習・まとめ</h2>
+                        </div>
+                        
+                        <!-- カードグリッド -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <!-- 特集 -->
+                            <a href="./special/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-5 pr-12 hover:border-secondary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-secondary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2 flex items-start">
+                                    <i data-lucide="star" class="w-5 h-5 text-secondary mr-3 mt-0.5"></i>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900 text-base group-hover:text-secondary transition-colors">◯◯◯◯◯ 特集記事</h3>
+                                        <p class="text-sm text-gray-500 mt-1">-------</p>
+                                    </div>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 group-hover:text-secondary transition-colors"></i>
+                            </a>
+                            
+                            <!-- 中間演習 -->
+                            <a href="./practice-mid/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-5 pr-12 hover:border-secondary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-secondary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2 flex items-start">
+                                    <i data-lucide="edit-3" class="w-5 h-5 text-secondary mr-3 mt-0.5"></i>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900 text-base group-hover:text-secondary transition-colors">中間テスト対策演習</h3>
+                                        <p class="text-sm text-gray-500 mt-1">-------</p>
+                                    </div>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 group-hover:text-secondary transition-colors"></i>
+                            </a>
+
+                            <!-- 期末演習 -->
+                            <a href="./practice-final/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-5 pr-12 hover:border-secondary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-secondary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2 flex items-start">
+                                    <i data-lucide="edit-3" class="w-5 h-5 text-secondary mr-3 mt-0.5"></i>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900 text-base group-hover:text-secondary transition-colors">期末テスト対策演習</h3>
+                                        <p class="text-sm text-gray-500 mt-1">-------</p>
+                                    </div>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 group-hover:text-secondary transition-colors"></i>
+                            </a>
+
+                            <!-- まとめ -->
+                            <a href="./summary/index.html" class="group relative block bg-white border border-gray-200 rounded-md p-5 pr-12 hover:border-secondary hover:shadow-md transition-all duration-200">
+                                <div class="absolute left-0 top-0 bottom-0 w-2.5 bg-secondary rounded-l-md opacity-90 group-hover:opacity-100"></div>
+                                <div class="pl-2 flex items-start">
+                                    <i data-lucide="file-text" class="w-5 h-5 text-secondary mr-3 mt-0.5"></i>
+                                    <div>
+                                        <h3 class="font-bold text-gray-900 text-base group-hover:text-secondary transition-colors">◯◯◯◯◯ 総まとめ</h3>
+                                        <p class="text-sm text-gray-500 mt-1">-------</p>
+                                    </div>
+                                </div>
+                                <i data-lucide="chevron-right" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 group-hover:text-secondary transition-colors"></i>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- フッター -->
+            <footer class="bg-primary text-white pt-10 pb-6 text-center mt-auto border-t border-[#756447]">
+                <div class="max-w-5xl mx-auto px-4">
+                    <div class="text-[11px] space-y-1 opacity-80">
+                        <p>COPYRIGHT 2026 © ALL RIGHTS RESERVED</p>
+                        <p>QRコードは(株)デンソーウェーブの登録商標です</p>
+                        <p>このサイトは非公式サイトです</p>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- 画面上部へ戻るボタン -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50 hover:bg-[#6d5d42] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        <i data-lucide="arrow-up" class="w-7 h-7"></i>
+    </button>
+
+    <!-- スクリプト -->
+    <script>
+        // Lucide Icons の初期化
+        lucide.createIcons();
+
+        // ------------------------------
+        // 1. サイドバー（モバイル用）の開閉
+        // ------------------------------
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // ------------------------------
+        // 2. 画面上部へ戻るボタンの制御
+        // ------------------------------
+        const mainElement = document.querySelector('main');
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        // スクロール量を検知してボタンをフェードイン/フェードアウト
+        mainElement.addEventListener('scroll', () => {
+            if (mainElement.scrollTop > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                backToTopBtn.classList.add('opacity-100');
+            } else {
+                backToTopBtn.classList.remove('opacity-100');
+                backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // クリック時にスムーズに一番上へスクロール
+        backToTopBtn.addEventListener('click', () => {
+            mainElement.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+    </script>
+</body>
+</html>
