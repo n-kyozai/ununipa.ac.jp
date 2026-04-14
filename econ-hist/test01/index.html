@@ -111,10 +111,10 @@
     <script>
         // 問題データ（PDF資料から穴埋め箇所を抽出、一部プルダウン化）
         const originalQuestions = [
-            { id: 1, type: "text", text: "グローバル化初期の経済 (1) 大航海時代（　　　）", answer: "大交易時代" },
+            { id: 1, type: "select", text: "グローバル化初期の経済 (1) 大航海時代（　　　）", answer: "大交易時代", options: ["選択してください", "大交易時代", "ルネサンス", "産業革命", "帝国主義"] },
             { id: 2, type: "select", text: "18世紀から第一次世界大戦の時期（　　　）=イギリスでの産業革命、工業化の開始、そのヨーロッパ諸国やアメリカ合衆国への広がり", answer: "長期の19世紀", options: ["選択してください", "短い20世紀", "大航海時代", "長期の19世紀", "帝国主義の時代"] },
             { id: 3, type: "text", text: "18世紀から第一次世界大戦の時期(長期の19世紀)=イギリスでの（　　　）、工業化の開始、そのヨーロッパ諸国やアメリカ合衆国への広がり", answer: "産業革命" },
-            { id: 4, type: "select", text: "第一次大戦から1990年代まで=第一次大戦でいったんグローバル化は中断、1920年代にその再建の模索、しかし（　　　）経済化、第二次世界大戦により再び中断", answer: "ブロック", options: ["選択してください", "グローバル", "デジタル", "ブロック", "自由主義"] }
+            { id: 4, type: "text", text: "第一次大戦から1990年代まで=第一次大戦でいったんグローバル化は中断、1920年代にその再建の模索、しかし（　　　）経済化、第二次世界大戦により再び中断", answer: "ブロック" }
         ];
 
         // 状態変数
@@ -206,7 +206,6 @@
                         }
                     }
                 });
-                answerInput.focus();
             } else if (q.type === 'select') {
                 const optionsHtml = q.options.map(opt => {
                     const isSelected = (userAnswers[q.id] === opt) ? 'selected' : '';
@@ -221,7 +220,6 @@
                 `;
                 const answerSelect = document.getElementById('answer-select');
                 answerSelect.addEventListener('change', saveAnswer);
-                answerSelect.focus();
             }
 
             // 左側のナビゲーションの色を更新
