@@ -60,35 +60,67 @@
 
     <script>
         /**
-         * テストデータを動的に生成する関数
-         * @param {string} category カテゴリ名（教育原理など）
-         * @param {number} count 作成するテストの数
-         * @param {string} status 'active'（受付中） または 'prep'（準備中）
+         * 【テストデータ管理】
+         * GitHub上でリンクやステータスを変更する場合は、以下のデータを直接書き換えてください。
+         * * [項目の説明]
+         * ・status:   'active'（公開・受付中） または 'prep'（準備中）
+         * ・pdfLink:  PDFのURL（例: './pdf/genri01.pdf' や Google Driveの共有リンク等）
+         * ・link:     確認テストのURL（例: './test_genri01.html' や Google Formのリンク等）
+         * ・totalScore: '10点' などの表示テキスト
          */
-        const generateData = (category, count, status) => {
-            const data = [];
-            for (let i = 1; i <= count; i++) {
-                // 1桁の数字を0埋めして2桁にする (例: 1 -> 01)
-                const numStr = i.toString().padStart(2, '0');
-                data.push({
-                    category: category,
-                    name: `${category}${numStr}`,
-                    status: status,
-                    pdfLink: status === 'active' ? `./pdf/${category}${numStr}.pdf` : '#',
-                    link: status === 'active' ? `./test_${category}${numStr}.html` : '#',
-                    totalScore: status === 'active' ? "10点" : "-" // 表示用の仮の合計点数
-                });
-            }
-            return data;
-        };
-
-        // 【データ定義】ここで各科目の数と公開ステータスを一括設定しています
         const allTestsData = [
-            ...generateData('教育原理', 13, 'prep'),
-            ...generateData('教育法規', 7, 'prep'),
-            ...generateData('西洋教育史', 8, 'prep'),
-            ...generateData('日本教育史', 9, 'prep'),
-            ...generateData('教育心理', 6, 'prep')
+            // --- 教育原理 (13件) ---
+            { category: '教育原理', name: '教育原理01', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理02', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理03', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理04', status: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604_compressed.pdf', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理05', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理06', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理07', status: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育原理07_compressed.pdf', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理08', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理09', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理10', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理11', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理12', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理13', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+
+            // --- 教育法規 (7件) ---
+            { category: '教育法規', name: '教育法規01', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規02', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規03', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規04', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規05', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規06', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規07', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+
+            // --- 西洋教育史 (8件) ---
+            { category: '西洋教育史', name: '西洋教育史01', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史02', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史03', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史04', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史05', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史06', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史07', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史08', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+
+            // --- 日本教育史 (9件) ---
+            { category: '日本教育史', name: '日本教育史01', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史02', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史03', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史04', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史05', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史06', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史07', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史08', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史09', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+
+            // --- 教育心理 (6件) ---
+            { category: '教育心理', name: '教育心理01', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理02', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理03', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理04', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理05', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理06', status: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
         ];
 
         // タブとして表示するカテゴリのリスト
