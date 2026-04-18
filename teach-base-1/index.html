@@ -35,6 +35,7 @@
                         <tr>
                             <th class="border border-gray-300 p-3 font-normal w-1/4">確認テスト</th>
                             <th class="border border-gray-300 p-3 font-normal w-20">PDF</th>
+                            <th id="th-two-in-one" class="border border-gray-300 p-3 font-normal w-20">2in1</th>
                             <th class="border border-gray-300 p-3 font-normal">ステータス</th>
                             <th class="border border-gray-300 p-3 font-normal">合計点数</th>
                             <th class="border border-gray-300 p-3 font-normal">テスト実施</th>
@@ -63,65 +64,67 @@
          * 【テストデータ管理】
          * GitHub上でリンクやステータスを変更する場合は、以下のデータを直接書き換えてください。
          * * [項目の説明]
-         * ・status:     テストのステータス。'active'（テスト受付中） または 'prep'（テスト準備中）
-         * ・pdfStatus:  PDFのステータス。'active'（PDF公開） または 'prep'（PDF準備中）
-         * ・pdfLink:    PDFのURL（例: './pdf/genri01.pdf' や Google Driveの共有リンク等）
-         * ・link:       確認テストのURL（例: './test_genri01.html' や Google Formのリンク等）
-         * ・totalScore: '10点' などの表示テキスト
+         * ・status:         テストのステータス。'active'（テスト受付中） または 'prep'（テスト準備中）
+         * ・pdfStatus:      PDFのステータス。'active'（PDF公開） または 'prep'（PDF準備中）
+         * ・twoInOneStatus: 2in1のステータス。'active'（公開） または 'prep'（準備中）
+         * ・pdfLink:        PDFのURL（例: './pdf/genri01.pdf' や Google Driveの共有リンク等）
+         * ・twoInOneLink:   2in1のURL（例: './pdf/genri01_2in1.pdf' 等）
+         * ・link:           確認テストのURL（例: './test_genri01.html' や Google Formのリンク等）
+         * ・totalScore:     '10点' などの表示テキスト
          */
         const allTestsData = [
             // --- 教育原理 (13件) ---
-            { category: '教育原理', name: '教育原理01', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理02', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理03', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理04', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604_compressed.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理05', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8605.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理06', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8606.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理07', status: 'prep', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育原理07_compressed.pdf', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理08', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理09', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理10', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理11', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理12', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育原理', name: '教育原理13', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604_compressed.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8605.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8606.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育原理07_compressed.pdf', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理08', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理09', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理10', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理11', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理12', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育原理', name: '教育原理13', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
 
             // --- 教育法規 (7件) ---
-            { category: '教育法規', name: '教育法規01', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規02', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規03', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規04', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規05', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規06', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規07', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規01', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規02', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規03', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規04', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規05', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規06', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育法規', name: '教育法規07', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
 
             // --- 西洋教育史 (8件) ---
-            { category: '西洋教育史', name: '西洋教育史01', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史02', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史03', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史04', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史05', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史06', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史07', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史08', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史01', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史02', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史03', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史04', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史05', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史06', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史07', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '西洋教育史', name: '西洋教育史08', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
 
             // --- 日本教育史 (9件) ---
-            { category: '日本教育史', name: '日本教育史01', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史02', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史03', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史04', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史05', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史06', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史07', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史08', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史09', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史01', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史02', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史03', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史04', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史05', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史06', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史07', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史08', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '日本教育史', name: '日本教育史09', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
 
             // --- 教育心理 (6件) ---
-            { category: '教育心理', name: '教育心理01', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育心理', name: '教育心理02', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育心理', name: '教育心理03', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育心理', name: '教育心理04', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育心理', name: '教育心理05', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
-            { category: '教育心理', name: '教育心理06', status: 'prep', pdfStatus: 'active', pdfLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { category: '教育心理', name: '教育心理06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
 
             // --- 教職教養基礎Ⅰ (第2回〜第14回) ---
             { category: '教職教養基礎Ⅰ', name: '第2回復習問題', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
@@ -189,6 +192,15 @@
             const tbody = document.getElementById('test-list-body');
             tbody.innerHTML = '';
 
+            // 2in1列の表示/非表示をカテゴリで判定
+            const showTwoInOne = !(category === '教職教養基礎Ⅰ' || category === '教職教養基礎Ⅱ');
+            const thTwoInOne = document.getElementById('th-two-in-one');
+            if (showTwoInOne) {
+                thTwoInOne.style.display = ''; // テーブルセルのデフォルト表示に戻す
+            } else {
+                thTwoInOne.style.display = 'none'; // 非表示にする
+            }
+
             // 現在選択されているカテゴリのデータのみを抽出
             const filteredData = allTestsData.filter(test => test.category === category);
 
@@ -223,6 +235,26 @@
                         PDF
                        </span>`;
 
+                // 2in1列のHTML生成 (表示フラグと2in1のステータスに依存)
+                let twoInOneTd = '';
+                if (showTwoInOne) {
+                    const isTwoInOneActive = test.twoInOneStatus === "active";
+                    const twoInOneHtml = isTwoInOneActive
+                        ? `<a href="${test.twoInOneLink}" target="_blank" class="text-orange-500 hover:text-orange-700 font-bold flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                            </svg>
+                            2in1
+                           </a>`
+                        : `<span class="text-gray-300 flex items-center justify-center gap-1 cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                            </svg>
+                            2in1
+                           </span>`;
+                    twoInOneTd = `<td class="border border-gray-300 p-2 whitespace-nowrap">${twoInOneHtml}</td>`;
+                }
+
                 // 実施ボタンのHTML生成 (テストのステータスに依存)
                 const btnHtml = isTestActive
                     ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-xs font-bold transition">テスト実施</a>`
@@ -235,6 +267,7 @@
                     <td class="border border-gray-300 p-2 whitespace-nowrap">
                         ${pdfHtml}
                     </td>
+                    ${twoInOneTd}
                     <td class="border border-gray-300 p-2 whitespace-nowrap">
                         <span class="inline-block text-white text-xs px-3 py-1 rounded ${statusClass}">
                             ${statusLabel}
