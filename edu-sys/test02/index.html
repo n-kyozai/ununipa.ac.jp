@@ -254,7 +254,11 @@
             currentInputElement.addEventListener('change', saveAnswer);
             currentInputElement.addEventListener('input', saveAnswer); // テキスト入力用
             inputContainer.appendChild(currentInputElement);
-            currentInputElement.focus();
+            
+            // テキスト入力の場合のみ、自動でフォーカス（カーソル）を合わせる
+            if (q.type === 'text') {
+                currentInputElement.focus();
+            }
 
             // ナビゲーションの色更新
             Array.from(questionNavList.children).forEach((el, idx) => {
