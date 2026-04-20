@@ -283,8 +283,8 @@
             if (selectedFormat === 'descriptive') {
                 // 記述式の場合
                 answerContainer.innerHTML = `
-                    <label class="block text-sm font-bold text-gray-700 mb-2" for="answer-input">解答を記述してください（用語のみ）：</label>
-                    <input type="text" id="answer-input" class="shadow-sm appearance-none border border-gray-400 rounded w-full md:w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" autocomplete="off" placeholder="例: 学習">
+                    <label class="block text-sm font-bold text-gray-700 mb-2" for="answer-input">解答を記述してください：</label>
+<input type="text" id="answer-input" class="shadow-sm appearance-none border border-gray-400 rounded w-full md:w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" autocomplete="off">
                 `;
                 const answerInput = document.getElementById('answer-input');
                 answerInput.value = userAnswers[q.id] || "";
