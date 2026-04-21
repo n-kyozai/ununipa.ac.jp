@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>経済史 第2回授業の復習テスト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ベースとなる青色（画像に合わせたカラー） */
+        .theme-bg { background-color: #005682; }
+        .theme-text { color: #005682; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-10">
+
+    <!-- スタート画面 -->
+    <div id="start-screen" class="max-w-5xl mx-auto p-4 pt-8">
+        <div class="bg-white border border-gray-300 shadow-sm mb-6">
+            <table class="w-full text-sm border-collapse">
+                <tbody>
+                    <tr><th class="w-1/4 theme-bg text-white p-3 border border-gray-300 text-left">テスト名</th><td class="p-3 border border-gray-300">第2回授業の復習</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト説明</th><td class="p-3 border border-gray-300">第2回授業終了後復習問題に取り組んでください。</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト方法区分</th><td class="p-3 border border-gray-300">WEB</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト区分</th><td class="p-3 border border-gray-300">随時試験</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">再テスト可否区分</th><td class="p-3 border border-gray-300">合格後も可</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">満点</th><td class="p-3 border border-gray-300">10点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">コース</th><td class="p-3 border border-gray-300">経済史 【新鞍 拓生】</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">目次</th><td class="p-3 border border-gray-300">【2026/04/21 2限】</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">問題表示区分</th><td class="p-3 border border-gray-300">一問題表示</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">問題出題形式</th><td class="p-3 border border-gray-300">ランダム</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト回数</th><td class="p-3 border border-gray-300">1回</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">一時保存</th><td class="p-3 border border-gray-300">使用可能</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-8 flex justify-center gap-4">
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/econ-hist/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block">テスト一覧へ</a>
+            <button id="start-btn" class="theme-bg hover:bg-blue-800 text-white font-bold py-3 px-12 rounded shadow transition duration-200">テスト開始</button>
+        </div>
+    </div>
+
+    <!-- テスト画面 -->
+    <div id="test-screen" class="hidden max-w-5xl mx-auto p-4 flex flex-col md:flex-row gap-6">
+        <!-- 左側：問題リスト -->
+        <div class="hidden md:block w-48 shrink-0">
+            <div id="question-nav-list" class="flex flex-col gap-1">
+                <!-- JSで生成 -->
+            </div>
+        </div>
+
+        <!-- 右側：問題エリア -->
+        <div class="flex-grow">
+            <div class="flex justify-between items-center mb-4 bg-gray-200 p-3 rounded border border-gray-300">
+                <div class="font-bold text-gray-700">第2回授業の復習</div>
+                <div id="timer-display" class="text-gray-800 font-bold text-lg bg-white px-3 py-1 rounded shadow-sm border border-gray-300">残り時間 5:00</div>
+            </div>
+            
+            <div class="border border-gray-300 rounded shadow-sm bg-white mb-6">
+                <div id="question-number" class="bg-blue-100 px-4 py-3 border-b border-gray-300 text-gray-800 font-bold">
+                    <!-- 問題番号 -->
+                </div>
+                <div class="p-6">
+                    <p id="question-text" class="text-lg mb-8 leading-relaxed"></p>
+                    <div id="answer-area" class="mb-4 bg-gray-50 p-4 border rounded">
+                        <!-- JSで動的生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-t pt-4">
+                <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed">前へ</button>
+                <div class="flex items-center">
+                    <span id="progress-text" class="mr-6 text-gray-600 font-bold">1 / 10</span>
+                    <button id="next-btn" class="theme-bg hover:bg-blue-800 text-white font-bold py-2 px-6 rounded transition">次へ</button>
+                    <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition">テスト提出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 採点結果画面 -->
+    <div id="result-screen" class="hidden max-w-5xl mx-auto p-4">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b-2 border-blue-800 pb-2">採点結果</h2>
+        
+        <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
+            <p class="text-lg text-gray-600 mb-2">あなたの得点</p>
+            <p id="total-score" class="text-5xl font-bold theme-text mb-2">0点 / 10点</p>
+            <p id="pass-status" class="text-xl font-bold"></p>
+        </div>
+
+        <div id="result-list" class="space-y-8">
+            <!-- JSで結果を生成 -->
+        </div>
+
+        <div class="text-center mt-12 mb-8">
+            <button id="retry-btn" class="theme-bg hover:bg-blue-800 text-white font-bold py-3 px-12 rounded shadow transition duration-200">もう一度テストを行う（再テスト）</button>
+        </div>
+    </div>
+
+    <!-- 確認モーダル -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg max-w-sm w-full mx-4">
+            <p class="mb-6 text-center text-lg font-bold text-gray-800">テストを提出して採点しますか？</p>
+            <div class="flex justify-center gap-4">
+                <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition font-bold">いいえ</button>
+                <button id="modal-ok-btn" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition font-bold">はい</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 問題データ（第2回PDF資料より抽出）
+        const originalQuestions = [
+            { id: 1, type: "select", text: "15世紀末に完了した、イベリア半島におけるキリスト教徒によるイスラーム教徒からの国土回復運動を（　　　）という。", answer: "レコンキスタ", options: ["選択してください", "十字軍", "ルネサンス", "レコンキスタ", "宗教改革"] },
+            { id: 2, type: "select", text: "東半球と西半球との間での動物・植物・人口・病原菌などの交換を（　　　）の交換と呼ぶ。", answer: "コロンブス", options: ["選択してください", "マゼラン", "コロンブス", "ガマ", "エンリケ"] },
+            { id: 3, type: "text", text: "明朝では倭寇対策として、民間による海上貿易を禁止する（　　　）政策を実施した。", answer: "海禁" },
+            { id: 4, type: "select", text: "16世紀の経済において、西ヨーロッパと東ヨーロッパやラテンアメリカの間では、西ヨーロッパを「（　　　）」、他を「周辺」とする分業関係が動き始めた。", answer: "中核", options: ["選択してください", "中心", "中核", "覇権", "帝国"] },
+            { id: 5, type: "select", text: "1492年、カリブ海に到達しアメリカ大陸へ進出したジェノヴァ人は（　　　）である。", answer: "コロンブス", options: ["選択してください", "マゼラン", "コロンブス", "ヴァスコ・ダ・ガマ", "アメリゴ・ヴェスプッチ"] },
+            { id: 6, type: "select", text: "1494年、ポルトガルとスペインが世界分割で協定を結んだ条約は（　　　）条約である。", answer: "トルデシリャス", options: ["選択してください", "ウェストファリア", "トルデシリャス", "ヴェルサイユ", "サラゴサ"] },
+            { id: 7, type: "select", text: "1545年、（　　　）で銀山が発見され、ラテンアメリカの銀が大量にヨーロッパに流入した。", answer: "ポトシ", options: ["選択してください", "石見", "ポトシ", "アカプルコ", "マニラ"] },
+            { id: 8, type: "text", text: "日本では戦国大名の富国強兵政策で金山銀山の開発が進行し、朝鮮から銀製錬法である（　　　）法が伝授された。", answer: "灰吹" },
+            { id: 9, type: "select", text: "スペインによる、メキシコのアカプルコとフィリピンのマニラ間の太平洋横断貿易は（　　　）貿易と呼ばれる。", answer: "ガレオン", options: ["選択してください", "ガレオン", "キャラベル", "ジャンク", "クリッパー"] },
+            { id: 10, type: "select", text: "16世紀中、ヨーロッパでアメリカ銀の流入などにより物価が3〜4倍に上昇した現象を（　　　）という。", answer: "価格革命", options: ["選択してください", "商業革命", "産業革命", "農業革命", "価格革命"] }
+        ];
+
+        // 状態変数
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // { questionId: "ユーザーの入力" }
+        let timeLeft = 300; // 制限時間5分（300秒）
+        let timerInterval = null;
+
+        // DOM要素
+        const startScreen = document.getElementById('start-screen');
+        const testScreen = document.getElementById('test-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const answerArea = document.getElementById('answer-area');
+        const questionNavList = document.getElementById('question-nav-list');
+        const confirmModal = document.getElementById('confirm-modal');
+
+        // 配列をシャッフルする関数（ランダム出題用）
+        function shuffleArray(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        // テスト開始処理
+        function startTest() {
+            questions = shuffleArray(originalQuestions);
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            timeLeft = 300;
+            
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            testScreen.classList.remove('hidden');
+
+            renderNavList();
+            renderQuestion();
+            startTimer();
+        }
+
+        // 左側の問題ナビゲーション
+        function renderNavList() {
+            questionNavList.innerHTML = '';
+            questions.forEach((_, index) => {
+                const navItem = document.createElement('div');
+                navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors ${index === currentQuestionIndex ? 'bg-blue-200 border-blue-400' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                navItem.innerText = `【問題${index + 1}】`;
+                
+                // クリックして特定の問題へ移動する機能
+                navItem.addEventListener('click', () => {
+                    if (currentQuestionIndex !== index) {
+                        saveAnswer(); // 移動前に現在の解答を保存
+                        currentQuestionIndex = index;
+                        renderQuestion();
+                    }
+                });
+
+                questionNavList.appendChild(navItem);
+            });
+        }
+
+        // 問題の表示
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（1点）`;
+            document.getElementById('question-text').innerText = q.text;
+            document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
+
+            // 回答エリアの構築
+            answerArea.innerHTML = '';
+            if (q.type === 'text') {
+                answerArea.innerHTML = `
+                    <label class="block text-sm font-bold text-gray-700 mb-2" for="answer-input">（　　　）に入る言葉を記述してください：</label>
+                    <input type="text" id="answer-input" class="shadow-sm appearance-none border border-gray-400 rounded w-full md:w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" autocomplete="off" value="${userAnswers[q.id] || ''}">
+                `;
+                const answerInput = document.getElementById('answer-input');
+                answerInput.addEventListener('input', saveAnswer);
+                answerInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (currentQuestionIndex < questions.length - 1) {
+                            document.getElementById('next-btn').click();
+                        } else {
+                            document.getElementById('finish-btn').click();
+                        }
+                    }
+                });
+                // 注：問題文が隠れないよう answerInput.focus(); は設定していません
+            } else if (q.type === 'select') {
+                const optionsHtml = q.options.map(opt => {
+                    const isSelected = (userAnswers[q.id] === opt) ? 'selected' : '';
+                    return `<option value="${opt === '選択してください' ? '' : opt}" ${isSelected}>${opt}</option>`;
+                }).join('');
+
+                answerArea.innerHTML = `
+                    <label class="block text-sm font-bold text-gray-700 mb-2" for="answer-select">（　　　）に入る言葉を選択してください：</label>
+                    <select id="answer-select" class="shadow-sm border border-gray-400 rounded w-full md:w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
+                        ${optionsHtml}
+                    </select>
+                `;
+                const answerSelect = document.getElementById('answer-select');
+                answerSelect.addEventListener('change', saveAnswer);
+                // 注：問題文が隠れないよう answerSelect.focus(); は設定していません
+            }
+
+            // 左側のナビゲーションの色を更新
+            Array.from(questionNavList.children).forEach((el, idx) => {
+                if (idx === currentQuestionIndex) {
+                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors bg-blue-200 border-blue-400';
+                } else {
+                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors bg-gray-200 border-gray-300 hover:bg-gray-300';
+                }
+            });
+
+            // ボタンの表示切り替え
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('finish-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('finish-btn').classList.add('hidden');
+            }
+        }
+
+        // 解答の保存
+        function saveAnswer() {
+            const q = questions[currentQuestionIndex];
+            if (q.type === 'text') {
+                const input = document.getElementById('answer-input');
+                if (input) userAnswers[q.id] = input.value;
+            } else if (q.type === 'select') {
+                const select = document.getElementById('answer-select');
+                if (select) userAnswers[q.id] = select.value;
+            }
+        }
+
+        // タイマー処理
+        function updateTimerDisplay() {
+            const min = Math.floor(timeLeft / 60);
+            const sec = timeLeft % 60;
+            document.getElementById('timer-display').innerText = `残り時間 ${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    saveAnswer(); // 最後の入力を保存
+                    executeScoring(); // 時間切れで自動採点
+                }
+            }, 1000);
+        }
+
+        // 採点と結果表示
+        function executeScoring() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            testScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            confirmModal.classList.add('hidden');
+
+            let score = 0;
+            const resultContainer = document.getElementById('result-list');
+            resultContainer.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                // 空白を取り除いて判定（完全一致）
+                const userAnswer = (userAnswers[q.id] || "").trim();
+                const isCorrect = userAnswer === q.answer;
+                
+                if (isCorrect) score++;
+
+                const itemHtml = `
+                    <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
+                        <div class="bg-blue-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center">
+                            ${isCorrect ? '<span class="text-red-600 font-bold text-xl mr-2">○</span>' : '<span class="text-blue-600 font-bold text-xl mr-2">×</span>'}
+                            【問題${index + 1}】（1点）
+                        </div>
+                        <div class="p-4 md:p-6">
+                            <p class="mb-6 text-gray-800">${q.text}</p>
+                            <table class="w-full border-collapse text-sm">
+                                <tbody>
+                                    <tr>
+                                        <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left">正解</th>
+                                        <td class="p-2 border border-gray-300 font-bold">${q.answer}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left">学習者解答</th>
+                                        <td class="p-2 border border-gray-300 ${isCorrect ? '' : 'text-red-600 font-bold'}">${userAnswer === "" ? "<span class='text-gray-400'>未解答</span>" : userAnswer}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left">点数</th>
+                                        <td class="p-2 border border-gray-300">${isCorrect ? '1' : '0'}点／1点</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left">問題解説</th>
+                                        <td class="p-2 border border-gray-300 text-gray-500"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                resultContainer.insertAdjacentHTML('beforeend', itemHtml);
+            });
+
+            document.getElementById('total-score').innerText = `${score}点 / ${questions.length}点`;
+            
+            const passStatus = document.getElementById('pass-status');
+            if (score === questions.length) {
+                passStatus.innerText = "合格！満点です。";
+                passStatus.className = "text-xl font-bold text-green-600";
+            } else {
+                passStatus.innerText = "不合格。満点を目指して再テストしましょう。";
+                passStatus.className = "text-xl font-bold text-red-600";
+            }
+        }
+
+        // イベントリスナーの設定
+        document.getElementById('start-btn').addEventListener('click', startTest);
+        
+        document.getElementById('retry-btn').addEventListener('click', () => {
+            window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/econ-hist/index.html";
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            saveAnswer();
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            saveAnswer();
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        });
+
+        // 終了ボタン -> モーダル表示
+        document.getElementById('finish-btn').addEventListener('click', () => {
+            saveAnswer();
+            confirmModal.classList.remove('hidden');
+        });
+
+        // モーダルキャンセル
+        document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+        });
+
+        // モーダルOK -> 採点実行
+        document.getElementById('modal-ok-btn').addEventListener('click', () => {
+            executeScoring();
+        });
+
+    </script>
+</body>
+</html>
