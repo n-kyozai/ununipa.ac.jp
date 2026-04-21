@@ -248,7 +248,8 @@
                     input.value = (userAnswers[q.id] && userAnswers[q.id][i]) ? userAnswers[q.id][i] : "";
                     answerContainer.appendChild(input);
                 }
-                answerContainer.querySelector('input').focus();
+                // 自動フォーカスを削除し、画面スクロールを防ぎます
+                // answerContainer.querySelector('input').focus();
             }
 
             // 左側のナビゲーションの色を更新
