@@ -246,7 +246,11 @@
                     // デフォルトの未選択オプション
                     const defaultOption = document.createElement('option');
                     defaultOption.value = "";
-                    defaultOption.text = `（${'①②③④⑤'[i]}）を選択してください`;
+                    if (q.inputCount === 1) {
+                        defaultOption.text = "選択してください";
+                    } else {
+                        defaultOption.text = `（${'①②③④⑤'[i]}）を選択してください`;
+                    }
                     defaultOption.disabled = true;
                     defaultOption.selected = true;
                     select.appendChild(defaultOption);
