@@ -6,7 +6,7 @@
     <title>テスト一覧メニュー</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ヘッダーやアクセントのカラー（画像参考） */
+        /* ヘッダーやアクセントのカラー */
         .header-bg { background-color: #005662; }
         .tab-bg { background-color: #e5f1f4; }
         .status-active { background-color: #a0c832; } /* テスト受付中（黄緑） */
@@ -17,9 +17,25 @@
 
     <div class="max-w-4xl mx-auto overflow-hidden">
         <div class="flex-grow pb-6 overflow-y-auto">
-            <h1 class="text-xl font-bold mb-4 pb-2 border-b border-gray-300 flex justify-between items-end">
+            <h1 class="text-xl font-bold mb-2 flex justify-between items-end">
                 <span>教育制度論 対策</span>
             </h1>
+
+            <!-- タブメニュー -->
+            <div class="flex border-b border-gray-300 mb-4">
+                <button id="tab-assignments" onclick="switchTab('assignments')" class="tab-btn px-6 py-2 font-bold text-gray-800 border-b-2 border-blue-600 transition-colors">
+                    課題
+                </button>
+                <button id="tab-comprehensive" onclick="switchTab('comprehensive')" class="tab-btn px-6 py-2 font-bold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors">
+                    総合テスト
+                </button>
+            </div>
+
+            <!-- 総合テスト用の説明書き（初期状態は非表示） -->
+            <div id="comprehensive-desc" class="hidden bg-blue-50 border border-blue-200 text-blue-800 p-3 rounded mb-4 text-sm">
+                💡 <strong>総合テストについて</strong><br>
+                レベルが上がるほど、出題される問題の範囲（データベース）が広く、難易度が上がっていきます。
+            </div>
 
             <!-- テスト一覧テーブル -->
             <div class="overflow-x-auto">
@@ -38,9 +54,9 @@
                 </table>
             </div>
 
-            <!-- ページネーション（ただの文字表示） -->
+            <!-- ページネーション -->
             <div class="bg-gray-200 p-2 mt-2 flex justify-center items-center text-sm text-gray-600 gap-4">
-                <span>14件 (1/1)</span>
+                <span id="pagination-info">14件 (1/1)</span>
                 <div class="flex gap-3">
                     <span class="text-gray-500">&lt;</span>
                     <span class="text-gray-700 font-bold">1</span>
@@ -52,71 +68,125 @@
 
     <script>
         /**
-         * 【GitHubでの手動管理用データ】
-         * ここにあるテストデータを書き換えるだけで、画面に自動で反映されます。
-         * * 新しいテストを公開する際の手順：
-         * 1. 該当する回の status を "prep"（準備中）から "active"（実施中）に変更する。
-         * 2. link に作成したHTMLファイルの相対パス（例: "./test02.html"）を設定する。
+         * 【データ定義】
+         * タブごとに表示するデータを分けて管理します。
          */
-        const testsData = [
-            { id: 1, name: "第1回課題", status: "active", link: "./test01/index.html", passScore: "5点" },
-            { id: 2, name: "第2回課題", status: "active", link: "./test02/index.html", passScore: "5点" },
-            { id: 3, name: "第3回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 4, name: "第4回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 5, name: "第5回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 6, name: "第6回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 7, name: "第7回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 8, name: "第8回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 9, name: "第9回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 10, name: "第10回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 11, name: "第11回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 12, name: "第12回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 13, name: "第13回課題", status: "prep", link: "#", passScore: "-" },
-            { id: 14, name: "第14回課題", status: "prep", link: "#", passScore: "-" },
-        ];
+        const testsData = {
+            // 課題タブのデータ
+            assignments: [
+                { id: 1, name: "第1回課題", status: "active", link: "./test01/index.html", passScore: "5点" },
+                { id: 2, name: "第2回課題", status: "active", link: "./test02/index.html", passScore: "5点" },
+                { id: 3, name: "第3回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 4, name: "第4回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 5, name: "第5回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 6, name: "第6回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 7, name: "第7回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 8, name: "第8回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 9, name: "第9回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 10, name: "第10回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 11, name: "第11回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 12, name: "第12回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 13, name: "第13回課題", status: "prep", link: "#", passScore: "-" },
+                { id: 14, name: "第14回課題", status: "prep", link: "#", passScore: "-" },
+            ],
+            // 総合テストタブのデータ（空の配列を準備）
+            comprehensive: []
+        };
 
-        // テーブル本体を生成する処理
+        // 総合テスト1〜15のデータを自動生成して追加
+        for (let i = 1; i <= 15; i++) {
+            testsData.comprehensive.push({
+                id: `comp_${i}`,
+                name: `レベル${i}`,
+                status: "prep", // すべてテスト準備中
+                link: "#",
+                passScore: "-"
+            });
+        }
+
+        // --- テーブル描画・タブ切り替えロジック ---
+        let currentTab = 'assignments'; // 初期表示するタブ
         const tbody = document.getElementById('test-list-body');
+        const paginationInfo = document.getElementById('pagination-info');
 
-        testsData.forEach(test => {
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-gray-50 transition-colors";
+        // テーブルを描画する関数
+        function renderTable() {
+            tbody.innerHTML = ''; // テーブルの中身を一度リセット
+            const currentData = testsData[currentTab]; // 選択中のタブのデータを取得
 
-            // ステータスに応じた処理の分岐
-            const isActive = test.status === "active";
-            const statusLabel = isActive ? "テスト受付中" : "テスト準備中";
-            const statusClass = isActive ? "status-active" : "status-prep";
+            currentData.forEach(test => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors";
+
+                // ステータスに応じた処理の分岐
+                const isActive = test.status === "active";
+                const statusLabel = isActive ? "テスト受付中" : "テスト準備中";
+                const statusClass = isActive ? "status-active" : "status-prep";
+                
+                // 準備中の場合はリンクを無効化するクラスを付与
+                const linkTagOpen = isActive 
+                    ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold">` 
+                    : `<span class="text-gray-400 underline cursor-not-allowed">`;
+                const linkTagClose = isActive ? `</a>` : `</span>`;
+
+                // 実施ボタンのHTML生成
+                const btnHtml = isActive
+                    ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-xs font-bold transition">テスト実施</a>`
+                    : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-4 py-1 rounded text-xs cursor-not-allowed">テスト実施</button>`;
+
+                tr.innerHTML = `
+                    <td class="border border-gray-300 p-2 text-left pl-4 whitespace-nowrap">
+                        ${linkTagOpen}${test.name}${linkTagClose}
+                    </td>
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        <span class="inline-block text-white text-xs px-3 py-1 rounded ${statusClass}">
+                            ${statusLabel}
+                        </span>
+                    </td>
+                    <td class="border border-gray-300 p-2 text-gray-600 whitespace-nowrap">
+                        ${test.passScore}
+                    </td>
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${btnHtml}
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            // ページネーションの件数表示を更新
+            paginationInfo.textContent = `${currentData.length}件 (1/1)`;
+        }
+
+        // タブをクリックしたときに呼ばれる関数
+        function switchTab(tabId) {
+            currentTab = tabId;
             
-            // 準備中の場合はリンクを無効化するクラスを付与（下線を常時表示に変更）
-            const linkTagOpen = isActive 
-                ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold">` 
-                : `<span class="text-gray-400 underline cursor-not-allowed">`;
-            const linkTagClose = isActive ? `</a>` : `</span>`;
+            // すべてのタブの装飾を非アクティブ（グレー）にリセット
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-gray-800', 'border-blue-600');
+                btn.classList.add('text-gray-500', 'border-transparent');
+            });
+            
+            // クリックされたタブをアクティブ（青線・黒文字）にする
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.remove('text-gray-500', 'border-transparent');
+            activeBtn.classList.add('text-gray-800', 'border-blue-600');
+            
+            // 総合テストタブの場合のみ説明書きを表示
+            const descEl = document.getElementById('comprehensive-desc');
+            if (tabId === 'comprehensive') {
+                descEl.classList.remove('hidden');
+            } else {
+                descEl.classList.add('hidden');
+            }
+            
+            // テーブルを再描画
+            renderTable();
+        }
 
-            // 実施ボタンのHTML生成
-            const btnHtml = isActive
-                ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-xs font-bold transition">テスト実施</a>`
-                : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-4 py-1 rounded text-xs cursor-not-allowed">テスト実施</button>`;
-
-            tr.innerHTML = `
-                <td class="border border-gray-300 p-2 text-left pl-4 whitespace-nowrap">
-                    ${linkTagOpen}${test.name}${linkTagClose}
-                </td>
-                <td class="border border-gray-300 p-2 whitespace-nowrap">
-                    <span class="inline-block text-white text-xs px-3 py-1 rounded ${statusClass}">
-                        ${statusLabel}
-                    </span>
-                </td>
-                <td class="border border-gray-300 p-2 text-gray-600 whitespace-nowrap">
-                    ${test.passScore}
-                </td>
-                <td class="border border-gray-300 p-2 whitespace-nowrap">
-                    ${btnHtml}
-                </td>
-            `;
-
-            tbody.appendChild(tr);
-        });
+        // ページ読み込み時の初期描画
+        renderTable();
     </script>
 </body>
 </html>
