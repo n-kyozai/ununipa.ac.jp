@@ -54,6 +54,21 @@
         .blank-select:focus {
             border-color: #005b82;
         }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 <body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col">
@@ -153,8 +168,8 @@
         <!-- ================= テスト画面 ================= -->
         <section id="test-screen" class="hidden flex-col md:flex-row gap-4 lg:gap-8 items-start w-full">
             
-            <!-- デスクトップ用 左サイドバー -->
-            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-48 shrink-0">
+            <!-- デスクトップ用 左サイドバー (スクロール対応) -->
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-48 shrink-0 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-8">
                 <!-- JSでサイドバーのボタンを生成 -->
             </div>
 
@@ -266,7 +281,7 @@
 
     <script>
         // --- データ定義 ---
-        // 画像5問＋PDF網羅の全18パターン
+        // 画像優先の問題＋PDFからの補完分（レベル2の全18パターン）
         const baseQuestions = [
             // 画像優先の問題
             {
