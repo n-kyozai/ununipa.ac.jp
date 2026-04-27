@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育制度論 レベル3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ヘッダーやアクセントのカラー */
+        .header-bg { background-color: #005b82; }
+        
+        /* タイマー枠の固定 */
+        .timer-box {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 記述式の入力欄スタイル */
+        .blank-input {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 8px 12px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .blank-input:focus {
+            border-color: #005b82;
+            box-shadow: 0 0 0 2px rgba(0, 91, 130, 0.2);
+        }
+
+        /* 選択式のセレクトボックススタイル */
+        .blank-select {
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            padding: 8px 32px 8px 12px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .blank-select:focus {
+            border-color: #005b82;
+        }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="header-bg text-white p-4 flex justify-between items-center">
+            <span class="font-bold text-lg">問題リスト</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2">
+            <!-- JSでリストを生成 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="flex-1 py-8 px-4 md:px-8 max-w-5xl mx-auto w-full">
+        
+        <!-- ================= スタート画面 ================= -->
+        <section id="start-screen" class="w-full mx-auto">
+            
+            <div class="bg-white border border-gray-300 w-full mb-6 text-sm md:text-base flex flex-col shadow-sm">
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">テスト名</div>
+                    <div class="w-2/3 md:w-3/4 p-3 font-medium">レベル3</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">テスト範囲</div>
+                    <div class="w-2/3 md:w-3/4 p-3 leading-relaxed">第3回授業内容</div>
+                </div>
+                <!-- 出題数のプルダウン選択 -->
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">出題数</div>
+                    <div class="w-2/3 md:w-3/4 p-3">
+                        <select id="question-count-select" class="border border-gray-300 rounded p-1.5 focus:border-[#005b82] outline-none">
+                            <option value="5">5問</option>
+                            <option value="10">10問</option>
+                            <!-- PDF・画像全て網羅した24問 -->
+                            <option value="all" selected>全問（24問）</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">満点</div>
+                    <div id="display-score" class="w-2/3 md:w-3/4 p-3">計算中...</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">合格点数</div>
+                    <div id="display-pass-score" class="w-2/3 md:w-3/4 p-3">計算中...</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">テスト時間</div>
+                    <div id="display-test-time" class="w-2/3 md:w-3/4 p-3">計算中...</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">問題表示区分</div>
+                    <div class="w-2/3 md:w-3/4 p-3">一問題表示</div>
+                </div>
+                <div class="flex border-b border-gray-300">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">問題出題形式</div>
+                    <div class="w-2/3 md:w-3/4 p-3">ランダム</div>
+                </div>
+                <div class="flex">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">再テスト可否区分</div>
+                    <div class="w-2/3 md:w-3/4 p-3">合格後も可</div>
+                </div>
+            </div>
+
+            <div class="mb-8 flex justify-center gap-6 bg-white p-4 rounded border border-gray-200 shadow-sm">
+                <span class="font-bold text-gray-700">解答形式：</span>
+                <label class="flex items-center cursor-pointer">
+                    <input type="radio" name="test-mode" value="descriptive" class="w-4 h-4 text-[#005b82] focus:ring-[#005b82]" checked>
+                    <span class="ml-2 text-gray-800 font-medium">記述式（直接入力）</span>
+                </label>
+                <label class="flex items-center cursor-pointer">
+                    <input type="radio" name="test-mode" value="multiple-choice" class="w-4 h-4 text-[#005b82] focus:ring-[#005b82]">
+                    <span class="ml-2 text-gray-800 font-medium">選択式（ドロップダウン）</span>
+                </label>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-2.5 px-6 rounded shadow transition">
+                    テスト一覧へ
+                </a>
+                <button id="start-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-2.5 px-8 rounded shadow transition">
+                    テスト開始
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= テスト画面 ================= -->
+        <section id="test-screen" class="hidden flex-col md:flex-row gap-4 lg:gap-8 items-start w-full">
+            
+            <!-- デスクトップ用 左サイドバー -->
+            <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-48 shrink-0 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-8">
+                <!-- JSでサイドバーのボタンを生成 -->
+            </div>
+
+            <!-- 右側 メインエリア -->
+            <div class="flex-1 w-full flex flex-col">
+                
+                <!-- ヘッダーバー (レベル3 & 残り時間) -->
+                <div class="bg-[#e2e8f0] p-2 md:p-3 rounded border border-gray-300 mb-4 flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <!-- モバイル用メニューボタン -->
+                        <button id="menu-btn" class="md:hidden p-1.5 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition" aria-label="メニューを開く">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <span class="font-bold text-gray-700 ml-1">レベル3</span>
+                    </div>
+                    <!-- 残り時間表示 -->
+                    <div class="bg-white px-3 md:px-4 py-1 rounded border border-gray-300 font-bold text-gray-800 text-sm md:text-base flex items-center timer-container">
+                        残り時間 <span id="timer-text" class="ml-2 font-mono">00:00</span>
+                    </div>
+                </div>
+
+                <!-- 問題枠 -->
+                <div class="bg-white rounded border border-gray-300 shadow-sm flex flex-col mb-4">
+                    <!-- タイトル -->
+                    <div class="bg-[#e0f2fe] p-3 md:p-4 border-b border-gray-300">
+                        <h2 id="question-number-title" class="text-base md:text-lg font-bold text-gray-800">
+                            【問題 1】<span class="text-sm font-normal ml-2 text-gray-600">（1点）</span>
+                        </h2>
+                    </div>
+                    <!-- 問題文と解答欄 -->
+                    <div class="p-6 md:p-8 flex flex-col gap-6 md:gap-8">
+                        <div id="question-body" class="text-base md:text-lg text-gray-800 leading-relaxed min-h-[60px]">
+                            <!-- JSで生成 -->
+                        </div>
+                        
+                        <!-- 解答エリア (グレー枠) -->
+                        <div class="bg-[#f8fafc] border border-gray-200 rounded p-4 md:p-6">
+                            <p id="input-instruction" class="text-sm text-gray-700 mb-3 font-medium">（　　　）に入る言葉を記述してください：</p>
+                            <div id="input-area">
+                                <!-- JSで input/select を挿入 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- フッターナビゲーション -->
+                <div class="flex justify-between items-center mt-2">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        前へ
+                    </button>
+                    <div class="flex items-center gap-6">
+                        <span id="question-progress" class="text-gray-600 font-bold text-sm md:text-base">1 / 5</span>
+                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-8 rounded shadow-sm transition">
+                            次へ
+                        </button>
+                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-8 rounded shadow-sm transition hidden">
+                            テスト提出
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 確認モーダル ================= -->
+        <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm">
+            <div class="bg-white rounded p-8 max-w-sm w-full shadow-2xl text-center mx-4 border border-gray-200">
+                <p class="text-lg font-bold text-gray-800 mb-8">テストを提出して採点しますか？</p>
+                <div class="flex justify-center gap-4">
+                    <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2.5 px-8 rounded transition">
+                        いいえ
+                    </button>
+                    <button id="modal-submit-btn" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-gray-900 font-bold py-2.5 px-8 rounded transition">
+                        はい
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 結果画面 ================= -->
+        <section id="result-screen" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-10 text-center mb-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
+                <div class="text-5xl font-bold text-[#005b82] mb-4" id="score-display">
+                    -- / --
+                </div>
+                <p id="time-taken" class="text-gray-600 mb-6 font-medium">残り時間: --:--</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-8 mb-8 border border-gray-200">
+                <h3 class="font-bold text-lg border-b border-gray-300 pb-2 mb-4">詳細</h3>
+                <div id="result-details" class="flex flex-col gap-4">
+                    <!-- JSで結果詳細を生成 -->
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition">
+                    テスト一覧へ
+                </a>
+                <button onclick="location.reload();" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-8 rounded shadow transition">
+                    もう一度挑戦する
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- データ定義 ---
+        // 画像5問＋PDF網羅の全24パターン
+        const baseQuestions = [
+            // 画像で提供された5問
+            {
+                title: "学校教育法34条",
+                text: "小学校においては、文部科学大臣の[HOLE]を経た教科用図書又は文部科学省が著作の名義を有する教科用図書を使用しなければならない。",
+                correctAnswer: "検定"
+            },
+            {
+                title: "教育基本法10条1項",
+                text: "父母その他の保護者は、子の教育について[HOLE]を有するものであって、生活のために必要な習慣を身に付けさせるとともに、自立心を育成し、心身の調和のとれた発達を図るよう努めるものとする。",
+                correctAnswer: "第一義的責任"
+            },
+            {
+                title: "日本国憲法第26条 第1項",
+                text: "すべて国民は、法律の定めるところにより、その[HOLE]に応じて、ひとしく教育を受ける権利を有する。",
+                correctAnswer: "能力"
+            },
+            {
+                title: "学校教育法33条",
+                text: "小学校の教育課程に関する事項は、第二十九条及び第三十条の規定に従い、[HOLE]が定める。",
+                correctAnswer: "文部科学大臣"
+            },
+            {
+                title: "教育基本法10条2項",
+                text: "国及び地方公共団体は、家庭教育の[HOLE]を尊重しつつ、保護者に対する学習の機会及び情報の提供その他の家庭教育を支援するために必要な施策を講ずるよう努めなければならない。",
+                correctAnswer: "自主性"
+            },
+            // PDFからの網羅補完分
+            {
+                title: "日本国憲法第26条 第1項",
+                text: "すべて国民は、法律の定めるところにより、その能力に応じて、[HOLE]教育を受ける権利を有する。",
+                correctAnswer: "ひとしく"
+            },
+            {
+                title: "日本国憲法第26条 第2項",
+                text: "すべて国民は、法律の定めるところにより、その保護する[HOLE]に普通教育を受けさせる義務を負ふ。",
+                correctAnswer: "子女"
+            },
+            {
+                title: "日本国憲法第26条 第2項",
+                text: "すべて国民は、法律の定めるところにより、その保護する子女に[HOLE]教育を受けさせる義務を負ふ。",
+                correctAnswer: "普通"
+            },
+            {
+                title: "日本国憲法第26条 第2項",
+                text: "[HOLE]教育は、これを無償とする。",
+                correctAnswer: "義務"
+            },
+            {
+                title: "日本国憲法第26条 第2項",
+                text: "義務教育は、これを[HOLE]とする。",
+                correctAnswer: "無償"
+            },
+            {
+                title: "教育基本法第5条",
+                text: "国民は、その保護する子に、別に法律で定めるところにより、[HOLE]を受けさせる義務を負う",
+                correctAnswer: "普通教育"
+            },
+            {
+                title: "教育基本法第16条 第2項",
+                text: "国は、全国的な[HOLE]と教育水準の維持向上を図るため、教育に関する施策を総合的に策定し、実施しなければならない",
+                correctAnswer: "教育の機会均等"
+            },
+            {
+                title: "教育基本法第16条 第2項",
+                text: "国は、全国的な教育の機会均等と[HOLE]を図るため、教育に関する施策を総合的に策定し、実施しなければならない",
+                correctAnswer: "教育水準の維持向上"
+            },
+            {
+                title: "学校教育法33条",
+                text: "小学校の[HOLE]に関する事項は、第二十九条及び第三十条の規定に従い、文部科学大臣が定める。",
+                correctAnswer: "教育課程"
+            },
+            {
+                title: "教科書の発行に関する臨時措置法2条",
+                text: "この法律において「教科書」とは、小学校、中学校、義務教育学校、高等学校、中等教育学校及びこれらに準ずる学校において、教育課程の構成に応じて[HOLE]された教科の主たる教材として、教授の用に供せられる児童又は生徒用図書であつて、文部科学大臣の検定を経たもの又は文部科学省が著作の名義を有するものをいう。",
+                correctAnswer: "組織排列"
+            },
+            {
+                title: "教科書の発行に関する臨時措置法2条",
+                text: "この法律において「教科書」とは、小学校、中学校、義務教育学校、高等学校、中等教育学校及びこれらに準ずる学校において、教育課程の構成に応じて組織排列された教科の[HOLE]として、教授の用に供せられる児童又は生徒用図書であつて、文部科学大臣の検定を経たもの又は文部科学省が著作の名義を有するものをいう。",
+                correctAnswer: "主たる教材"
+            },
+            {
+                title: "教科書の発行に関する臨時措置法2条",
+                text: "この法律において「教科書」とは、小学校、中学校、義務教育学校、高等学校、中等教育学校及びこれらに準ずる学校において、教育課程の構成に応じて組織排列された教科の主たる教材として、教授の用に供せられる児童又は生徒用図書であつて、文部科学大臣の[HOLE]を経たもの又は文部科学省が著作の名義を有するものをいう。",
+                correctAnswer: "検定"
+            },
+            {
+                title: "義務教育費国庫負担法2条",
+                text: "[HOLE]は、毎年度、各都道府県ごとに、公立の小学校、中学校、義務教育学校、中等教育学校の前期課程並びに特別支援学校の小学部及び中学部に要する経費のうち、次に掲げるものについて、その実支出額の三分の一を負担する。",
+                correctAnswer: "国"
+            },
+            {
+                title: "義務教育費国庫負担法2条",
+                text: "国は、毎年度、各[HOLE]ごとに、公立の小学校、中学校、義務教育学校、中等教育学校の前期課程並びに特別支援学校の小学部及び中学部に要する経費のうち、次に掲げるものについて、その実支出額の三分の一を負担する。",
+                correctAnswer: "都道府県"
+            },
+            {
+                title: "義務教育費国庫負担法2条",
+                text: "国は、毎年度、各都道府県ごとに、公立の小学校、中学校、義務教育学校、中等教育学校の前期課程並びに特別支援学校の小学部及び中学部に要する経費のうち、次に掲げるものについて、その実支出額の[HOLE]を負担する。",
+                correctAnswer: "三分の一",
+                options: ["二分の一", "三分の一", "三分の二", "四分の一", "四分の三"],
+                forceSelect: true // 記述式モードでも強制的にセレクトボックスにする
+            },
+            {
+                title: "教育基本法10条1項",
+                text: "父母その他の保護者は、子の教育について第一義的責任を有するものであって、生活のために必要な[HOLE]を身に付けさせるとともに、自立心を育成し、心身の調和のとれた発達を図るよう努めるものとする。",
+                correctAnswer: "習慣"
+            },
+            {
+                title: "教育基本法10条1項",
+                text: "父母その他の保護者は、子の教育について第一義的責任を有するものであって、生活のために必要な習慣を身に付けさせるとともに、[HOLE]を育成し、心身の調和のとれた発達を図るよう努めるものとする。",
+                correctAnswer: "自立心"
+            },
+            {
+                title: "教育基本法10条2項",
+                text: "国及び地方公共団体は、家庭教育の自主性を尊重しつつ、保護者に対する[HOLE]及び情報の提供その他の家庭教育を支援するために必要な施策を講ずるよう努めなければならない。",
+                correctAnswer: "学習の機会"
+            },
+            {
+                title: "教育基本法10条2項",
+                text: "国及び地方公共団体は、家庭教育の自主性を尊重しつつ、保護者に対する学習の機会及び[HOLE]その他の家庭教育を支援するために必要な施策を講ずるよう努めなければならない。",
+                correctAnswer: "情報の提供"
+            }
+        ];
+
+        // --- 設定値 ---
+        const TIME_PER_QUESTION = 15; // 1問あたりの秒数
+
+        // --- グローバル変数 ---
+        let testMode = 'descriptive'; 
+        let parsedQuestions = [];     
+        let userAnswers = [];         
+        let currentQuestionIndex = 0; 
+        let timerInterval = null;     
+        let totalTimeLimit = 0;
+        let timeLeft = 0;           
+
+        // --- DOM要素 ---
+        const screens = {
+            start: document.getElementById('start-screen'),
+            test: document.getElementById('test-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const els = {
+            qCountSelect: document.getElementById('question-count-select'),
+            displayScore: document.getElementById('display-score'),
+            displayPassScore: document.getElementById('display-pass-score'),
+            displayTestTime: document.getElementById('display-test-time'),
+            
+            menuBtn: document.getElementById('menu-btn'),
+            timerContainer: document.querySelector('.timer-container'),
+            timerText: document.getElementById('timer-text'),
+            drawerOverlay: document.getElementById('drawer-overlay'),
+            drawerMenu: document.getElementById('drawer-menu'),
+            drawerList: document.getElementById('drawer-list'),
+            closeMenuBtn: document.getElementById('close-menu-btn'),
+            
+            desktopSidebar: document.getElementById('desktop-sidebar'),
+            qNumberTitle: document.getElementById('question-number-title'),
+            qBody: document.getElementById('question-body'),
+            inputArea: document.getElementById('input-area'),
+            inputInstruction: document.getElementById('input-instruction'),
+            qProgress: document.getElementById('question-progress'),
+            
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            submitConfirmBtn: document.getElementById('submit-confirm-btn'),
+            
+            submitModal: document.getElementById('submit-modal'),
+            modalCancelBtn: document.getElementById('modal-cancel-btn'),
+            modalSubmitBtn: document.getElementById('modal-submit-btn'),
+            
+            scoreDisplay: document.getElementById('score-display'),
+            timeTaken: document.getElementById('time-taken'),
+            resultDetails: document.getElementById('result-details')
+        };
+
+        // --- 初期化 ---
+        function initApp() {
+            // 出題数選択の変更イベント
+            els.qCountSelect.addEventListener('change', updateStartScreen);
+            updateStartScreen(); // 初期表示の反映
+
+            // イベントリスナー登録
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
+            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            
+            // モーダル関連
+            els.submitConfirmBtn.addEventListener('click', () => {
+                els.submitModal.classList.remove('hidden');
+            });
+            els.modalCancelBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+            });
+            els.modalSubmitBtn.addEventListener('click', () => {
+                els.submitModal.classList.add('hidden');
+                finishTest();
+            });
+            
+            els.menuBtn.addEventListener('click', openDrawer);
+            els.closeMenuBtn.addEventListener('click', closeDrawer);
+            els.drawerOverlay.addEventListener('click', closeDrawer);
+        }
+
+        // --- スタート画面の表示更新 ---
+        function updateStartScreen() {
+            const val = els.qCountSelect.value;
+            const count = val === 'all' ? baseQuestions.length : parseInt(val, 10);
+            
+            els.displayScore.textContent = `${count}点`;
+            els.displayPassScore.textContent = `${count}点`;
+            
+            totalTimeLimit = count * TIME_PER_QUESTION;
+            const minutes = Math.floor(totalTimeLimit / 60);
+            const seconds = totalTimeLimit % 60;
+            els.displayTestTime.textContent = `${minutes}分${seconds > 0 ? seconds + '秒' : ''}`;
+        }
+
+        // --- テスト開始処理 ---
+        function startTest() {
+            const modeRadios = document.getElementsByName('test-mode');
+            for (const radio of modeRadios) {
+                if (radio.checked) testMode = radio.value;
+            }
+
+            generateQuestions();
+
+            if (parsedQuestions.length === 0) {
+                alert("出題可能な問題がありません。");
+                return;
+            }
+
+            screens.start.classList.add('hidden');
+            screens.test.classList.remove('hidden');
+            screens.test.classList.add('flex');
+
+            currentQuestionIndex = 0;
+            renderQuestion(currentQuestionIndex);
+            updateNavigations();
+            
+            startTimer();
+        }
+
+        // --- 問題データの生成 ---
+        function generateQuestions() {
+            parsedQuestions = [];
+            userAnswers = [];
+
+            // すべての正解リスト（ダミー選択肢生成用）
+            const allAnswersArray = Array.from(new Set(baseQuestions.map(q => q.correctAnswer)));
+
+            const val = els.qCountSelect.value;
+            const count = val === 'all' ? baseQuestions.length : parseInt(val, 10);
+
+            // 問題をランダムにシャッフルして指定数取得
+            const shuffledData = [...baseQuestions].sort(() => Math.random() - 0.5);
+            const selectedData = shuffledData.slice(0, count);
+
+            selectedData.forEach((q) => {
+                let options = [];
+                if (q.options) {
+                    // 専用の選択肢（分数の問題など）が定義されていればそれを使用
+                    options = [...q.options];
+                } else {
+                    // 定義がなければ正解＋ランダムなダミー3つで4択を作成
+                    options = [q.correctAnswer];
+                    const dummyOptions = allAnswersArray.filter(a => a !== q.correctAnswer).sort(() => Math.random() - 0.5);
+                    options = options.concat(dummyOptions.slice(0, 3)); 
+                    options.sort(() => Math.random() - 0.5); 
+                }
+
+                parsedQuestions.push({
+                    title: q.title,
+                    text: q.text,
+                    correctAnswer: q.correctAnswer,
+                    options: options,
+                    forceSelect: q.forceSelect || false
+                });
+                
+                userAnswers.push(""); 
+            });
+        }
+
+        // --- 問題の描画 ---
+        function renderQuestion(index) {
+            const q = parsedQuestions[index];
+            
+            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-sm ml-2 font-normal text-gray-700">（1点）</span>`;
+            // プレースホルダー [HOLE] を（　　　）に置換して表示
+            const displayText = q.text.replace('[HOLE]', `<span class="font-bold px-1">（　　　）</span>`).replace(/\n/g, '<br>');
+            els.qBody.innerHTML = displayText;
+            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+
+            // 解答枠の生成
+            els.inputArea.innerHTML = '';
+            
+            // 記述式モードであっても、forceSelectがtrueならプルダウンを強制
+            if (testMode === 'descriptive' && !q.forceSelect) {
+                els.inputInstruction.textContent = "（　　　）に入る言葉を記述してください：";
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'blank-input';
+                input.value = userAnswers[index];
+                
+                input.addEventListener('input', (e) => {
+                    userAnswers[index] = e.target.value;
+                    updateNavigations();
+                });
+                els.inputArea.appendChild(input);
+            } else {
+                els.inputInstruction.textContent = "（　　　）に入る言葉を選択してください：";
+                const select = document.createElement('select');
+                select.className = 'blank-select';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.textContent = "選択してください";
+                select.appendChild(defaultOption);
+
+                q.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    if (userAnswers[index] === opt) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', (e) => {
+                    userAnswers[index] = e.target.value;
+                    updateNavigations();
+                });
+                els.inputArea.appendChild(select);
+            }
+
+            // ボタンの表示制御
+            els.prevBtn.disabled = index === 0;
+            if (index === parsedQuestions.length - 1) {
+                els.nextBtn.classList.add('hidden');
+                els.submitConfirmBtn.classList.remove('hidden');
+            } else {
+                els.nextBtn.classList.remove('hidden');
+                els.submitConfirmBtn.classList.add('hidden');
+            }
+        }
+
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion(currentQuestionIndex);
+                updateNavigations(); 
+            }
+        }
+
+        // --- UIの更新 ---
+        function updateNavigations() {
+            updateSidebarList();
+            updateDrawerList();
+        }
+
+        function updateSidebarList() {
+            els.desktopSidebar.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const button = document.createElement('button');
+                const isActive = idx === currentQuestionIndex;
+                
+                let baseClass = "text-center px-4 py-2.5 rounded font-medium transition border text-sm md:text-base shadow-sm ";
+                if (isActive) {
+                    baseClass += "bg-[#bfdbfe] text-black border-[#93c5fd]"; 
+                } else {
+                    baseClass += "bg-[#e2e8f0] text-gray-700 border-[#cbd5e1] hover:bg-[#cbd5e1]";
+                }
+                
+                button.className = baseClass;
+                button.innerHTML = `【問題${idx + 1}】`;
+                
+                button.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    updateNavigations();
+                });
+                
+                els.desktopSidebar.appendChild(button);
+            });
+        }
+
+        function updateDrawerList() {
+            els.drawerList.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentQuestionIndex;
+                
+                li.className = `p-3 mb-1 rounded cursor-pointer transition ${isActive ? 'bg-[#bfdbfe] font-bold text-black border border-[#93c5fd]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
+                li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
+                
+                li.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    closeDrawer(); 
+                    updateNavigations();
+                });
+                
+                els.drawerList.appendChild(li);
+            });
+        }
+
+        function openDrawer() {
+            els.drawerMenu.classList.remove('-translate-x-full');
+            els.drawerOverlay.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            els.drawerMenu.classList.add('-translate-x-full');
+            els.drawerOverlay.classList.add('hidden');
+        }
+
+        // --- タイマー処理 ---
+        function startTimer() {
+            timeLeft = totalTimeLimit; 
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 10) {
+                    els.timerContainer.classList.add('text-red-600');
+                    els.timerContainer.classList.remove('text-gray-800');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    els.submitModal.classList.add('hidden'); // モーダルが開いていれば閉じる
+                    alert("制限時間終了です！自動的に採点します。");
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(Math.max(0, timeLeft) / 60).toString().padStart(2, '0');
+            const s = (Math.max(0, timeLeft) % 60).toString().padStart(2, '0');
+            els.timerText.textContent = `${m}:${s}`;
+        }
+
+        function normalizeString(str) {
+            if (!str) return "";
+            return str.replace(/[\s　]/g, '').toLowerCase();
+        }
+
+        // --- テスト終了・採点処理 ---
+        function finishTest() {
+            clearInterval(timerInterval);
+            
+            let correctCount = 0;
+            els.resultDetails.innerHTML = '';
+
+            parsedQuestions.forEach((q, idx) => {
+                const userAnswer = userAnswers[idx];
+                const isCorrect = normalizeString(userAnswer) === normalizeString(q.correctAnswer);
+                if (isCorrect) correctCount++;
+
+                const resultCard = document.createElement('div');
+                resultCard.className = `p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
+                
+                const icon = isCorrect 
+                    ? `<span class="text-green-600 font-bold text-lg">○ 正解</span>` 
+                    : `<span class="text-red-600 font-bold text-lg">× 不正解</span>`;
+
+                // 正解を埋め込んだテキストを生成
+                const correctHtmlText = q.text.replace('[HOLE]', `<span class="font-bold border-b-2 border-gray-400 px-1 text-black">（ ${q.correctAnswer} ）</span>`).replace(/\n/g, '<br>');
+
+                resultCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-gray-800">問題 ${idx + 1}: <span class="text-sm font-normal text-gray-600">${q.title}</span></h4>
+                        ${icon}
+                    </div>
+                    <div class="text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2">
+                        ${correctHtmlText}
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-sm mt-2">
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            <span class="text-gray-500 block text-xs">あなたの解答</span>
+                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}">${userAnswer || '（未解答）'}</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            <span class="text-gray-500 block text-xs">正解</span>
+                            <span class="font-bold text-blue-700">${q.correctAnswer}</span>
+                        </div>
+                    </div>
+                `;
+                els.resultDetails.appendChild(resultCard);
+            });
+
+            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
+            
+            const timeTakenSec = totalTimeLimit - Math.max(0, timeLeft);
+            const tm = Math.floor(timeTakenSec / 60);
+            const ts = timeTakenSec % 60;
+            els.timeTaken.textContent = `所要時間: ${tm}分 ${ts}秒`;
+
+            screens.test.classList.add('hidden');
+            screens.test.classList.remove('flex');
+            screens.result.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>
