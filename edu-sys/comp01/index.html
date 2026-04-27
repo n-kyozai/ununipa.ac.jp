@@ -3,400 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育制度論 対策テスト</title>
+    <title>教育制度論 総合01</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ヘッダーやアクセントのカラー（テスト一覧に合わせる） */
+        /* ヘッダーやアクセントのカラー（過去のメニューを踏襲） */
         .header-bg { background-color: #005662; }
         
-        /* ドロワーメニューのアニメーション用 */
-        #drawer { transition: transform 0.3s ease-in-out; }
-        .drawer-open { transform: translateX(0); }
-        .drawer-closed { transform: translateX(-100%); }
+        /* タイマー枠の固定（ガタつき防止） */
+        .timer-box {
+            min-width: 80px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
 
-        /* タイマー枠固定・ガタつき防止 */
-        .timer-fixed {
-            font-variant-numeric: tabular-nums; /* 数字の幅を等幅にする */
-            min-width: 5rem; /* 枠の幅を固定 */
+        /* 記述式の入力欄スタイル */
+        .blank-input {
+            border: none;
+            border-bottom: 2px solid #005662;
+            background-color: #e5f1f4;
+            padding: 2px 8px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            outline: none;
+            transition: background-color 0.2s, border-color 0.2s;
+            width: 140px;
+            border-radius: 4px 4px 0 0;
+        }
+        .blank-input:focus {
+            background-color: #cce3e8;
+            border-bottom-color: #003d46;
+        }
+
+        /* 選択式のセレクトボックススタイル */
+        .blank-select {
+            border: 2px solid #005662;
+            background-color: #fff;
+            padding: 2px 24px 2px 8px;
+            font-weight: bold;
+            color: #333;
+            outline: none;
+            border-radius: 4px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23005662' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
+            background-size: 16px;
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
 
     <!-- ヘッダー -->
-    <header class="header-bg text-white p-4 flex justify-between items-center fixed w-full z-30 top-0 shadow-md">
-        <div class="flex items-center gap-3">
-            <!-- ハンバーガーボタン -->
-            <button id="menu-btn" class="p-2 text-white focus:outline-none hover:bg-white hover:bg-opacity-20 rounded transition" aria-label="メニューを開く">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    <header class="header-bg text-white shadow-md fixed top-0 left-0 w-full z-30 h-16 flex items-center justify-between px-4">
+        <!-- 左側：ハンバーガーメニュー（スタート画面では非表示） -->
+        <div class="w-16">
+            <button id="menu-btn" class="hidden p-2 rounded hover:bg-white hover:bg-opacity-20 transition" aria-label="メニューを開く">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
-            <h1 class="text-lg md:text-xl font-bold">教育制度論 対策</h1>
         </div>
-        <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="text-sm underline hover:text-gray-300 transition">テスト一覧へ</a>
+
+        <!-- 中央：タイトル -->
+        <h1 class="text-lg md:text-xl font-bold text-center flex-1 whitespace-nowrap overflow-hidden text-ellipsis">
+            教育制度論 総合01
+        </h1>
+
+        <!-- 右側：タイマー（スタート画面では非表示） -->
+        <div class="w-16 flex justify-end">
+            <div id="timer-container" class="hidden flex items-center bg-black bg-opacity-30 rounded px-2 py-1 timer-box text-sm md:text-base font-mono">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="timer-text">02:00</span>
+            </div>
+        </div>
     </header>
 
-    <!-- ドロワーメニュー -->
-    <div id="drawer" class="drawer-closed fixed top-0 left-0 h-full w-64 bg-white shadow-2xl z-40 pt-16 flex flex-col">
-        <div class="p-4 bg-gray-100 border-b flex justify-between items-center">
-            <span class="font-bold text-gray-700">問題リスト</span>
-            <button id="close-drawer-btn" class="text-gray-500 hover:text-gray-800 font-bold p-2">&times;</button>
-        </div>
-        <ul id="drawer-list" class="p-4 flex-grow overflow-y-auto space-y-2">
-            <!-- JSで問題リストが生成されます -->
-        </ul>
-    </div>
-    <!-- ドロワー用オーバーレイ（背景の暗転） -->
-    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 pt-16"></div>
+    <!-- ドロワーメニュー用オーバーレイ -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
 
-    <!-- メインコンテンツ -->
-    <main class="flex-grow pt-20 p-4 w-full max-w-3xl mx-auto flex flex-col items-center">
+    <!-- ドロワーメニュー本体 -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="header-bg text-white p-4 flex justify-between items-center">
+            <span class="font-bold text-lg">問題リスト</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2">
+            <!-- JSでリストを生成 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="flex-1 pt-20 pb-8 px-4 md:px-8 max-w-4xl mx-auto w-full">
         
         <!-- ================= スタート画面 ================= -->
-        <div id="start-screen" class="bg-white p-6 md:p-10 rounded-lg shadow-lg w-full mt-4">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6 border-b-2 border-blue-500 pb-2 inline-block w-full">総合テスト開始</h2>
-            
-            <div class="mb-8">
-                <p class="text-gray-600 mb-4 font-bold">出題形式を選択してください</p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <label class="flex-1 cursor-pointer border-2 border-gray-200 rounded-lg p-4 flex items-center hover:bg-blue-50 transition">
-                        <input type="radio" name="test-mode" value="written" class="form-radio h-5 w-5 text-blue-600" checked>
-                        <span class="ml-3 font-bold text-gray-700">記述式（入力）</span>
+        <section id="start-screen" class="bg-white rounded-lg shadow-md p-6 md:p-10 text-center mt-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">総合テスト01</h2>
+            <p class="text-gray-600 mb-8 text-sm md:text-base text-left">
+                ・問題はランダムに出題されます。<br>
+                ・1つの問題につき、穴埋め箇所は1つです（解くたびにランダムに変わります）。<br>
+                ・制限時間は <strong>2分間</strong> です。
+            </p>
+
+            <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-8 max-w-md mx-auto text-left">
+                <h3 class="font-bold text-gray-700 mb-3 border-b pb-2">解答形式の選択</h3>
+                <div class="flex flex-col gap-3">
+                    <label class="flex items-center cursor-pointer p-2 rounded hover:bg-gray-100 transition">
+                        <input type="radio" name="test-mode" value="descriptive" class="w-5 h-5 text-teal-600 focus:ring-teal-500" checked>
+                        <span class="ml-3 text-gray-800 font-medium">記述式（直接入力）</span>
                     </label>
-                    <label class="flex-1 cursor-pointer border-2 border-gray-200 rounded-lg p-4 flex items-center hover:bg-blue-50 transition">
-                        <input type="radio" name="test-mode" value="choice" class="form-radio h-5 w-5 text-blue-600">
-                        <span class="ml-3 font-bold text-gray-700">選択式（ドロップダウン）</span>
+                    <label class="flex items-center cursor-pointer p-2 rounded hover:bg-gray-100 transition">
+                        <input type="radio" name="test-mode" value="multiple-choice" class="w-5 h-5 text-teal-600 focus:ring-teal-500">
+                        <span class="ml-3 text-gray-800 font-medium">選択式（ドロップダウン）</span>
                     </label>
                 </div>
-                <p class="text-sm text-gray-500 mt-3">※ 問題はランダムな順番で出題されます。</p>
             </div>
 
-            <div class="text-center">
-                <button id="start-btn" class="bg-[#005662] hover:bg-[#00424b] text-white font-bold py-3 px-12 rounded-full shadow-md transition-colors text-lg">
-                    テストを開始する
-                </button>
-            </div>
-        </div>
+            <button id="start-btn" class="header-bg hover:bg-teal-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transform transition hover:scale-105 text-lg">
+                テスト開始
+            </button>
+        </section>
 
         <!-- ================= テスト画面 ================= -->
-        <div id="test-screen" class="hidden bg-white p-5 md:p-8 rounded-lg shadow-lg w-full mt-4">
-            <!-- 情報ヘッダー -->
-            <div class="flex justify-between items-center mb-6 pb-2 border-b border-gray-200">
-                <div>
-                    <span id="progress-info" class="text-sm font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">問 1 / 3</span>
-                    <h2 id="question-title" class="text-xl font-bold mt-2 text-gray-800"></h2>
+        <section id="test-screen" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-8 mb-6 relative">
+                <!-- 問題番号と進捗 -->
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 id="question-number" class="text-xl font-bold text-teal-700">問題 1</h2>
+                    <span id="question-progress" class="text-sm font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">1 / 2</span>
                 </div>
-                <!-- タイマー（枠固定） -->
-                <div class="bg-gray-800 text-white px-3 py-2 rounded-lg flex flex-col items-center shadow-inner">
-                    <span class="text-xs text-gray-300">TIME</span>
-                    <div id="timer-display" class="font-mono text-xl md:text-2xl font-bold timer-fixed text-center">00:00</div>
+
+                <!-- 問題タイトル -->
+                <h3 id="question-title" class="text-lg font-bold text-gray-800 mb-4 bg-blue-50 border-l-4 border-blue-500 p-2"></h3>
+
+                <!-- 問題文（ここに穴埋めが展開される） -->
+                <div id="question-body" class="text-base md:text-lg text-gray-700 leading-relaxed min-h-[150px] mb-6">
+                    <!-- JSで生成 -->
                 </div>
             </div>
 
-            <!-- 問題文エリア -->
-            <div id="question-area" class="text-base md:text-lg leading-relaxed text-gray-700 mb-8 py-4">
-                <!-- JSで問題文と入力欄が生成されます -->
-            </div>
-
-            <!-- アクションエリア -->
-            <div class="text-center">
-                <div id="result-message" class="mb-4 font-bold text-lg h-8"></div>
-                
-                <button id="check-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-10 rounded shadow transition-colors text-lg">
-                    判定する
+            <!-- 操作ボタン -->
+            <div class="flex justify-between items-center">
+                <button id="prev-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded shadow transition hidden">
+                    前へ
                 </button>
-                <button id="next-btn" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded shadow transition-colors text-lg">
-                    次の問題へ
+                <div class="flex-1"></div>
+                <button id="next-btn" class="header-bg hover:bg-teal-700 text-white font-bold py-2 px-8 rounded shadow transition">
+                    次へ
+                </button>
+                <button id="submit-btn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-8 rounded shadow transition hidden">
+                    採点する
                 </button>
             </div>
-        </div>
+        </section>
 
         <!-- ================= 結果画面 ================= -->
-        <div id="result-screen" class="hidden bg-white p-6 md:p-10 rounded-lg shadow-lg w-full mt-4 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 mb-4">テスト完了！</h2>
-            <div class="bg-gray-100 p-6 rounded-lg mb-8 inline-block">
-                <p class="text-gray-600 mb-2">クリアタイム</p>
-                <p id="final-time" class="font-mono text-4xl font-bold text-[#005662]">00:00</p>
+        <section id="result-screen" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-10 text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
+                <div class="text-5xl font-bold text-teal-600 mb-4" id="score-display">
+                    -- / --
+                </div>
+                <p id="time-taken" class="text-gray-600 mb-6">残り時間: --:--</p>
             </div>
-            
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button id="retry-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded shadow transition-colors">
-                    設定に戻ってやり直す
-                </button>
-                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#005662] hover:bg-[#00424b] text-white font-bold py-3 px-6 rounded shadow transition-colors inline-block">
-                    テスト一覧へ戻る
+
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-8 mb-6">
+                <h3 class="font-bold text-lg border-b pb-2 mb-4">詳細</h3>
+                <div id="result-details" class="flex flex-col gap-4">
+                    <!-- JSで結果詳細を生成 -->
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="inline-block header-bg hover:bg-teal-700 text-white font-bold py-3 px-8 rounded shadow transition">
+                    テスト一覧メニューに戻る
                 </a>
             </div>
-        </div>
+        </section>
 
     </main>
 
     <script>
-        // --- データ定義 ---
-        // {0}, {1} の部分が穴埋めになります
-        const originalQuestions = [
+        /**
+         * 【データ定義】
+         * 出題元データ。提供されたテキストをベースに構築。
+         */
+        const rawData = [
             {
-                id: "q1",
-                title: "日本国憲法 26条 第1項",
-                text: "すべて国民は、法律の定めるところにより、その{0}に応じて、{1}教育を受ける権利を有する。",
-                answers: ["能力", "ひとしく"]
+                title: "日本国憲法26条",
+                text: "すべて国民は、法律の定めるところにより、その（　能力　）に応じて、（　ひとしく　）教育を受ける権利を有する。\n②すべて国民は、法律の定めるところにより、その保護する（　子女　）に（　普通　）教育を受けさせる義務を負ふ。（　義務　）教育は、これを（　無償　）とする。"
             },
             {
-                id: "q2",
-                title: "日本国憲法 26条 第2項",
-                text: "すべて国民は、法律の定めるところにより、その保護する{0}に{1}教育を受けさせる義務を負ふ。{2}教育は、これを{3}とする。",
-                answers: ["子女", "普通", "義務", "無償"]
-            },
-            {
-                id: "q3",
-                title: "教育基本法 5条",
-                text: "国民は、その保護する子に、別に法律で定めるところにより、{0}を受けさせる義務を負う。",
-                answers: ["普通教育"]
+                title: "教育基本法5条",
+                text: "国民は、その保護する子に、別に法律で定めるところにより、（　普通教育　）を受けさせる義務を負う"
             }
         ];
 
-        // 選択式用のダミー選択肢プール
-        const dummyChoices = [
-            "能力", "ひとしく", "子女", "普通", "義務", "無償", "普通教育", 
-            "個性", "平等", "児童", "専門", "権利", "有償", "国民", "人間性", "保護者"
-        ];
-
-        // --- 状態管理 ---
-        let currentQuestions = [];
-        let currentIndex = 0;
-        let testMode = 'written'; // 'written' | 'choice'
-        let timerInterval;
-        let timeElapsed = 0;
-        let isAnswered = false; // 現在の問題を正解したか
+        // --- グローバル変数 ---
+        let testMode = 'descriptive'; // 'descriptive' or 'multiple-choice'
+        let parsedQuestions = [];     // 実際に出題される問題データの配列
+        let userAnswers = [];         // ユーザーの解答を保持
+        let currentQuestionIndex = 0; // 現在表示中の問題インデックス
+        let timerInterval = null;     // タイマーのID
+        let timeLeft = 120;           // 制限時間（秒）
 
         // --- DOM要素 ---
-        const ui = {
-            drawer: document.getElementById('drawer'),
-            drawerOverlay: document.getElementById('drawer-overlay'),
+        const screens = {
+            start: document.getElementById('start-screen'),
+            test: document.getElementById('test-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const els = {
             menuBtn: document.getElementById('menu-btn'),
-            closeDrawerBtn: document.getElementById('close-drawer-btn'),
+            timerContainer: document.getElementById('timer-container'),
+            timerText: document.getElementById('timer-text'),
+            drawerOverlay: document.getElementById('drawer-overlay'),
+            drawerMenu: document.getElementById('drawer-menu'),
             drawerList: document.getElementById('drawer-list'),
-            startScreen: document.getElementById('start-screen'),
-            testScreen: document.getElementById('test-screen'),
-            resultScreen: document.getElementById('result-screen'),
-            startBtn: document.getElementById('start-btn'),
-            progressInfo: document.getElementById('progress-info'),
-            questionTitle: document.getElementById('question-title'),
-            questionArea: document.getElementById('question-area'),
-            checkBtn: document.getElementById('check-btn'),
+            closeMenuBtn: document.getElementById('close-menu-btn'),
+            
+            qNumber: document.getElementById('question-number'),
+            qProgress: document.getElementById('question-progress'),
+            qTitle: document.getElementById('question-title'),
+            qBody: document.getElementById('question-body'),
+            
+            prevBtn: document.getElementById('prev-btn'),
             nextBtn: document.getElementById('next-btn'),
-            resultMessage: document.getElementById('result-message'),
-            timerDisplay: document.getElementById('timer-display'),
-            finalTime: document.getElementById('final-time'),
-            retryBtn: document.getElementById('retry-btn')
+            submitBtn: document.getElementById('submit-btn'),
+            
+            scoreDisplay: document.getElementById('score-display'),
+            timeTaken: document.getElementById('time-taken'),
+            resultDetails: document.getElementById('result-details')
         };
 
-        // --- ユーティリティ関数 ---
-        // 配列をシャッフルする
-        function shuffleArray(array) {
-            const arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+        // --- 初期化 ---
+        function initApp() {
+            // スタートボタン
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            // ナビゲーションボタン
+            els.prevBtn.addEventListener('click', () => navigateQuestion(-1));
+            els.nextBtn.addEventListener('click', () => navigateQuestion(1));
+            els.submitBtn.addEventListener('click', finishTest);
+            
+            // ドロワーメニュー関連
+            els.menuBtn.addEventListener('click', openDrawer);
+            els.closeMenuBtn.addEventListener('click', closeDrawer);
+            els.drawerOverlay.addEventListener('click', closeDrawer);
+        }
+
+        // --- テスト開始処理 ---
+        function startTest() {
+            // モードの取得
+            const modeRadios = document.getElementsByName('test-mode');
+            for (const radio of modeRadios) {
+                if (radio.checked) testMode = radio.value;
             }
-            return arr;
-        }
 
-        // 時間を MM:SS にフォーマット
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const s = (seconds % 60).toString().padStart(2, '0');
-            return `${m}:${s}`;
-        }
+            // 問題データの生成（ランダム化）
+            generateQuestions();
 
-        // --- ドロワーメニュー制御 ---
-        function toggleDrawer(forceClose = false) {
-            const isOpen = ui.drawer.classList.contains('drawer-open');
-            if (isOpen || forceClose) {
-                ui.drawer.classList.remove('drawer-open');
-                ui.drawer.classList.add('drawer-closed');
-                ui.drawerOverlay.classList.add('hidden');
-            } else {
-                ui.drawer.classList.remove('drawer-closed');
-                ui.drawer.classList.add('drawer-open');
-                ui.drawerOverlay.classList.remove('hidden');
+            if (parsedQuestions.length === 0) {
+                alert("出題可能な問題がありません。");
+                return;
             }
+
+            // 画面切り替えとUI設定
+            screens.start.classList.add('hidden');
+            screens.test.classList.remove('hidden');
+            els.menuBtn.classList.remove('hidden');
+            els.timerContainer.classList.remove('hidden');
+
+            currentQuestionIndex = 0;
+            renderQuestion(currentQuestionIndex);
+            updateDrawerList();
+            
+            // タイマー開始
+            startTimer();
         }
 
-        ui.menuBtn.addEventListener('click', () => toggleDrawer());
-        ui.closeDrawerBtn.addEventListener('click', () => toggleDrawer(true));
-        ui.drawerOverlay.addEventListener('click', () => toggleDrawer(true));
+        // --- 問題データの生成（パースとランダム化） ---
+        function generateQuestions() {
+            parsedQuestions = [];
+            userAnswers = [];
 
-        // ドロワー内のリストを生成
-        function updateDrawerList() {
-            ui.drawerList.innerHTML = '';
-            currentQuestions.forEach((q, index) => {
-                const li = document.createElement('li');
-                // 現在選択中の問題はハイライト
-                const activeClass = index === currentIndex ? 'bg-blue-100 border-l-4 border-blue-500 font-bold' : 'hover:bg-gray-100';
-                li.className = `p-3 rounded cursor-pointer transition-colors text-sm text-gray-700 ${activeClass}`;
-                li.textContent = `問${index + 1}: ${q.title}`;
-                li.addEventListener('click', () => {
-                    currentIndex = index;
-                    renderQuestion();
-                    toggleDrawer(true); // 問題を選んだら自動で閉じる
-                });
-                ui.drawerList.appendChild(li);
+            // すべての答えのリストを作成（選択式のダミー用）
+            const allAnswersSet = new Set();
+            const regex = /（\s*(.+?)\s*）/g;
+            rawData.forEach(q => {
+                let match;
+                // RegExpに状態を持たせないよう毎回新しい正規表現を使うか、matchAllを使う
+                const matches = [...q.text.matchAll(/（\s*(.+?)\s*）/g)];
+                matches.forEach(m => allAnswersSet.add(m[1].trim()));
+            });
+            const allAnswersArray = Array.from(allAnswersSet);
+
+            // 問題をランダムにシャッフル
+            const shuffledData = [...rawData].sort(() => Math.random() - 0.5);
+
+            shuffledData.forEach((q, index) => {
+                const matches = [...q.text.matchAll(/（\s*(.+?)\s*）/g)];
+                if (matches.length > 0) {
+                    // 1つの問題につき、ランダムに1つの穴を開ける
+                    const targetIndex = Math.floor(Math.random() * matches.length);
+                    const correctAnswer = matches[targetIndex][1].trim();
+
+                    // HTML文字列の組み立て
+                    let htmlText = q.text;
+                    matches.forEach((m, i) => {
+                        if (i === targetIndex) {
+                            // 穴にする部分（レンダリング時に input/select に置換するためのプレースホルダ）
+                            htmlText = htmlText.replace(m[0], `<span id="input-container-${index}" class="inline-block align-middle mx-1"></span>`);
+                        } else {
+                            // 穴にしない部分は、答えが最初から表示されている状態（太字で強調）
+                            const word = m[1].trim();
+                            htmlText = htmlText.replace(m[0], `<span class="font-bold text-teal-800 border-b-2 border-teal-200 px-1 mx-1 bg-teal-50">${word}</span>`);
+                        }
+                    });
+                    
+                    // 改行コードを <br> に変換
+                    htmlText = htmlText.replace(/\n/g, '<br>');
+
+                    // 選択式の場合のダミー選択肢の生成
+                    let options = [correctAnswer];
+                    const dummyOptions = allAnswersArray.filter(a => a !== correctAnswer).sort(() => Math.random() - 0.5);
+                    options = options.concat(dummyOptions.slice(0, 3)); // 正解1 + ダミー3 = 4択
+                    options.sort(() => Math.random() - 0.5); // 選択肢をシャッフル
+
+                    parsedQuestions.push({
+                        originalTitle: q.title,
+                        htmlText: htmlText,
+                        correctAnswer: correctAnswer,
+                        options: options
+                    });
+                    
+                    userAnswers.push(""); // 解答枠の初期化
+                }
             });
         }
 
-        // --- テスト進行制御 ---
+        // --- 問題の描画 ---
+        function renderQuestion(index) {
+            const q = parsedQuestions[index];
+            
+            els.qNumber.textContent = `問題 ${index + 1}`;
+            els.qProgress.textContent = `${index + 1} / ${parsedQuestions.length}`;
+            els.qTitle.textContent = q.originalTitle;
+            els.qBody.innerHTML = q.htmlText;
 
-        // タイマー開始
+            // 入力欄（input or select）の生成と挿入
+            const container = document.getElementById(`input-container-${index}`);
+            if (container) {
+                if (testMode === 'descriptive') {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'blank-input';
+                    input.placeholder = '解答を入力';
+                    input.value = userAnswers[index];
+                    // ※勝手にキーボードが出ないよう autofocus は設定しない
+                    
+                    input.addEventListener('input', (e) => {
+                        userAnswers[index] = e.target.value;
+                        updateDrawerList(); // ドロワーの解答状況を更新
+                    });
+                    container.appendChild(input);
+                } else {
+                    const select = document.createElement('select');
+                    select.className = 'blank-select';
+                    
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.textContent = "選択してください";
+                    select.appendChild(defaultOption);
+
+                    q.options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        if (userAnswers[index] === opt) {
+                            option.selected = true;
+                        }
+                        select.appendChild(option);
+                    });
+
+                    select.addEventListener('change', (e) => {
+                        userAnswers[index] = e.target.value;
+                        updateDrawerList();
+                    });
+                    container.appendChild(select);
+                }
+            }
+
+            // ボタンの表示制御
+            els.prevBtn.classList.toggle('hidden', index === 0);
+            if (index === parsedQuestions.length - 1) {
+                els.nextBtn.classList.add('hidden');
+                els.submitBtn.classList.remove('hidden');
+            } else {
+                els.nextBtn.classList.remove('hidden');
+                els.submitBtn.classList.add('hidden');
+            }
+        }
+
+        // --- 前/次の問題へ ---
+        function navigateQuestion(step) {
+            const newIndex = currentQuestionIndex + step;
+            if (newIndex >= 0 && newIndex < parsedQuestions.length) {
+                currentQuestionIndex = newIndex;
+                renderQuestion(currentQuestionIndex);
+                updateDrawerList(); // ハイライトの更新
+            }
+        }
+
+        // --- ドロワーメニューの処理 ---
+        function openDrawer() {
+            els.drawerMenu.classList.remove('-translate-x-full');
+            els.drawerOverlay.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            els.drawerMenu.classList.add('-translate-x-full');
+            els.drawerOverlay.classList.add('hidden');
+        }
+
+        function updateDrawerList() {
+            els.drawerList.innerHTML = '';
+            parsedQuestions.forEach((q, idx) => {
+                const li = document.createElement('li');
+                const isActive = idx === currentQuestionIndex;
+                const isAnswered = userAnswers[idx].trim() !== "";
+                
+                li.className = `p-3 mb-1 rounded cursor-pointer transition ${isActive ? 'bg-teal-100 border-l-4 border-teal-600 font-bold' : 'hover:bg-gray-100 border-l-4 border-transparent'}`;
+                
+                const statusBadge = isAnswered 
+                    ? `<span class="ml-2 inline-block bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full align-middle">解答済</span>` 
+                    : '';
+
+                li.innerHTML = `<span class="${isActive ? 'text-teal-800' : 'text-gray-700'}">問題 ${idx + 1}</span> ${statusBadge}`;
+                
+                li.addEventListener('click', () => {
+                    currentQuestionIndex = idx;
+                    renderQuestion(currentQuestionIndex);
+                    closeDrawer(); // 選択後は自動で閉じる
+                    updateDrawerList();
+                });
+                
+                els.drawerList.appendChild(li);
+            });
+        }
+
+        // --- タイマー処理 ---
         function startTimer() {
-            clearInterval(timerInterval);
-            timeElapsed = 0;
-            ui.timerDisplay.textContent = "00:00";
+            timeLeft = 120; // 2分
+            updateTimerDisplay();
+            
             timerInterval = setInterval(() => {
-                timeElapsed++;
-                ui.timerDisplay.textContent = formatTime(timeElapsed);
+                timeLeft--;
+                updateTimerDisplay();
+                
+                // 残り時間が少なくなったら赤くする等の演出
+                if (timeLeft <= 10) {
+                    els.timerContainer.classList.add('text-red-300');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("制限時間終了です！自動的に採点します。");
+                    finishTest();
+                }
             }, 1000);
         }
 
-        // タイマー停止
-        function stopTimer() {
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            els.timerText.textContent = `${m}:${s}`;
+        }
+
+        // --- 文字列の正規化（全角半角スペースや大文字小文字の揺れを吸収） ---
+        function normalizeString(str) {
+            if (!str) return "";
+            // 全角・半角スペースを除去して比較
+            return str.replace(/[\s　]/g, '').toLowerCase();
+        }
+
+        // --- テスト終了・採点処理 ---
+        function finishTest() {
             clearInterval(timerInterval);
-        }
-
-        // テスト開始
-        ui.startBtn.addEventListener('click', () => {
-            // 設定の取得
-            const selectedMode = document.querySelector('input[name="test-mode"]:checked').value;
-            testMode = selectedMode;
-
-            // 問題をランダムにシャッフル
-            currentQuestions = shuffleArray(originalQuestions);
-            currentIndex = 0;
-
-            // 画面の切り替え
-            ui.startScreen.classList.add('hidden');
-            ui.resultScreen.classList.add('hidden');
-            ui.testScreen.classList.remove('hidden');
-
-            startTimer();
-            renderQuestion();
-        });
-
-        // リトライ処理
-        ui.retryBtn.addEventListener('click', () => {
-            ui.resultScreen.classList.add('hidden');
-            ui.startScreen.classList.remove('hidden');
-            stopTimer();
-            ui.timerDisplay.textContent = "00:00";
-        });
-
-        // 問題の描画
-        function renderQuestion() {
-            isAnswered = false;
-            const q = currentQuestions[currentIndex];
             
-            ui.progressInfo.textContent = `問 ${currentIndex + 1} / ${currentQuestions.length}`;
-            ui.questionTitle.textContent = q.title;
-            ui.resultMessage.textContent = "";
-            
-            ui.checkBtn.classList.remove('hidden');
-            ui.nextBtn.classList.add('hidden');
+            let correctCount = 0;
+            els.resultDetails.innerHTML = '';
 
-            let htmlContent = q.text;
-            
-            // 穴埋め部分の置換
-            q.answers.forEach((ans, i) => {
-                let inputElement = "";
-                if (testMode === 'written') {
-                    // 記述式
-                    // autocomplete等をoffにして余計なキーボード予測を防ぐ
-                    inputElement = `<input type="text" id="ans-${i}" class="answer-input border-b-2 border-gray-400 bg-blue-50 focus:border-blue-600 focus:bg-white outline-none px-2 py-1 mx-1 w-24 md:w-32 text-center transition-colors text-gray-800 font-bold" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">`;
-                } else {
-                    // 選択式
-                    // 正解＋ダミー数個を抽出してシャッフル
-                    let optionsPool = dummyChoices.filter(d => d !== ans);
-                    optionsPool = shuffleArray(optionsPool).slice(0, 4); // ダミー4つ
-                    const choices = shuffleArray([ans, ...optionsPool]);
-                    
-                    let optionsHtml = `<option value="">選択</option>`;
-                    choices.forEach(c => {
-                        optionsHtml += `<option value="${c}">${c}</option>`;
-                    });
-                    inputElement = `<select id="ans-${i}" class="answer-input border-2 border-gray-300 rounded px-2 py-1 mx-1 bg-white cursor-pointer font-bold text-gray-700 outline-none focus:border-blue-500">${optionsHtml}</select>`;
-                }
-                htmlContent = htmlContent.replace(`{${i}}`, inputElement);
+            parsedQuestions.forEach((q, idx) => {
+                const userAnswer = userAnswers[idx];
+                // 空白を除去して比較
+                const isCorrect = normalizeString(userAnswer) === normalizeString(q.correctAnswer);
+                if (isCorrect) correctCount++;
+
+                // 詳細結果のHTML生成
+                const resultCard = document.createElement('div');
+                resultCard.className = `p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
+                
+                const icon = isCorrect 
+                    ? `<span class="text-green-600 font-bold text-lg">○ 正解</span>` 
+                    : `<span class="text-red-600 font-bold text-lg">× 不正解</span>`;
+
+                resultCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-gray-800">問題 ${idx + 1}: <span class="text-sm font-normal text-gray-600">${q.originalTitle}</span></h4>
+                        ${icon}
+                    </div>
+                    <div class="text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2">
+                        ${q.htmlText.replace(`<span id="input-container-${idx}" class="inline-block align-middle mx-1"></span>`, `<span class="font-bold border-b-2 border-gray-400 px-1 text-black">（ ${q.correctAnswer} ）</span>`)}
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-sm mt-2">
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            <span class="text-gray-500 block text-xs">あなたの解答</span>
+                            <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}">${userAnswer || '（未解答）'}</span>
+                        </div>
+                        <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            <span class="text-gray-500 block text-xs">正解</span>
+                            <span class="font-bold text-blue-700">${q.correctAnswer}</span>
+                        </div>
+                    </div>
+                `;
+                els.resultDetails.appendChild(resultCard);
             });
 
-            ui.questionArea.innerHTML = htmlContent;
+            // スコアと時間の表示
+            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
             
-            // ドロワーリストのハイライト更新
-            updateDrawerList();
+            const timeTakenSec = 120 - Math.max(0, timeLeft);
+            const tm = Math.floor(timeTakenSec / 60);
+            const ts = timeTakenSec % 60;
+            els.timeTaken.textContent = `所要時間: ${tm}分 ${ts}秒`;
 
-            // 注意: 勝手にキーボードが出ないように、input要素への focus() はあえて行いません。
+            // 画面切り替え
+            screens.test.classList.add('hidden');
+            els.timerContainer.classList.add('hidden');
+            els.menuBtn.classList.add('hidden'); // ヘッダーのメニューボタンも隠す
+            screens.result.classList.remove('hidden');
         }
 
-        // 正誤判定
-        ui.checkBtn.addEventListener('click', () => {
-            const q = currentQuestions[currentIndex];
-            let allCorrect = true;
-
-            q.answers.forEach((ans, i) => {
-                const el = document.getElementById(`ans-${i}`);
-                const userAns = el.value.trim();
-
-                // クラスのリセット
-                el.classList.remove('border-red-500', 'bg-red-100', 'text-red-700', 'border-green-500', 'bg-green-100', 'text-green-800');
-
-                if (userAns === ans) {
-                    el.classList.add('border-green-500', 'bg-green-100', 'text-green-800');
-                    if(testMode === 'written') el.classList.remove('border-gray-400', 'bg-blue-50');
-                    if(testMode === 'choice') el.classList.remove('border-gray-300');
-                    el.disabled = true; // 正解した欄はロック
-                } else {
-                    el.classList.add('border-red-500', 'bg-red-100', 'text-red-700');
-                    allCorrect = false;
-                }
-            });
-
-            if (allCorrect) {
-                ui.resultMessage.textContent = "✅ 正解！";
-                ui.resultMessage.className = "mb-4 font-bold text-xl text-green-600";
-                ui.checkBtn.classList.add('hidden');
-                ui.nextBtn.classList.remove('hidden');
-                isAnswered = true;
-
-                // 最終問題の場合はボタンのテキストを変更
-                if (currentIndex === currentQuestions.length - 1) {
-                    ui.nextBtn.textContent = "結果を見る";
-                    ui.nextBtn.classList.replace('bg-blue-600', 'bg-yellow-500');
-                    ui.nextBtn.classList.replace('hover:bg-blue-700', 'hover:bg-yellow-600');
-                } else {
-                    ui.nextBtn.textContent = "次の問題へ";
-                    ui.nextBtn.classList.replace('bg-yellow-500', 'bg-blue-600');
-                    ui.nextBtn.classList.replace('hover:bg-yellow-600', 'hover:bg-blue-700');
-                }
-            } else {
-                ui.resultMessage.textContent = "❌ 不正解の箇所があります。直して再度判定してください。";
-                ui.resultMessage.className = "mb-4 font-bold text-base md:text-lg text-red-600";
-            }
-        });
-
-        // 次へ進む / 結果表示
-        ui.nextBtn.addEventListener('click', () => {
-            if (currentIndex < currentQuestions.length - 1) {
-                currentIndex++;
-                renderQuestion();
-            } else {
-                // テスト完了
-                stopTimer();
-                ui.testScreen.classList.add('hidden');
-                ui.resultScreen.classList.remove('hidden');
-                ui.finalTime.textContent = formatTime(timeElapsed);
-                // ドロワーも一旦リセットしておく
-                ui.drawerList.innerHTML = '';
-            }
-        });
+        // 初期化実行
+        document.addEventListener('DOMContentLoaded', initApp);
 
     </script>
 </body>
