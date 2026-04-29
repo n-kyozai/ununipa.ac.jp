@@ -6,50 +6,43 @@
     <title>教員採用試験 過去問</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --theme-color: #005662;
-            --theme-bg: #e5f1f4;
-        }
-        /* サイト全体の背景色（スムーズに色が切り替わるようアニメーション追加） */
+        /* カラーテーマを廃止し、最低限のスタイルのみ適用 */
         body {
-            background-color: var(--theme-bg);
-            transition: background-color 0.4s ease;
+            background-color: #f9fafb; /* bg-gray-50 */
         }
-        /* ヘッダーやアクセントのカラー（動的に変化） */
-        .text-theme { color: var(--theme-color); }
-        .bg-theme-soft { background-color: var(--theme-bg); transition: background-color 0.4s ease; }
-        .tab-active { background-color: var(--theme-bg); color: var(--theme-color); border-bottom: 2px solid var(--theme-color); }
-        .tab-inactive { background-color: #f3f4f6; color: #4b5563; }
-        .tab-inactive:hover { background-color: #e5e7eb; }
-        .status-active { background-color: #3b82f6; } /* 公開中（ブルー） */
-        .status-prep { background-color: #9ca3af; }   /* 準備中（グレー） */
-        .hover-theme:hover { color: var(--theme-color); }
-        .hover-row-theme:hover { background-color: var(--theme-bg); }
+        
+        /* トップへ戻るボタンのアニメーション用 */
+        #scrollTopBtn {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #scrollTopBtn.show {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
-<!-- bg-gray-50を削除し、bodyの背景色はCSSで制御 -->
 <body class="text-gray-800 font-sans min-h-screen p-2 sm:p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden p-3 md:p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden p-3 md:p-6 mb-16">
         <div class="flex-grow pb-4 overflow-y-auto">
-            <h1 class="text-lg md:text-xl font-bold mb-3 pb-2 border-b border-gray-300 flex justify-between items-end text-theme">
-                <span>教員採用試験 過去問</span>
+            <h1 class="text-lg md:text-xl font-bold mb-4 pb-2 border-b-2 border-[#005662] flex justify-between items-end text-[#005662]">
+                <span>教員採用試験 過去問 一覧</span>
             </h1>
 
-            <!-- タブメニュー（年度切り替え） -->
-            <div class="flex flex-wrap gap-1 mb-3 border-b border-gray-200" id="tabs-container">
-                <!-- JavaScriptでタブが生成されます -->
+            <!-- 自治体ジャンプボタン（元タブメニューの位置） -->
+            <div class="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-200" id="scroll-buttons-container">
+                <!-- JavaScriptでジャンプボタンが生成されます -->
             </div>
 
             <!-- PDF一覧テーブル -->
-            <!-- モバイル表示に最適化するため、横スクロールをなくし画面幅にフィットさせます -->
             <div class="w-full shadow-sm rounded-md overflow-hidden border border-gray-300">
                 <table class="w-full text-xs md:text-sm border-collapse bg-white">
-                    <!-- ヘッダーの背景色をテーマカラー(薄い色)に連動 -->
-                    <thead class="bg-theme-soft text-gray-800 text-center border-b border-gray-300">
+                    <thead class="bg-gray-100 text-gray-800 text-center border-b border-gray-300">
                         <tr>
                             <!-- モバイルでは縦並び、PCでは横並びになるセル -->
-                            <th class="border-b border-gray-300 p-2 md:p-3 font-medium text-left">自治体 / 試験科目</th>
+                            <th class="border-b border-gray-300 p-2 md:p-3 font-medium text-left">自治体 / 試験科目 (年度)</th>
                             <th class="border-b border-l border-gray-300 p-2 md:p-3 font-medium w-16 md:w-24">PDF</th>
                             <th class="border-b border-l border-gray-300 p-2 md:p-3 font-medium w-20 md:w-28">状況</th>
                         </tr>
@@ -60,19 +53,18 @@
                 </table>
             </div>
 
-            <!-- ページネーション（件数表示用）の背景色も連動させる -->
-            <div class="bg-theme-soft p-1.5 md:p-2 mt-0 flex justify-center items-center text-xs md:text-sm text-gray-700 rounded-b-md border border-t-0 border-gray-300 font-medium">
+            <!-- ページネーション（全件数表示用） -->
+            <div class="bg-gray-100 p-1.5 md:p-2 flex justify-center items-center text-xs md:text-sm text-gray-600 rounded-b-md border border-t-0 border-gray-300 font-medium">
                 <span id="pagination-info">0件</span>
             </div>
 
             <!-- Google Drive リンク -->
-            <div class="mt-6 flex justify-center">
+            <div class="mt-8 flex justify-center">
                 <a href="https://drive.google.com/drive/folders/16VyTyWeon9yuIweCsauZR9Ym7gINHA_D?usp=drive_link" 
                    target="_blank" 
                    rel="noopener noreferrer"
-                   class="inline-flex items-center gap-1.5 px-4 py-2 md:px-6 md:py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 hover-theme transition-colors font-medium text-xs md:text-sm text-gray-700 group">
-                    <!-- フォルダアイコン -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 text-gray-500 group-hover:text-[var(--theme-color)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   class="inline-flex items-center gap-1.5 px-4 py-2 md:px-6 md:py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-colors font-medium text-xs md:text-sm text-gray-700 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 text-gray-500 group-hover:text-blue-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                     </svg>
                     関連資料用フォルダ
@@ -80,6 +72,14 @@
             </div>
         </div>
     </div>
+
+    <!-- 画面上部へスクロールするボタン -->
+    <button id="scrollTopBtn" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-blue-600 hover:bg-blue-800 text-white p-3 md:p-4 rounded-full shadow-lg transition-colors z-50 flex items-center justify-center" aria-label="上部へスクロール">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- 上向きの矢印（シンプル図形） -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
 
     <script>
         const allPdfsData = [
@@ -126,74 +126,82 @@
             { year: "2024年度('23年実施)", prefecture: '佐賀県', subject: '中・高社会', status: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/kyosai-pdf/%E3%80%90%E4%BD%90%E8%B3%80%E7%9C%8C%E3%80%912024%E5%B9%B4%E5%BA%A6(2023%E5%B9%B4%E5%AE%9F%E6%96%BD)%E6%95%99%E5%93%A1%E6%8E%A1%E7%94%A8%E8%A9%A6%E9%A8%93%EF%BC%BB%E4%B8%AD%E3%83%BB%E9%AB%98%E7%A4%BE%E4%BC%9A%EF%BC%BD.pdf' }
         ];
 
-        // タブとして表示する年度とテーマカラーのリスト
-        const tabYearsData = [
-            { year: "2026年度('25年実施)", color: "#1e40af", bg: "#bfdbfe" }, // 濃く強いブルー (blue-800 / blue-200)
-            { year: "2025年度('24年実施)", color: "#9a3412", bg: "#fed7aa" }, // 濃く強いオレンジ (orange-800 / orange-200)
-            { year: "2024年度('23年実施)", color: "#166534", bg: "#bbf7d0" }  // 濃く強いグリーン (green-800 / green-200)
-        ];
-        let currentYearData = tabYearsData[0];
+        // 並び順を指定（この順で自治体がグループ化されます）
+        const prefOrder = ['山口県', '福岡県', '福岡市', '北九州市', '佐賀県'];
 
         function init() {
-            applyThemeColor();
-            renderTabs();
-            renderTable(currentYearData.year);
+            // データを 自治体順 ＞ 科目順 ＞ 年度降順 でソート
+            allPdfsData.sort((a, b) => {
+                if (prefOrder.indexOf(a.prefecture) !== prefOrder.indexOf(b.prefecture)) {
+                    return prefOrder.indexOf(a.prefecture) - prefOrder.indexOf(b.prefecture);
+                }
+                if (a.subject !== b.subject) {
+                    return a.subject.localeCompare(b.subject);
+                }
+                // 年度（2026, 2025, 2024...）を降順でソート
+                return b.year.localeCompare(a.year);
+            });
+
+            renderScrollButtons();
+            renderTable();
+            setupScrollTopButton();
         }
 
-        // 選択された年度に合わせてCSS変数を更新
-        function applyThemeColor() {
-            document.documentElement.style.setProperty('--theme-color', currentYearData.color);
-            document.documentElement.style.setProperty('--theme-bg', currentYearData.bg);
-        }
+        // 自治体へのジャンプボタンを生成
+        function renderScrollButtons() {
+            const container = document.getElementById('scroll-buttons-container');
+            container.innerHTML = '';
 
-        function renderTabs() {
-            const tabsContainer = document.getElementById('tabs-container');
-            tabsContainer.innerHTML = '';
-
-            tabYearsData.forEach(data => {
+            prefOrder.forEach(pref => {
                 const button = document.createElement('button');
-                const isActive = data.year === currentYearData.year;
+                button.className = 'px-3 py-1.5 md:px-4 md:py-2 text-[11px] md:text-sm font-medium rounded border border-gray-300 bg-white hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 text-gray-700 transition-colors shadow-sm';
+                button.textContent = pref;
                 
-                // モバイル向けにパディングと文字サイズを縮小
-                button.className = `px-2 py-1.5 md:px-4 md:py-2 text-[11px] md:text-sm font-bold rounded-t-md transition-colors ${isActive ? 'tab-active' : 'tab-inactive border-transparent border-b-2'}`;
-                button.textContent = data.year;
-                
+                // クリックで該当する自治体の行へスクロール
                 button.onclick = () => {
-                    currentYearData = data;
-                    applyThemeColor();
-                    renderTabs();
-                    renderTable(data.year);
+                    const targetRow = document.getElementById(`pref-${pref}`);
+                    if (targetRow) {
+                        // テーブルのヘッダーや画面の余白を考慮して少し上にオフセット
+                        const offsetPosition = targetRow.getBoundingClientRect().top + window.scrollY - 60;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
                 };
                 
-                tabsContainer.appendChild(button);
+                container.appendChild(button);
             });
         }
 
-        function renderTable(selectedYear) {
+        // 全データを1つのテーブルに描画
+        function renderTable() {
             const tbody = document.getElementById('pdf-list-body');
             tbody.innerHTML = '';
 
-            const filteredData = allPdfsData.filter(item => item.year === selectedYear);
             let prevPrefecture = "";
 
-            filteredData.forEach((item) => {
+            allPdfsData.forEach((item) => {
                 const tr = document.createElement('tr');
-                // ホバー時の背景色をテーマカラーに連動するクラス(hover-row-theme)に変更
-                tr.className = "hover-row-theme transition-colors border-b border-gray-200 last:border-b-0";
+                tr.className = "hover:bg-blue-50/50 transition-colors border-b border-gray-200 last:border-b-0";
 
-                // 自治体の区切りを分かりやすくする（上のボーダーを少し濃くする）
-                if (prevPrefecture !== "" && prevPrefecture !== item.prefecture) {
-                    tr.classList.add("border-t-2", "border-gray-300");
+                // 自治体の区切り判定
+                if (prevPrefecture !== item.prefecture) {
+                    // スクロール先のアンカーとしてIDを付与
+                    tr.id = `pref-${item.prefecture}`;
+                    
+                    // 最初の自治体以外は、区切りを分かりやすくする
+                    if (prevPrefecture !== "") {
+                        tr.classList.add("border-t-[3px]", "border-gray-300");
+                    }
                 }
                 prevPrefecture = item.prefecture;
 
                 const isPdfActive = item.status === "active";
                 const statusLabel = isPdfActive ? "公開中" : "準備中";
-                const statusClass = isPdfActive ? "status-active" : "status-prep";
+                // カラー復活: 公開中は青系、準備中はグレー系
+                const statusClass = isPdfActive ? "bg-blue-500 text-white shadow-sm" : "bg-gray-400 text-white";
                 
-                // PDFリンクアイコン
+                // PDFリンクアイコン（カラー復活）
                 const pdfHtml = isPdfActive
-                    ? `<a href="${item.pdfLink}" target="_blank" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-0.5 md:gap-1 p-1">
+                    ? `<a href="${item.pdfLink}" target="_blank" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-0.5 md:gap-1 p-1 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
@@ -206,20 +214,18 @@
                         <span class="text-[11px] md:text-sm">PDF</span>
                        </span>`;
 
-                // 自治体名をテキストのみにする（リンク解除）
-                const prefectureHtml = isPdfActive
-                    ? `<span class="text-gray-800">${item.prefecture}</span>`
-                    : `<span class="text-gray-500">${item.prefecture}</span>`;
-
-                // 結合されたセル：モバイル時は縦（flex-col）、PC時は横（md:flex-row）に並べる
+                // テーブル行の構築（年度ラベルを科目名の横に追加）
                 tr.innerHTML = `
                     <td class="p-2 md:p-3 text-left border-r border-gray-200">
                         <div class="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-3">
-                            <div class="font-bold text-sm md:text-base min-w-[5rem]">
-                                ${prefectureHtml}
+                            <div class="font-bold text-sm md:text-base min-w-[5rem] text-gray-800">
+                                ${item.prefecture}
                             </div>
-                            <div class="text-[11px] md:text-sm text-gray-600 mt-0.5 sm:mt-0">
-                                ${item.subject}
+                            <div class="text-[11px] md:text-sm text-gray-600 mt-0.5 sm:mt-0 flex items-center flex-wrap gap-1.5">
+                                <span>${item.subject}</span>
+                                <span class="inline-block px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded border border-indigo-200 text-[10px] md:text-xs font-medium whitespace-nowrap">
+                                    ${item.year}
+                                </span>
                             </div>
                         </div>
                     </td>
@@ -227,7 +233,7 @@
                         ${pdfHtml}
                     </td>
                     <td class="p-2 md:p-3 text-center align-middle">
-                        <span class="inline-block text-white text-[10px] md:text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-full ${statusClass} whitespace-nowrap">
+                        <span class="inline-block text-[10px] md:text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-full ${statusClass} whitespace-nowrap">
                             ${statusLabel}
                         </span>
                     </td>
@@ -236,7 +242,26 @@
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('pagination-info').textContent = `全 ${filteredData.length} 件`;
+            document.getElementById('pagination-info').textContent = `全 ${allPdfsData.length} 件`;
+        }
+
+        // トップへ戻るボタンの制御
+        function setupScrollTopButton() {
+            const btn = document.getElementById('scrollTopBtn');
+            
+            // スクロールイベントで表示/非表示を切り替え
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 200) {
+                    btn.classList.add('show');
+                } else {
+                    btn.classList.remove('show');
+                }
+            });
+
+            // クリックで上部へスムーズスクロール
+            btn.onclick = () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
         }
 
         window.onload = init;
