@@ -1,1 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教員採用試験 過去問PDF 配布メニュー</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ヘッダーやアクセントのカラー（元のデザインを踏襲） */
+        .header-bg { background-color: #005662; }
+        .tab-active { background-color: #e5f1f4; color: #005662; border-bottom: 2px solid #005662; }
+        .tab-inactive { background-color: #f3f4f6; color: #4b5563; }
+        .tab-inactive:hover { background-color: #e5e7eb; }
+        .status-active { background-color: #3b82f6; } /* 公開中（ブルー） */
+        .status-prep { background-color: #9ca3af; }   /* 準備中（グレー） */
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans min-h-screen p-4 md:p-8">
 
+    <div class="max-w-4xl mx-auto overflow-hidden">
+        <div class="flex-grow pb-6 overflow-y-auto">
+            <h1 class="text-xl font-bold mb-4 pb-2 border-b border-gray-300 flex justify-between items-end text-[#005662]">
+                <span>教員採用試験 過去問PDF 配布メニュー</span>
+            </h1>
+
+            <!-- タブメニュー（年度切り替え） -->
+            <div class="flex flex-wrap gap-1 mb-4" id="tabs-container">
+                <!-- JavaScriptでタブが生成されます -->
+            </div>
+
+            <!-- PDF一覧テーブル -->
+            <div class="overflow-x-auto shadow-sm">
+                <table class="w-full text-sm border-collapse border border-gray-300 min-w-[600px]">
+                    <thead class="bg-gray-100 text-gray-700 whitespace-nowrap text-center">
+                        <tr>
+                            <th class="border border-gray-300 p-3 font-medium w-1/4">自治体</th>
+                            <th class="border border-gray-300 p-3 font-medium w-1/3">試験科目</th>
+                            <th class="border border-gray-300 p-3 font-medium w-24">PDF</th>
+                            <th class="border border-gray-300 p-3 font-medium w-32">ステータス</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pdf-list-body">
+                        <!-- ここにJavaScriptでリストが生成されます -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ページネーション（件数表示用） -->
+            <div class="bg-gray-200 p-2 mt-2 flex justify-center items-center text-sm text-gray-600 gap-4 rounded-b">
+                <span id="pagination-info">0件</span>
+            </div>
+
+            <!-- Google Drive リンク（元のコードから保持） -->
+            <div class="mt-8 flex justify-center">
+                <a href="https://drive.google.com/drive/folders/1NIaw61nmVBGx6mrTeka5hLPLf-yAF6ZU?usp=drive_link" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 hover:text-[#005662] transition-colors font-medium text-sm text-gray-700">
+                    <!-- フォルダアイコン -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 group-hover:text-[#005662]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                    関連資料用 Google Drive フォルダを開く
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 【PDFデータ管理】
+         * * [項目の説明]
+         * ・year:       タブとして表示される年度名
+         * ・prefecture: 自治体名
+         * ・subject:    試験科目名
+         * ・status:     'active'（公開中） または 'prep'（準備中）
+         * ・pdfLink:    PDFのURL（準備中の場合は '#' でOKです）
+         */
+        const allPdfsData = [
+            // ==========================================
+            // --- 2026年度(2025年実施) ---
+            // ==========================================
+            { year: '2026年度(2025年実施)', prefecture: '山口県', subject: '教職教養・一般教養', status: 'active', pdfLink: 'https://example.com/pdf/yamaguchi_kyoshoku_2026.pdf' },
+            { year: '2026年度(2025年実施)', prefecture: '山口県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '福岡県', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '福岡県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '福岡市', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '福岡市', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '北九州市', subject: '教職教養・一般教養', status: 'prep', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '北九州市', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '佐賀県', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2026年度(2025年実施)', prefecture: '佐賀県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+
+            // ==========================================
+            // --- 2025年度(2024年実施) ---
+            // ==========================================
+            { year: '2025年度(2024年実施)', prefecture: '山口県', subject: '教職教養・一般教養', status: 'active', pdfLink: 'https://example.com/pdf/yamaguchi_kyoshoku_2025.pdf' },
+            { year: '2025年度(2024年実施)', prefecture: '山口県', subject: '中・高社会', status: 'active', pdfLink: 'https://example.com/pdf/yamaguchi_shakai_2025.pdf' },
+            { year: '2025年度(2024年実施)', prefecture: '福岡県', subject: '教職教養・一般教養', status: 'active', pdfLink: 'https://example.com/pdf/fukuoka_kyoshoku_2025.pdf' },
+            { year: '2025年度(2024年実施)', prefecture: '福岡県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2025年度(2024年実施)', prefecture: '福岡市', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2025年度(2024年実施)', prefecture: '福岡市', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2025年度(2024年実施)', prefecture: '北九州市', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2025年度(2024年実施)', prefecture: '北九州市', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2025年度(2024年実施)', prefecture: '佐賀県', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2025年度(2024年実施)', prefecture: '佐賀県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+
+            // ==========================================
+            // --- 2024年度(2023年実施) ---
+            // ==========================================
+            { year: '2024年度(2023年実施)', prefecture: '山口県', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '山口県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '福岡県', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '福岡県', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '福岡市', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '福岡市', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '北九州市', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '北九州市', subject: '中・高社会', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '佐賀県', subject: '教職教養・一般教養', status: 'active', pdfLink: '#' },
+            { year: '2024年度(2023年実施)', prefecture: '佐賀県', subject: '中・高社会', status: 'active', pdfLink: '#' }
+        ];
+
+        // タブとして表示する年度のリスト
+        const tabYears = ['2026年度(2025年実施)', '2025年度(2024年実施)', '2024年度(2023年実施)'];
+        let currentYear = tabYears[0]; // 初期表示は一番新しい年度
+
+        // 初期化処理
+        function init() {
+            renderTabs();
+            renderTable(currentYear);
+        }
+
+        // タブを描画する処理
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs-container');
+            tabsContainer.innerHTML = '';
+
+            tabYears.forEach(year => {
+                const button = document.createElement('button');
+                const isActive = year === currentYear;
+                
+                // アクティブか非アクティブかでスタイルを切り替え
+                button.className = `px-4 py-2 text-sm font-bold rounded-t-md transition-colors ${isActive ? 'tab-active' : 'tab-inactive'}`;
+                button.textContent = year;
+                
+                // タブがクリックされた時の処理
+                button.onclick = () => {
+                    currentYear = year;
+                    renderTabs(); // タブの見た目（色）を更新
+                    renderTable(year); // 選択された年度のテーブルを再描画
+                };
+                
+                tabsContainer.appendChild(button);
+            });
+        }
+
+        // テーブル本体を生成・描画する処理
+        function renderTable(selectedYear) {
+            const tbody = document.getElementById('pdf-list-body');
+            tbody.innerHTML = '';
+
+            // 現在選択されている年度のデータのみを抽出
+            const filteredData = allPdfsData.filter(item => item.year === selectedYear);
+
+            // 前の行の自治体名を記憶（同じ自治体が続く場合はセルを結合するような見た目にする工夫）
+            let prevPrefecture = "";
+
+            filteredData.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors";
+
+                // 自治体行の境界線を見やすくするための処理
+                if (prevPrefecture !== "" && prevPrefecture !== item.prefecture) {
+                    tr.classList.add("border-t-2", "border-gray-300");
+                }
+                prevPrefecture = item.prefecture;
+
+                const isPdfActive = item.status === "active";
+                const statusLabel = isPdfActive ? "公開中" : "準備中";
+                const statusClass = isPdfActive ? "status-active" : "status-prep";
+                
+                // PDFリンクのHTML生成（ステータスに依存）
+                const pdfHtml = isPdfActive
+                    ? `<a href="${item.pdfLink}" target="_blank" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        PDF
+                       </a>`
+                    : `<span class="text-gray-300 flex items-center justify-center gap-1 cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        PDF
+                       </span>`;
+
+                // テーブル行の構築
+                tr.innerHTML = `
+                    <td class="border border-gray-300 p-2 text-center font-medium text-gray-800 whitespace-nowrap bg-white">
+                        ${item.prefecture}
+                    </td>
+                    <td class="border border-gray-300 p-2 text-center text-gray-700 whitespace-nowrap">
+                        ${item.subject}
+                    </td>
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${pdfHtml}
+                    </td>
+                    <td class="border border-gray-300 p-2 text-center whitespace-nowrap">
+                        <span class="inline-block text-white text-xs px-3 py-1.5 rounded-full ${statusClass} min-w-[70px]">
+                            ${statusLabel}
+                        </span>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            // ページネーション部分に表示中の件数を更新
+            document.getElementById('pagination-info').textContent = `全 ${filteredData.length} 件`;
+        }
+
+        // ページ読み込み完了時に初期化処理を実行
+        window.onload = init;
+    </script>
+</body>
+</html>
