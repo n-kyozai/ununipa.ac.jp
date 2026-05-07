@@ -61,24 +61,29 @@
     <script>
         /**
          * 【講義データ】
-         * active: テスト受付中（解説とテストへのリンクが有効）
-         * prep: 準備中（リンク無効）
+         * docStatus: 資料名リンクの有効化 (active / prep)
+         * docLink: 資料名の遷移先URL
+         * aiStatus: AI資料ボタンの有効化 (active / prep)
+         * aiLink: AI資料の遷移先URL
+         * testStatus: 確認テストボタンの有効化 (active / prep)
+         * testLink: 確認テストの遷移先URL
+         * status: 全体ステータスラベルの表示 (active: テスト受付中, prep: 準備中)
          */
         const courseData = [
-            { id: 1, name: "第1回講義資料", status: "active", expLink: "./materials/01_guidance.pdf", testLink: "./test01/index.html", note: "ガイダンス・人文地理学とは" },
-            { id: 2, name: "第2回講義資料", status: "active", expLink: "./materials/02_population.pdf", testLink: "./test02/index.html", note: "人口地理学：人口分布と動態" },
-            { id: 3, name: "第3回講義資料", status: "active", expLink: "./materials/03_settlement.pdf", testLink: "./test03/index.html", note: "集落地理学：村落と都市" },
-            { id: 4, name: "第4回講義資料", status: "prep", expLink: "./materials/04_urban.pdf", testLink: "./test04/index.html", note: "都市地理学：都市システムと内部構造" },
-            { id: 5, name: "第5回講義資料", status: "prep", expLink: "./materials/05_agriculture.pdf", testLink: "./test05/index.html", note: "経済地理学：農業と食料" },
-            { id: 6, name: "第6回講義資料", status: "prep", expLink: "./materials/06_industry.pdf", testLink: "./test06/index.html", note: "経済地理学：工業と立地" },
-            { id: 7, name: "第7回講義資料", status: "prep", expLink: "./materials/07_commerce.pdf", testLink: "./test07/index.html", note: "経済地理学：商業とサービス業" },
-            { id: 8, name: "第8回講義資料", status: "prep", expLink: "./materials/08_transportation.pdf", testLink: "./test08/index.html", note: "交通・通信地理学：空間的相互作用" },
-            { id: 9, name: "第9回講義資料", status: "prep", expLink: "./materials/09_political.pdf", testLink: "./test09/index.html", note: "政治地理学：国家と国境" },
-            { id: 10, name: "第10回講義資料", status: "prep", expLink: "./materials/10_culture.pdf", testLink: "./test10/index.html", note: "文化地理学：言語と宗教" },
-            { id: 11, name: "第11回講義資料", status: "prep", expLink: "./materials/11_social.pdf", testLink: "./test11/index.html", note: "社会地理学：生活空間と不平等" },
-            { id: 12, name: "第12回講義資料", status: "prep", expLink: "./materials/12_tourism.pdf", testLink: "./test12/index.html", note: "観光地理学：観光地とツーリズム" },
-            { id: 13, name: "第13回講義資料", status: "prep", expLink: "./materials/13_environment.pdf", testLink: "./test13/index.html", note: "環境と人間生活：景観と環境問題" },
-            { id: 14, name: "第14回講義資料", status: "prep", expLink: "./materials/14_globalization.pdf", testLink: "./test14/index.html", note: "グローバリゼーションと地域課題" },
+            { id: 1, name: "第2回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test01/index.html", status: "prep", note: "農業地理学（農業立地論と自給的農業）" },
+            { id: 2, name: "第3回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test02/index.html", status: "prep", note: "農業地理学（商業的・企業的農業" },
+            { id: 3, name: "第4回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test03/index.html", status: "prep", note: "工業地理学（工業立地論と様々な工業）" },
+            { id: 4, name: "第5回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test04/index.html", status: "prep", note: "資源とエネルギーの分布と利用" },
+            { id: 5, name: "第6回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test05/index.html", status: "prep", note: "商業地理学（商業の立地と形態の変化" },
+            { id: 6, name: "第7回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test06/index.html", status: "prep", note: "観光地理学（観光資源と日本における観光）" },
+            { id: 7, name: "第8回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test07/index.html", status: "prep", note: "交通地理学（交通現象と地域変容）" },
+            { id: 8, name: "第9回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test08/index.html", status: "prep", note: "人口地理学（世界と日本の人口問題）" },
+            { id: 9, name: "第10回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test09/index.html", status: "prep", note: "都市地理学（都市の成立と都市機能・都市問題）" },
+            { id: 10, name: "第11回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test10/index.html", status: "prep", note: "宗教地理学（キリスト教・イスラム教・ユダヤ教）" },
+            { id: 11, name: "第12回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test11/index.html", status: "prep", note: "宗教地理学（世界の多様な宗教）" },
+            { id: 12, name: "第13回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test12/index.html", status: "prep", note: "歴史地理学（災害と地域）" },
+            { id: 13, name: "第14回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test13/index.html", status: "prep", note: "歴史地理学（交通と地域構造の変化）" },
+            { id: 14, name: "まとめのテスト", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test14/index.html", status: "prep", note: "まとめのテスト対策です。" }
         ];
 
         // ページネーション情報の動的更新
@@ -91,38 +96,45 @@
             const tr = document.createElement('tr');
             tr.className = "hover:bg-gray-50 transition-colors";
 
-            // ステータスに応じた処理の分岐
-            const isActive = item.status === "active";
-            const statusLabel = isActive ? "テスト受付中" : "準備中";
-            const statusClass = isActive ? "status-active" : "status-prep";
+            // 全体ステータスラベルの分岐
+            const isStatusActive = item.status === "active";
+            const statusLabel = isStatusActive ? "テスト受付中" : "準備中";
+            const statusClass = isStatusActive ? "status-active" : "status-prep";
+
+            // 個別ステータスの判定
+            const isDocActive = item.docStatus === "active";
+            const isAiActive = item.aiStatus === "active";
+            const isTestActive = item.testStatus === "active";
             
-            // 解説閲覧ボタンのHTML生成
-            const expBtnHtml = isActive
-                ? `<a href="${item.expLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1 border border-gray-400 bg-white hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-xs font-bold transition shadow-sm">
+            // 資料名のHTML生成 (prepの場合はリンクなしのグレー文字)
+            const docHtml = isDocActive
+                ? `<a href="${item.docLink}" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors">${item.name}</a>`
+                : `<span class="text-gray-500">${item.name}</span>`;
+
+            // AI資料ボタンのHTML生成（アイコンなし）
+            const aiBtnHtml = isAiActive
+                ? `<a href="${item.aiLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1 border border-gray-400 bg-white hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-xs font-bold transition shadow-sm">
                     資料
                    </a>`
                 : `<button disabled class="inline-flex items-center justify-center gap-1 border border-gray-200 bg-gray-50 text-gray-400 px-3 py-1.5 rounded text-xs cursor-not-allowed">
                     資料
                    </button>`;
 
-            // 確認テストボタンのHTML生成
-            const testBtnHtml = isActive
+            // 確認テストボタンのHTML生成（アイコンなし）
+            const testBtnHtml = isTestActive
                 ? `<a href="${item.testLink}" class="inline-flex items-center justify-center gap-1 border border-blue-400 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded text-xs font-bold transition shadow-sm">
                     テスト実施
                    </a>`
                 : `<button disabled class="inline-flex items-center justify-center gap-1 border border-gray-200 bg-gray-50 text-gray-400 px-3 py-1.5 rounded text-xs cursor-not-allowed">
                     テスト実施
                    </button>`;
-                   
-            // 下の階層へのリンクURLを動的に生成（例: ./lecture01/）
-            const lectureLink = `./lecture${String(item.id).padStart(2, '0')}/`;
 
             tr.innerHTML = `
                 <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap text-gray-800 font-medium">
-                    <a href="${lectureLink}" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors">${item.name}</a>
+                    ${docHtml}
                 </td>
                 <td class="border border-gray-300 p-2 whitespace-nowrap text-center">
-                    ${expBtnHtml}
+                    ${aiBtnHtml}
                 </td>
                 <td class="border border-gray-300 p-2 whitespace-nowrap text-center">
                     ${testBtnHtml}
