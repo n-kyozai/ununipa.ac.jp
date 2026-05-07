@@ -61,24 +61,30 @@
     <script>
         /**
          * 【講義データ】
-         * active: テスト受付中（解説とテストへのリンクが有効）
-         * prep: 準備中（リンク無効）
+         * docStatus: 資料名リンクの有効化 (active / prep)
+         * docLink: 資料名の遷移先URL
+         * aiStatus: AI資料ボタンの有効化 (active / prep)
+         * aiLink: AI資料の遷移先URL
+         * testStatus: 確認テストボタンの有効化 (active / prep)
+         * testLink: 確認テストの遷移先URL
+         * status: 全体ステータスラベルの表示 (active: テスト受付中, prep: 準備中)
          */
         const courseData = [
-            { id: 1, name: "第1回講義資料", status: "active", expLink: "./materials/01_guidance.pdf", testLink: "./test01/index.html", note: "ガイダンス・自然地理学とは" },
-            { id: 2, name: "第2回講義資料", status: "active", expLink: "./materials/02_geomorphology.pdf", testLink: "./test02/index.html", note: "地形の形成とプレートテクトニクス" },
-            { id: 3, name: "第3回講義資料", status: "active", expLink: "./materials/03_volcano.pdf", testLink: "./test03/index.html", note: "火山地形と変動地形" },
-            { id: 4, name: "第4回講義資料", status: "prep", expLink: "./materials/04_river.pdf", testLink: "./test04/index.html", note: "河川地形と海岸地形" },
-            { id: 5, name: "第5回講義資料", status: "prep", expLink: "./materials/05_glacier.pdf", testLink: "./test05/index.html", note: "氷河地形と乾燥地形" },
-            { id: 6, name: "第6回講義資料", status: "prep", expLink: "./materials/06_climate.pdf", testLink: "./test06/index.html", note: "気候の成り立ちと気候区分" },
-            { id: 7, name: "第7回講義資料", status: "prep", expLink: "./materials/07_tropical.pdf", testLink: "./test07/index.html", note: "熱帯・乾燥帯の気候と自然" },
-            { id: 8, name: "第8回講義資料", status: "prep", expLink: "./materials/08_temperate.pdf", testLink: "./test08/index.html", note: "温帯の気候と自然" },
-            { id: 9, name: "第9回講義資料", status: "prep", expLink: "./materials/09_cold.pdf", testLink: "./test09/index.html", note: "冷帯・寒帯の気候と自然" },
-            { id: 10, name: "第10回講義資料", status: "prep", expLink: "./materials/10_vegetation.pdf", testLink: "./test10/index.html", note: "植生の分布と環境" },
-            { id: 11, name: "第11回講義資料", status: "prep", expLink: "./materials/11_soil.pdf", testLink: "./test11/index.html", note: "土壌の形成と分類" },
-            { id: 12, name: "第12回講義資料", status: "prep", expLink: "./materials/12_ecosystem.pdf", testLink: "./test12/index.html", note: "世界の生態系" },
-            { id: 13, name: "第13回講義資料", status: "prep", expLink: "./materials/13_human.pdf", testLink: "./test13/index.html", note: "自然環境と人間生活" },
-            { id: 14, name: "第14回講義資料", status: "prep", expLink: "./materials/14_disaster.pdf", testLink: "./test14/index.html", note: "自然災害と防災・減災" },
+            { id: 1, name: "第2回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test01/index.html", status: "prep", note: "地形の形成と地質年代" },
+            { id: 2, name: "第3回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "active", testLink: "./test02/index.html", status: "active", note: "大気のはたらき" },
+            { id: 3, name: "大気のはたらきと大循環［復習］", docStatus: "prep", docLink: "#", aiStatus: "active", aiLink: "https://n-kyozai.github.io/ununipa.ac.jp/phys-geo/Global_Atmospheric_Dynamics_compressed.pdf", testStatus: "prep", testLink: "./test03/index.html", status: "prep", note: "大気のはたらきと大循環［復習］" },
+            { id: 4, name: "第4回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test04/index.html", status: "prep", note: "海洋のはたらき" },
+            { id: 5, name: "第5回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test05/index.html", status: "prep", note: "世界の気候" },
+            { id: 6, name: "第6回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test06/index.html", status: "prep", note: "日本の気候" },
+            { id: 7, name: "第7回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test07/index.html", status: "prep", note: "世界の大地形" },
+            { id: 8, name: "第8回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test08/index.html", status: "prep", note: "プレートテクトニクス" },
+            { id: 9, name: "第9回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test09/index.html", status: "prep", note: "河川と海岸の小地形" },
+            { id: 10, name: "第10回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test10/index.html", status: "prep", note: "扇状地と三角州" },
+            { id: 11, name: "第11回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test11/index.html", status: "prep", note: "カルスト地形" },
+            { id: 12, name: "第12回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test12/index.html", status: "prep", note: "火山と火山地形" },
+            { id: 13, name: "第13回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test13/index.html", status: "prep", note: "地震と災害" },
+            { id: 14, name: "第14回講義資料", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test14/index.html", status: "prep", note: "土壌と植生" },
+            { id: 15, name: "まとめのテスト", docStatus: "prep", docLink: "#", aiStatus: "prep", aiLink: "#", testStatus: "prep", testLink: "./test14/index.html", status: "prep", note: "まとめのテスト対策です。" }
         ];
 
         // ページネーション情報の動的更新
@@ -91,14 +97,24 @@
             const tr = document.createElement('tr');
             tr.className = "hover:bg-gray-50 transition-colors";
 
-            // ステータスに応じた処理の分岐
-            const isActive = item.status === "active";
-            const statusLabel = isActive ? "テスト受付中" : "準備中";
-            const statusClass = isActive ? "status-active" : "status-prep";
+            // 全体ステータスラベルの分岐
+            const isStatusActive = item.status === "active";
+            const statusLabel = isStatusActive ? "テスト受付中" : "準備中";
+            const statusClass = isStatusActive ? "status-active" : "status-prep";
+
+            // 個別ステータスの判定
+            const isDocActive = item.docStatus === "active";
+            const isAiActive = item.aiStatus === "active";
+            const isTestActive = item.testStatus === "active";
             
-            // AI資料閲覧ボタンのHTML生成（アイコンなし）
-            const expBtnHtml = isActive
-                ? `<a href="${item.expLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1 border border-gray-400 bg-white hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-xs font-bold transition shadow-sm">
+            // 資料名のHTML生成 (prepの場合はリンクなしのグレー文字)
+            const docHtml = isDocActive
+                ? `<a href="${item.docLink}" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors">${item.name}</a>`
+                : `<span class="text-gray-500">${item.name}</span>`;
+
+            // AI資料ボタンのHTML生成（アイコンなし）
+            const aiBtnHtml = isAiActive
+                ? `<a href="${item.aiLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1 border border-gray-400 bg-white hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-xs font-bold transition shadow-sm">
                     資料
                    </a>`
                 : `<button disabled class="inline-flex items-center justify-center gap-1 border border-gray-200 bg-gray-50 text-gray-400 px-3 py-1.5 rounded text-xs cursor-not-allowed">
@@ -106,23 +122,20 @@
                    </button>`;
 
             // 確認テストボタンのHTML生成（アイコンなし）
-            const testBtnHtml = isActive
+            const testBtnHtml = isTestActive
                 ? `<a href="${item.testLink}" class="inline-flex items-center justify-center gap-1 border border-blue-400 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded text-xs font-bold transition shadow-sm">
                     テスト実施
                    </a>`
                 : `<button disabled class="inline-flex items-center justify-center gap-1 border border-gray-200 bg-gray-50 text-gray-400 px-3 py-1.5 rounded text-xs cursor-not-allowed">
                     テスト実施
                    </button>`;
-                   
-            // 下の階層へのリンクURLを動的に生成（例: ./lecture01/）
-            const lectureLink = `./lecture${String(item.id).padStart(2, '0')}/`;
 
             tr.innerHTML = `
                 <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap text-gray-800 font-medium">
-                    <a href="${lectureLink}" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors">${item.name}</a>
+                    ${docHtml}
                 </td>
                 <td class="border border-gray-300 p-2 whitespace-nowrap text-center">
-                    ${expBtnHtml}
+                    ${aiBtnHtml}
                 </td>
                 <td class="border border-gray-300 p-2 whitespace-nowrap text-center">
                     ${testBtnHtml}
