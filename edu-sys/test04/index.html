@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育法規のふりかえりテスト - 第3回</title>
+    <title>教育法規のふりかえりテスト - 第4回</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ベースとなる青色（第1回のカラー） */
@@ -21,7 +21,7 @@
             <table class="w-full text-sm border-collapse">
                 <tbody>
                     <tr><th class="w-1/4 theme-bg text-white p-3 border border-gray-300 text-left">テストグループ</th><td class="p-3 border border-gray-300"></td></tr>
-                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト名</th><td class="p-3 border border-gray-300 font-bold">第3回課題</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト名</th><td class="p-3 border border-gray-300 font-bold">第4回課題</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">テスト説明</th><td class="p-3 border border-gray-300">今週までの教育法規のふりかえり。<br>何回でもできる設定にしているので、必ず満点にすること。</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">満点</th><td class="p-3 border border-gray-300">5点</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left">合格点数</th><td class="p-3 border border-gray-300">5点</td></tr>
@@ -50,7 +50,7 @@
         <!-- 右側：問題エリア -->
         <div class="flex-grow">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 bg-gray-200 p-3 rounded border border-gray-300 gap-2 sm:gap-0">
-                <div class="font-bold text-gray-700">第3回課題</div>
+                <div class="font-bold text-gray-700">第4回課題</div>
                 <div id="timer-display" class="text-gray-800 font-bold text-lg bg-white px-3 py-1 rounded shadow-sm border border-gray-300 whitespace-nowrap shrink-0">残り時間 2:00</div>
             </div>
             
@@ -108,7 +108,7 @@
     </div>
 
     <script>
-        // 問題データ（第3回：画像から抽出）
+        // 問題データ（第4回として設定）
         const originalQuestions = [
             { 
                 id: 1, 
@@ -231,7 +231,10 @@
             } else {
                 currentInputElement = document.createElement('input');
                 currentInputElement.type = 'text';
-                currentInputElement.autocomplete = 'off';
+                
+                // 自動補完・サジェストを無効化するための強力な設定
+                currentInputElement.setAttribute('autocomplete', 'new-password');
+                
                 currentInputElement.className = 'shadow-sm appearance-none border border-gray-400 rounded w-full md:w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600';
                 
                 // Enterキーで次へ進む補助機能（テキスト入力のみ）
@@ -253,10 +256,10 @@
             currentInputElement.addEventListener('input', saveAnswer); // テキスト入力用
             inputContainer.appendChild(currentInputElement);
             
-            // テキスト入力の場合のみ、自動でフォーカス（カーソル）を合わせる
-            if (q.type === 'text') {
-                currentInputElement.focus();
-            }
+            // ▼ ここにあった自動フォーカス処理（キーボードが勝手に立ち上がる原因）を削除しました ▼
+            // if (q.type === 'text') {
+            //     currentInputElement.focus();
+            // }
 
             // ナビゲーションの色更新
             Array.from(questionNavList.children).forEach((el, idx) => {
