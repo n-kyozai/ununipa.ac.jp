@@ -100,18 +100,17 @@
         </div>
     </div>
 
-    <!-- モバイル用問題一覧モーダル (左上ポップアップ) -->
-    <div id="mobile-nav-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
-        <div class="absolute top-16 left-4 bg-gray-100 w-64 rounded shadow-xl border border-gray-300 flex flex-col max-h-[70vh]">
-            <div class="flex justify-between items-center p-3 border-b border-gray-300 bg-white rounded-t">
-                <span class="font-bold text-gray-800 fs-base">問題一覧</span>
-                <button id="mobile-nav-close" class="text-gray-500 hover:text-gray-800 focus:outline-none p-1">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div id="mobile-nav-list" class="p-3 flex flex-col gap-2 overflow-y-auto">
-                <!-- JSで生成 -->
-            </div>
+    <!-- モバイル用問題一覧ドロワー (スライドイン) -->
+    <div id="mobile-nav-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity"></div>
+    <div id="mobile-nav-drawer" class="fixed inset-y-0 left-0 transform -translate-x-full transition duration-300 ease-in-out bg-gray-100 w-64 shadow-xl z-50 md:hidden flex flex-col">
+        <div class="flex justify-between items-center p-4 border-b border-gray-300 bg-white">
+            <span class="font-bold text-gray-800 fs-base">問題一覧</span>
+            <button id="mobile-nav-close" class="text-gray-500 hover:text-gray-800 focus:outline-none p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-nav-list" class="p-4 flex flex-col gap-2 overflow-y-auto flex-grow">
+            <!-- JSで生成 -->
         </div>
     </div>
 
@@ -174,7 +173,8 @@
         const inputContainer = document.getElementById('input-container');
         const questionNavList = document.getElementById('question-nav-list');
         const confirmModal = document.getElementById('confirm-modal');
-        const mobileNavModal = document.getElementById('mobile-nav-modal');
+        const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+        const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
         const mobileNavList = document.getElementById('mobile-nav-list');
 
         // フォントサイズ切り替えイベント
@@ -190,12 +190,23 @@
         });
 
         // モバイル用メニューの開閉イベント
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            mobileNavModal.classList.remove('hidden');
-        });
-        document.getElementById('mobile-nav-close').addEventListener('click', () => {
-            mobileNavModal.classList.add('hidden');
-        });
+        function openMobileMenu() {
+            mobileNavOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                mobileNavDrawer.classList.remove('-translate-x-full');
+            }, 10);
+        }
+
+        function closeMobileMenu() {
+            mobileNavDrawer.classList.add('-translate-x-full');
+            setTimeout(() => {
+                mobileNavOverlay.classList.add('hidden');
+            }, 300);
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu);
+        document.getElementById('mobile-nav-close').addEventListener('click', closeMobileMenu);
+        mobileNavOverlay.addEventListener('click', closeMobileMenu);
 
         // 配列をシャッフル
         function shuffleArray(array) {
@@ -253,7 +264,7 @@
                         currentQuestionIndex = index;
                         renderQuestion();
                     }
-                    mobileNavModal.classList.add('hidden'); // 選択後に閉じる
+                    closeMobileMenu(); // 選択後に閉じる
                 });
                 mobileNavList.appendChild(mobileBtn);
             });
