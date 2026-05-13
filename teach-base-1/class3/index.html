@@ -212,7 +212,7 @@
                 pointPerItem: 1,
                 inputCount: 4,
                 ordered: true,
-                text: "ピアジェに関する次の各問いに答えよ。\n\n(1) ピアジェが設定した知能の発達段階を4つ順に選べ。", 
+                text: "ピアジェに関する次の各問いに答えよ。\n\n(1) ピアジェが設定した知能の発達段階を4つ順に選べ。\n\n（ ① ）→（ ② ）→（ ③ ）→（ ④ ）", 
                 options: [
                     ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期", "潜伏期", "口愛期"],
                     ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期", "潜伏期", "口愛期"],
@@ -351,7 +351,7 @@
             
             const defaultOption = document.createElement('option');
             defaultOption.value = "";
-            if (q.inputCount === 1 || q.subQuestions) {
+            if (q.inputCount === 1 || q.subQuestions || !q.ordered) {
                 defaultOption.text = "選択してください";
             } else {
                 defaultOption.text = `（${'①②③④⑤⑥'[i]}）を選択してください`;
@@ -519,7 +519,7 @@
                     isCorrect = earnedPoint === q.point; 
 
                     displayUserAnswer = userAnsArray.map((ans, idx) => {
-                        const prefix = q.inputCount > 1 ? `①②③④⑤⑥`[idx] + " " : "";
+                        const prefix = (q.inputCount > 1 && q.ordered) ? `①②③④⑤⑥`[idx] + " " : "";
                         return ans.trim() === "" ? `${prefix}<span class='text-gray-400'>未選択</span>` : `${prefix}${ans}`;
                     }).join('\n');
                 }
