@@ -15,33 +15,44 @@
             --tw-ring-color: #005c42; 
             border-color: #005c42; 
         }
+
+        /* フォントサイズ手動切り替え用 */
+        :root {
+            --font-scale: 1;
+        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-10 text-sm md:text-base">
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-10 fs-base">
 
     <!-- スタート画面 -->
     <div id="start-screen" class="max-w-5xl mx-auto p-4 pt-8">
         <div class="bg-white border border-gray-300 shadow-sm mb-6">
-            <table class="w-full text-xs md:text-sm border-collapse">
+            <table class="w-full border-collapse">
                 <tbody>
-                    <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-2 md:p-3 border border-gray-300 text-left">テストグループ</th><td class="p-2 md:p-3 border border-gray-300">教職教養基礎</td></tr>
-                    <tr><th class="theme-bg text-white p-2 md:p-3 border border-gray-300 text-left">テスト名</th><td class="p-2 md:p-3 border border-gray-300">第3回復習問題</td></tr>
-                    <tr><th class="theme-bg text-white p-2 md:p-3 border border-gray-300 text-left">満点</th><td class="p-2 md:p-3 border border-gray-300">15点</td></tr>
-                    <tr><th class="theme-bg text-white p-2 md:p-3 border border-gray-300 text-left">コース</th><td class="p-2 md:p-3 border border-gray-300">教育心理学</td></tr>
-                    <tr><th class="theme-bg text-white p-2 md:p-3 border border-gray-300 text-left">問題表示区分</th><td class="p-2 md:p-3 border border-gray-300">一問題表示</td></tr>
-                    <tr><th class="theme-bg text-white p-2 md:p-3 border border-gray-300 text-left">問題出題形式</th><td class="p-2 md:p-3 border border-gray-300">同一</td></tr>
+                    <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テストグループ</th><td class="p-3 border border-gray-300 fs-sm">教職教養基礎</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">第3回復習問題</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">15点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">コース</th><td class="p-3 border border-gray-300 fs-sm">教育心理学</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題表示区分</th><td class="p-3 border border-gray-300 fs-sm">一問題表示</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題出題形式</th><td class="p-3 border border-gray-300 fs-sm">同一</td></tr>
                 </tbody>
             </table>
         </div>
         <div class="text-center mt-8 flex justify-center gap-4">
-            <a href="https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 md:py-3 md:px-8 text-sm md:text-base rounded shadow transition duration-200 inline-block">テスト一覧へ</a>
-            <button id="start-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-8 md:py-3 md:px-12 text-sm md:text-base rounded shadow transition duration-200">テスト開始</button>
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base">テスト一覧へ</a>
+            <button id="start-btn" class="theme-bg theme-bg-hover text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト開始</button>
         </div>
     </div>
 
     <!-- テスト画面 -->
     <div id="test-screen" class="hidden max-w-5xl mx-auto p-4 flex flex-col md:flex-row gap-6">
-        <!-- 左側：問題リスト -->
+        <!-- 左側：問題リスト (PC用) -->
         <div class="hidden md:block w-48 shrink-0">
             <div id="question-nav-list" class="flex flex-col gap-1">
                 <!-- JSで生成 -->
@@ -50,59 +61,88 @@
 
         <!-- 右側：問題エリア -->
         <div class="flex-grow">
+            <!-- ヘッダー部分 -->
             <div class="flex justify-between items-center mb-4 bg-gray-200 p-3 rounded border border-gray-300">
-                <div class="font-bold text-gray-700">第3回復習問題</div>
+                <div class="flex items-center gap-2">
+                    <!-- モバイル用メニュー開閉ボタン -->
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none p-1">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="font-bold text-gray-700 fs-base">第3回復習問題</div>
+                </div>
+                
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- フォントサイズ切り替えボタン -->
+                    <button id="font-size-btn" class="border border-gray-400 bg-white rounded px-2 py-1 flex items-center justify-center font-bold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none" style="font-size: 14px; line-height: 1.2;">
+                        ぁあ
+                    </button>
+                </div>
             </div>
             
             <div class="border border-gray-300 rounded shadow-sm bg-white mb-6">
-                <div id="question-number" class="bg-emerald-50 px-4 py-3 border-b border-gray-300 text-gray-800 font-bold text-sm md:text-base">
+                <div id="question-number" class="bg-emerald-50 px-4 py-3 border-b border-gray-300 text-gray-800 font-bold fs-base">
                     <!-- 問題番号 -->
                 </div>
-                <div class="p-4 md:p-6">
-                    <!-- whitespace-pre-wrap で改行を反映 -->
-                    <p id="question-text" class="text-sm md:text-lg mb-6 md:mb-8 leading-relaxed whitespace-pre-wrap"></p>
-                    <div class="mb-4 bg-gray-50 p-4 border rounded" id="answer-container">
-                        <!-- JSで入力欄(セレクトボックス)を生成 -->
-                    </div>
+                <div class="p-6">
+                    <!-- 問題文と、文ごとの解答欄が展開されるエリア -->
+                    <div id="question-content" class="mb-4"></div>
+
+                    <!-- 従来通り、問題文の下にまとめて解答欄を置く場合のエリア -->
+                    <div class="bg-gray-50 p-4 border rounded hidden" id="answer-container"></div>
                 </div>
             </div>
 
             <div class="flex justify-between items-center border-t pt-4">
-                <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed">前へ</button>
+                <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">前へ</button>
                 <div class="flex items-center">
-                    <span id="progress-text" class="mr-6 text-gray-600 font-bold">1 / 6</span>
-                    <button id="next-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-6 rounded transition">次へ</button>
-                    <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition">テスト提出</button>
+                    <span id="progress-text" class="mr-6 text-gray-600 font-bold fs-base">1 / 6</span>
+                    <button id="next-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-6 rounded transition fs-base">次へ</button>
+                    <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition fs-base">テスト提出</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- モバイル用問題一覧モーダル (左上ポップアップ) -->
+    <div id="mobile-nav-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+        <div class="absolute top-16 left-4 bg-gray-100 w-64 rounded shadow-xl border border-gray-300 flex flex-col max-h-[70vh]">
+            <div class="flex justify-between items-center p-3 border-b border-gray-300 bg-white rounded-t">
+                <span class="font-bold text-gray-800 fs-base">問題一覧</span>
+                <button id="mobile-nav-close" class="text-gray-500 hover:text-gray-800 focus:outline-none p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="mobile-nav-list" class="p-3 flex flex-col gap-2 overflow-y-auto">
+                <!-- JSで生成 -->
             </div>
         </div>
     </div>
 
     <!-- 採点結果画面 -->
     <div id="result-screen" class="hidden max-w-5xl mx-auto p-4">
-        <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-800 border-b-2 theme-border pb-2">採点結果</h2>
+        <h2 class="font-bold mb-6 text-gray-800 border-b-2 theme-border pb-2 fs-2xl">採点結果</h2>
         
-        <div class="bg-white border border-gray-300 rounded shadow-sm p-4 md:p-6 mb-6 md:mb-8 text-center">
-            <p class="text-base md:text-lg text-gray-600 mb-2">あなたの得点</p>
-            <p id="total-score" class="text-4xl md:text-5xl font-bold theme-text mb-2">0点 / 15点</p>
+        <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
+            <p class="text-gray-600 mb-2 fs-lg">あなたの得点</p>
+            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 15点</p>
         </div>
 
-        <div id="result-list" class="space-y-6 md:space-y-8">
+        <div id="result-list" class="space-y-8">
             <!-- JSで結果を生成 -->
         </div>
 
-        <div class="text-center mt-8 md:mt-12 mb-8">
-            <button id="retry-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-8 md:py-3 md:px-12 text-sm md:text-base rounded shadow transition duration-200">テスト一覧へ戻る</button>
+        <div class="text-center mt-12 mb-8">
+            <button id="retry-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト一覧へ戻る</button>
         </div>
     </div>
 
     <!-- 確認モーダル -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded shadow-lg max-w-sm w-full mx-4">
-            <p class="mb-6 text-center text-lg font-bold text-gray-800">テストを提出して採点しますか？</p>
+            <p class="mb-6 text-center font-bold text-gray-800 fs-lg">テストを提出して採点しますか？</p>
             <div class="flex justify-center gap-4">
-                <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition font-bold">いいえ</button>
-                <button id="modal-ok-btn" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition font-bold">はい</button>
+                <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition font-bold fs-base">いいえ</button>
+                <button id="modal-ok-btn" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition font-bold fs-base">はい</button>
             </div>
         </div>
     </div>
@@ -130,7 +170,16 @@
                 pointPerItem: 1,
                 inputCount: 6,
                 ordered: true,
-                text: "次の各文を読んで，それぞれに当てはまる一般的発達段階区分を選べ。\n\n(1) 身体的にも知的にも著しい発達がみられる。具体的なものを媒介にした思考が発達する。活動は家族から友人へと移っていき，社会性が発達し，仲間関係が広がる。\n(2) 独立して社会的な活動により生計を営み，多くは家族を形成する。\n(3) 母子の愛着関係が成立し，歩行と言葉の獲得期である。\n(4) 心理的，身体的機能の減退，退職や配偶者との別れなどの喪失を特徴とする一方，個人のもつ価値観や自我統合が確立する。\n(5) 第二次性徴に伴い，心身ともに大きな変化を迎える。親への依存と独立の間を行き来しながら，心理的離乳を果たそうとする。\n(6) 他者の視点が理解できず，自分の視点からものごとを理解したり（自己中心性），物質にも生命があると考えたりする（アニミズム），などの未熟さがある。", 
+                // 問題2は subQuestions を使って、文ごとに解答欄を配置できるようにしました
+                text: "次の各文を読んで，それぞれに当てはまる一般的発達段階区分を選べ。", 
+                subQuestions: [
+                    "(1) 身体的にも知的にも著しい発達がみられる。具体的なものを媒介にした思考が発達する。活動は家族から友人へと移っていき，社会性が発達し，仲間関係が広がる。",
+                    "(2) 独立して社会的な活動により生計を営み，多くは家族を形成する。",
+                    "(3) 母子の愛着関係が成立し，歩行と言葉の獲得期である。",
+                    "(4) 心理的，身体的機能の減退，退職や配偶者との別れなどの喪失を特徴とする一方，個人のもつ価値観や自我統合が確立する。",
+                    "(5) 第二次性徴に伴い，心身ともに大きな変化を迎える。親への依存と独立の間を行き来しながら，心理的離乳を果たそうとする。",
+                    "(6) 他者の視点が理解できず，自分の視点からものごとを理解したり（自己中心性），物質にも生命があると考えたりする（アニミズム），などの未熟さがある。"
+                ],
                 options: [
                     ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
                     ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
@@ -210,14 +259,40 @@
         let currentQuestionIndex = 0;
         let userAnswers = {}; // { questionId: ["入力1", "入力2"...] }
 
+        // フォントサイズ切り替え用の設定
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 0;
+
         // DOM要素
         const startScreen = document.getElementById('start-screen');
         const testScreen = document.getElementById('test-screen');
         const resultScreen = document.getElementById('result-screen');
-        
+        const questionContent = document.getElementById('question-content');
         const answerContainer = document.getElementById('answer-container');
         const questionNavList = document.getElementById('question-nav-list');
         const confirmModal = document.getElementById('confirm-modal');
+        const mobileNavModal = document.getElementById('mobile-nav-modal');
+        const mobileNavList = document.getElementById('mobile-nav-list');
+
+        // フォントサイズ切り替えイベント
+        document.getElementById('font-size-btn').addEventListener('click', () => {
+            currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+            const scaleMap = {
+                'normal': 1,
+                'small': 0.85,
+                'xsmall': 0.7,
+                'large': 1.15
+            };
+            document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+        });
+
+        // モバイル用メニューの開閉イベント
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            mobileNavModal.classList.remove('hidden');
+        });
+        document.getElementById('mobile-nav-close').addEventListener('click', () => {
+            mobileNavModal.classList.add('hidden');
+        });
 
         // テスト開始処理
         function startTest() {
@@ -233,12 +308,15 @@
             renderQuestion();
         }
 
-        // 左側の問題ナビゲーション
+        // 左側の問題ナビゲーションとモバイル用問題一覧の生成
         function renderNavList() {
             questionNavList.innerHTML = '';
+            mobileNavList.innerHTML = '';
+
             questions.forEach((_, index) => {
+                // PC用
                 const navItem = document.createElement('div');
-                navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
                 navItem.innerText = `【問題${index + 1}】`;
                 
                 navItem.addEventListener('click', () => {
@@ -248,65 +326,129 @@
                         renderQuestion();
                     }
                 });
-
                 questionNavList.appendChild(navItem);
+
+                // モバイル用
+                const mobileBtn = document.createElement('button');
+                mobileBtn.className = `w-full p-2 border rounded font-bold text-center transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`;
+                mobileBtn.innerText = `【問題${index + 1}】`;
+                
+                mobileBtn.addEventListener('click', () => {
+                    if (currentQuestionIndex !== index) {
+                        saveAnswer();
+                        currentQuestionIndex = index;
+                        renderQuestion();
+                    }
+                    mobileNavModal.classList.add('hidden'); // 選択後に閉じる
+                });
+                mobileNavList.appendChild(mobileBtn);
             });
+        }
+
+        // セレクトボックス生成のヘルパー関数
+        function createSelectElement(q, i) {
+            const select = document.createElement('select');
+            select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring bg-white cursor-pointer fs-base';
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            if (q.inputCount === 1 || q.subQuestions) {
+                defaultOption.text = "選択してください";
+            } else {
+                defaultOption.text = `（${'①②③④⑤⑥'[i]}）を選択してください`;
+            }
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            select.appendChild(defaultOption);
+
+            q.options[i].forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.text = opt;
+                if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            return select;
         }
 
         // 問題の表示
         function renderQuestion() {
             const q = questions[currentQuestionIndex];
             document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
-            document.getElementById('question-text').innerText = q.text;
             document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
 
-            // 入力欄(プルダウン)の生成と保存されている解答のセット
+            // コンテナのリセット
+            questionContent.innerHTML = '';
             answerContainer.innerHTML = '';
-            const label = document.createElement('label');
-            label.className = 'block text-xs md:text-sm font-bold text-gray-700 mb-2';
-            label.innerText = '解答を選択してください：';
-            answerContainer.appendChild(label);
 
-            if (q.inputCount) {
-                for(let i = 0; i < q.inputCount; i++) {
-                    const select = document.createElement('select');
-                    select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-sm md:text-base text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring mb-3 bg-white cursor-pointer';
+            // 全体の問題文(共通)
+            if (q.text) {
+                const p = document.createElement('p');
+                p.className = 'mb-6 leading-relaxed whitespace-pre-wrap fs-lg text-gray-800';
+                p.innerText = q.text;
+                questionContent.appendChild(p);
+            }
+
+            // subQuestionsがある場合（小問ごとに解答欄を配置）
+            if (q.subQuestions) {
+                answerContainer.classList.add('hidden'); // まとめて表示するコンテナは隠す
+
+                q.subQuestions.forEach((subText, i) => {
+                    const subP = document.createElement('p');
+                    subP.className = 'mb-2 leading-relaxed whitespace-pre-wrap fs-lg text-gray-800';
+                    subP.innerText = subText;
+                    questionContent.appendChild(subP);
+
+                    const selectWrap = document.createElement('div');
+                    selectWrap.className = 'mb-8 bg-gray-50 p-4 border rounded';
                     
-                    // デフォルトの未選択オプション
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = "";
-                    if (q.inputCount === 1) {
-                        defaultOption.text = "選択してください";
-                    } else {
-                        // 6つまでの選択肢に対応
-                        defaultOption.text = `（${'①②③④⑤⑥'[i]}）を選択してください`;
+                    const label = document.createElement('label');
+                    label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                    label.innerText = '解答を選択してください：';
+                    selectWrap.appendChild(label);
+
+                    const select = createSelectElement(q, i);
+                    selectWrap.appendChild(select);
+                    
+                    questionContent.appendChild(selectWrap);
+                });
+            } 
+            // 従来通り、問題文の下にまとめて解答欄を配置する場合
+            else {
+                if (q.inputCount > 0) {
+                    answerContainer.classList.remove('hidden');
+                    const label = document.createElement('label');
+                    label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                    label.innerText = '解答を選択してください：';
+                    answerContainer.appendChild(label);
+
+                    for(let i = 0; i < q.inputCount; i++) {
+                        const selectWrap = document.createElement('div');
+                        selectWrap.className = 'mb-3';
+                        const select = createSelectElement(q, i);
+                        selectWrap.appendChild(select);
+                        answerContainer.appendChild(selectWrap);
                     }
-                    defaultOption.disabled = true;
-                    defaultOption.selected = true;
-                    select.appendChild(defaultOption);
-
-                    // 選択肢の追加
-                    q.options[i].forEach(opt => {
-                        const option = document.createElement('option');
-                        option.value = opt;
-                        option.text = opt;
-                        // 既に回答済みの場合はそれを選択状態にする
-                        if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
-                            option.selected = true;
-                        }
-                        select.appendChild(option);
-                    });
-
-                    answerContainer.appendChild(select);
+                } else {
+                    answerContainer.classList.add('hidden');
                 }
             }
 
-            // 左側のナビゲーションの色を更新
+            // ナビゲーションの色を更新（PC用・モバイル用）
             Array.from(questionNavList.children).forEach((el, idx) => {
                 if (idx === currentQuestionIndex) {
-                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors bg-emerald-100 border-emerald-400 theme-text';
+                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-emerald-100 border-emerald-400 theme-text';
                 } else {
-                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors bg-gray-200 border-gray-300 hover:bg-gray-300';
+                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-gray-200 border-gray-300 hover:bg-gray-300';
+                }
+            });
+            Array.from(mobileNavList.children).forEach((btn, idx) => {
+                if (idx === currentQuestionIndex) {
+                    btn.className = 'w-full p-2 border rounded font-bold text-center transition-colors fs-base bg-emerald-100 border-emerald-400 theme-text';
+                } else {
+                    btn.className = 'w-full p-2 border rounded font-bold text-center transition-colors fs-base bg-white border-gray-300 text-gray-700 hover:bg-gray-50';
                 }
             });
 
@@ -326,7 +468,8 @@
         function saveAnswer() {
             const q = questions[currentQuestionIndex];
             if (q.inputCount) {
-                const inputs = answerContainer.querySelectorAll('.multi-input');
+                // テスト画面内の全解答欄(multi-input)を取得
+                const inputs = document.getElementById('test-screen').querySelectorAll('.multi-input');
                 userAnswers[q.id] = Array.from(inputs).map(input => input.value);
             }
         }
@@ -382,41 +525,48 @@
 
                 let markHtml = '';
                 if (earnedPoint === q.point) {
-                    markHtml = '<span class="text-red-600 font-bold text-xl mr-2">○</span>';
+                    markHtml = '<span class="text-red-600 font-bold mr-2 fs-xl">○</span>';
                 } else if (earnedPoint > 0) {
-                    markHtml = '<span class="text-yellow-600 font-bold text-xl mr-2">△</span>';
+                    markHtml = '<span class="text-yellow-600 font-bold mr-2 fs-xl">△</span>';
                 } else {
-                    markHtml = '<span class="text-blue-600 font-bold text-xl mr-2">×</span>';
+                    markHtml = '<span class="text-blue-600 font-bold mr-2 fs-xl">×</span>';
                 }
 
-                // 解説がある場合は表示、なければ空
+                // 解説と問題文の構築
                 const explanationHtml = q.explanation ? q.explanation : '';
+                
+                // 採点結果画面でも問題文がわかりやすいように subQuestions があれば結合して表示
+                let fullTextHtml = `<p class="mb-6 text-gray-800 whitespace-pre-wrap fs-lg">${q.text}</p>`;
+                if (q.subQuestions) {
+                    const subList = q.subQuestions.map(sq => `<p class="mb-2 text-gray-800 whitespace-pre-wrap fs-lg">${sq}</p>`).join('');
+                    fullTextHtml += `<div class="mb-6">${subList}</div>`;
+                }
 
                 const itemHtml = `
                     <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
-                        <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center text-sm md:text-base">
+                        <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center fs-base">
                             ${markHtml}
                             【問題${index + 1}】（${q.point}点）
                         </div>
-                        <div class="p-3 md:p-6">
-                            <p class="mb-4 md:mb-6 text-sm md:text-base text-gray-800 whitespace-pre-wrap">${q.text}</p>
-                            <table class="w-full border-collapse text-xs md:text-sm">
+                        <div class="p-4 md:p-6">
+                            ${fullTextHtml}
+                            <table class="w-full border-collapse">
                                 <tbody>
                                     <tr>
-                                        <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left">正解</th>
-                                        <td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap">${q.displayAnswer}</td>
+                                        <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left fs-sm">正解</th>
+                                        <td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap fs-sm">${q.displayAnswer}</td>
                                     </tr>
                                     <tr>
-                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left">学習者解答</th>
-                                        <td class="p-2 border border-gray-300 whitespace-pre-wrap ${isCorrect ? '' : (earnedPoint > 0 ? 'text-yellow-700 font-bold' : 'text-red-600 font-bold')}">${displayUserAnswer}</td>
+                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">学習者解答</th>
+                                        <td class="p-2 border border-gray-300 whitespace-pre-wrap fs-sm ${isCorrect ? '' : (earnedPoint > 0 ? 'text-yellow-700 font-bold' : 'text-red-600 font-bold')}">${displayUserAnswer}</td>
                                     </tr>
                                     <tr>
-                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left">点数</th>
-                                        <td class="p-2 border border-gray-300">${earnedPoint}点／${q.point}点</td>
+                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">点数</th>
+                                        <td class="p-2 border border-gray-300 fs-sm">${earnedPoint}点／${q.point}点</td>
                                     </tr>
                                     <tr>
-                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left">問題解説</th>
-                                        <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed">${explanationHtml}</td>
+                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">問題解説</th>
+                                        <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed fs-sm">${explanationHtml}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -453,8 +603,8 @@
             }
         });
 
-        // selectの変更時に即座に保存
-        answerContainer.addEventListener('change', (e) => {
+        // テスト画面全体でchangeイベントを監視し、解答を即座に保存 (イベント委譲)
+        document.getElementById('test-screen').addEventListener('change', (e) => {
             if (e.target.classList.contains('answer-input')) {
                 saveAnswer();
             }
