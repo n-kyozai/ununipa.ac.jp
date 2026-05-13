@@ -18,7 +18,7 @@
 
         /* フォントサイズ手動切り替え用 */
         :root {
-            --font-scale: 1;
+            --font-scale: 0.85; /* デフォルトを一段階縮小 */
         }
         .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
         .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
@@ -170,7 +170,6 @@
                 pointPerItem: 1,
                 inputCount: 6,
                 ordered: true,
-                // 問題2は subQuestions を使って、文ごとに解答欄を配置できるようにしました
                 text: "次の各文を読んで，それぞれに当てはまる一般的発達段階区分を選べ。", 
                 subQuestions: [
                     "(1) 身体的にも知的にも著しい発達がみられる。具体的なものを媒介にした思考が発達する。活動は家族から友人へと移っていき，社会性が発達し，仲間関係が広がる。",
@@ -261,7 +260,7 @@
 
         // フォントサイズ切り替え用の設定
         const fontSizes = ['normal', 'small', 'xsmall', 'large'];
-        let currentFontSizeIndex = 0;
+        let currentFontSizeIndex = 1; // 初期値を 'small' に設定
 
         // DOM要素
         const startScreen = document.getElementById('start-screen');
@@ -393,7 +392,7 @@
 
             // subQuestionsがある場合（小問ごとに解答欄を配置）
             if (q.subQuestions) {
-                answerContainer.classList.add('hidden'); // まとめて表示するコンテナは隠す
+                answerContainer.classList.add('hidden');
 
                 q.subQuestions.forEach((subText, i) => {
                     const subP = document.createElement('p');
@@ -468,7 +467,6 @@
         function saveAnswer() {
             const q = questions[currentQuestionIndex];
             if (q.inputCount) {
-                // テスト画面内の全解答欄(multi-input)を取得
                 const inputs = document.getElementById('test-screen').querySelectorAll('.multi-input');
                 userAnswers[q.id] = Array.from(inputs).map(input => input.value);
             }
@@ -496,14 +494,12 @@
                     let matchCount = 0;
 
                     if (q.ordered) {
-                        // 順番通りに正解と一致するか判定
                         q.answer.forEach((correctWord, i) => {
                             if (userAnsArray[i] === correctWord) {
                                 matchCount++;
                             }
                         });
                     } else {
-                        // 順不同での判定（重複選択を省いて正解リストに含まれるか確認）
                         const normalizedUserAns = [...new Set(userAnsArray.filter(ans => ans !== ''))];
                         q.answer.forEach(correctWord => {
                             if (normalizedUserAns.includes(correctWord)) {
@@ -532,10 +528,8 @@
                     markHtml = '<span class="text-blue-600 font-bold mr-2 fs-xl">×</span>';
                 }
 
-                // 解説と問題文の構築
                 const explanationHtml = q.explanation ? q.explanation : '';
                 
-                // 採点結果画面でも問題文がわかりやすいように subQuestions があれば結合して表示
                 let fullTextHtml = `<p class="mb-6 text-gray-800 whitespace-pre-wrap fs-lg">${q.text}</p>`;
                 if (q.subQuestions) {
                     const subList = q.subQuestions.map(sq => `<p class="mb-2 text-gray-800 whitespace-pre-wrap fs-lg">${sq}</p>`).join('');
@@ -564,10 +558,11 @@
                                         <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">点数</th>
                                         <td class="p-2 border border-gray-300 fs-sm">${earnedPoint}点／${q.point}点</td>
                                     </tr>
+                                    ${explanationHtml ? `
                                     <tr>
                                         <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">問題解説</th>
                                         <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed fs-sm">${explanationHtml}</td>
-                                    </tr>
+                                    </tr>` : ''}
                                 </tbody>
                             </table>
                         </div>
@@ -582,7 +577,6 @@
         // イベントリスナーの設定
         document.getElementById('start-btn').addEventListener('click', startTest);
         
-        // テスト一覧へ戻るリンクの更新
         document.getElementById('retry-btn').addEventListener('click', () => {
             window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html";
         });
@@ -603,7 +597,6 @@
             }
         });
 
-        // テスト画面全体でchangeイベントを監視し、解答を即座に保存 (イベント委譲)
         document.getElementById('test-screen').addEventListener('change', (e) => {
             if (e.target.classList.contains('answer-input')) {
                 saveAnswer();
