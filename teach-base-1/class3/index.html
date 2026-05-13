@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第3回復習問題</title>
+    <title>第2回復習問題</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 画像に合わせた深緑色をテーマカラーに設定 */
@@ -18,7 +18,7 @@
 
         /* フォントサイズ手動切り替え用 */
         :root {
-            --font-scale: 0.85; /* デフォルトを一段階縮小 */
+            --font-scale: 0.85;
         }
         .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
         .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
@@ -36,8 +36,8 @@
             <table class="w-full border-collapse">
                 <tbody>
                     <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テストグループ</th><td class="p-3 border border-gray-300 fs-sm">教職教養基礎</td></tr>
-                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">第3回復習問題</td></tr>
-                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">15点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">第2回復習問題</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">11点</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">コース</th><td class="p-3 border border-gray-300 fs-sm">教育心理学</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題表示区分</th><td class="p-3 border border-gray-300 fs-sm">一問題表示</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題出題形式</th><td class="p-3 border border-gray-300 fs-sm">同一</td></tr>
@@ -68,7 +68,7 @@
                     <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none p-1">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <div class="font-bold text-gray-700 fs-base">第3回復習問題</div>
+                    <div class="font-bold text-gray-700 fs-base">第2回復習問題</div>
                 </div>
                 
                 <div class="flex items-center gap-2 sm:gap-3">
@@ -95,7 +95,7 @@
             <div class="flex justify-between items-center border-t pt-4">
                 <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">前へ</button>
                 <div class="flex items-center">
-                    <span id="progress-text" class="mr-6 text-gray-600 font-bold fs-base">1 / 6</span>
+                    <span id="progress-text" class="mr-6 text-gray-600 font-bold fs-base">1 / 4</span>
                     <button id="next-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-6 rounded transition fs-base">次へ</button>
                     <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition fs-base">テスト提出</button>
                 </div>
@@ -124,7 +124,7 @@
         
         <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
             <p class="text-gray-600 mb-2 fs-lg">あなたの得点</p>
-            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 15点</p>
+            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 11点</p>
         </div>
 
         <div id="result-list" class="space-y-8">
@@ -148,7 +148,7 @@
     </div>
 
     <script>
-        // 画像の内容を反映した問題データ（選択式・プルダウン用に改変）
+        // 第2回の問題データ
         const originalQuestions = [
             { 
                 id: 1, 
@@ -156,100 +156,58 @@
                 pointPerItem: 1,
                 inputCount: 1,
                 ordered: true,
-                text: "発達という概念を正しく説明しているものを選べ。\n\n① 個体の発生から死に至るまでの人の様々な変化をいう。特に心身の変化，中でも，精神の機能や構造の変化に焦点が当てられる。\n② 身体的，生理的な量的変化で特に上昇的な変化をいう。体重，身長の変化，第二次性徴などがこれに当てはまる。\n③ 遺伝的に組み込まれたプログラムによって人が完成状態に達することをいう。したがって，時期がくると訓練しなくても様々な行動ができるようになる。", 
+                text: "次の文と最も関係の深い人物を答えよ。\n\n(1) 1879年，ドイツのライプツィヒ大学に世界初の心理学実験室を開設し，独立した実証科学として心理学を創始した。生理学の出身であることを生かし，内観法と実験を組み合わせた独自の研究方法を提唱した。", 
                 options: [
-                    ["①", "②", "③"]
+                    ["フロイト", "ヴント", "ヘルバルト"]
                 ],
-                answer: ["①"],
-                displayAnswer: "①",
-                explanation: "心理学における発達の概念は衰退も含む変化であることを理解しておくこと。①の説明は生涯発達という発想に基づいている。②は量的増大を指す成長、③は遺伝を重視する成熟についての説明である。"
+                answer: ["ヴント"],
+                displayAnswer: "ヴント"
             },
             { 
                 id: 2, 
-                point: 6,
+                point: 1,
                 pointPerItem: 1,
-                inputCount: 6,
+                inputCount: 1,
                 ordered: true,
-                text: "次の各文を読んで，それぞれに当てはまる一般的発達段階区分を選べ。", 
-                subQuestions: [
-                    "(1) 身体的にも知的にも著しい発達がみられる。具体的なものを媒介にした思考が発達する。活動は家族から友人へと移っていき，社会性が発達し，仲間関係が広がる。",
-                    "(2) 独立して社会的な活動により生計を営み，多くは家族を形成する。",
-                    "(3) 母子の愛着関係が成立し，歩行と言葉の獲得期である。",
-                    "(4) 心理的，身体的機能の減退，退職や配偶者との別れなどの喪失を特徴とする一方，個人のもつ価値観や自我統合が確立する。",
-                    "(5) 第二次性徴に伴い，心身ともに大きな変化を迎える。親への依存と独立の間を行き来しながら，心理的離乳を果たそうとする。",
-                    "(6) 他者の視点が理解できず，自分の視点からものごとを理解したり（自己中心性），物質にも生命があると考えたりする（アニミズム），などの未熟さがある。"
-                ],
+                text: "次の文と最も関係の深い人物を答えよ。\n\n(2) 心理学の対象から主観的な意識を排除し，客観的にとらえられる行動によって心理学を形成しようとする行動主義心理学を唱えた。後に「意識（心）なき心理学」として批判されたが，学習理論や行動療法の基礎として現在まで影響を及ぼしている。", 
                 options: [
-                    ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
-                    ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
-                    ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
-                    ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
-                    ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"],
-                    ["乳児期", "幼児期", "児童期", "青年期", "成人期", "老年期"]
+                    ["パブロフ", "スキナー", "ワトソン"]
                 ],
-                answer: ["児童期", "成人期", "乳児期", "老年期", "青年期", "幼児期"],
-                displayAnswer: "① 児童期\n② 成人期\n③ 乳児期\n④ 老年期\n⑤ 青年期\n⑥ 幼児期",
-                explanation: "(1) ピアジェの具体的操作期とギャング・エイジに関連する記述に気付くことができれば容易に正答できる。\n(2) 経済的な自立は成人期の課題である。\n(3) 愛着はアタッチメントともよばれる。ボウルビィによって提唱されたことも確認しておきたい。\n(4) 自我統合はエリクソンの心理社会的発達理論における老年期の課題である。\n(5) 第二次性徴は青年期の始まりの指標である。心理的離乳に類似した概念として、自我の発見、脱衛星化、第二の誕生なども確認しておくこと。\n(6) 自己中心性とアニミズムはピアジェによって指摘された。保存概念の未獲得、直観的思考とともに前操作期の特徴としてまとめられる。"
+                answer: ["ワトソン"],
+                displayAnswer: "ワトソン"
             },
             { 
                 id: 3, 
-                point: 2,
-                pointPerItem: 1,
-                inputCount: 2,
-                ordered: false, // 順不同
-                text: "次の記述のうち，誤っているものを2つ選べ。（順不同）\n\n① エリクソンは，青年が自我同一性を確立するには，青年期以前の発達的危機を乗り越えて，さらに友人やその他の社会的関係に適応していくことが必要であると述べている。\n② ゲゼルは，発達の要因として学習を重視し環境優位説を唱えた。つまり，遺伝的な素質に関係なく，環境次第でどんな人間にでも発達させることができると考えた。\n③ 時代とともに生理的成熟が早期化していることを発達加速現象という。典型的には，初潮や精通の平均年齢が低下してきていることに象徴される。\n④ 社会性とは社会的適応能力であり，それを身に付ける過程を社会化とよぶ。同性・同年代の自然発生的な仲間集団を形成しやすいギャング・エイジは，社会化に重要な役割を果たしていると考えられてきた。\n⑤ フロイトは，自力で解決できる現在の発達水準と，助言があれば解決できる明日の発達水準を区別し，後者の重要性を主張して発達の最近接領域という概念を提唱した。", 
-                options: [
-                    ["①", "②", "③", "④", "⑤"],
-                    ["①", "②", "③", "④", "⑤"]
-                ],
-                answer: ["②", "⑤"],
-                displayAnswer: "②\n⑤",
-                explanation: "② ゲゼルではなく、行動主義心理学者のワトソンの立場である。ゲゼルは一卵性双生児を対象とした実験から成熟優位説を唱え、レディネスの重要性を主張した。\n⑤ フロイトではなく、ロシアの心理学者ヴィゴツキーである。ゲゼルの成熟を重視したレディネス観を批判し、むしろ教育的なはたらきかけがレディネスを引き上げていくと考えた点に特徴がある。"
-            },
-            { 
-                id: 4, 
                 point: 4,
                 pointPerItem: 1,
                 inputCount: 4,
                 ordered: true,
-                text: "ピアジェに関する次の各問いに答えよ。\n\n(1) ピアジェが設定した知能の発達段階を4つ順に選べ。", 
+                text: "次の文の（　　）に適する語句を選べ。\n\n心の深層に自分でも気付かない領域である（　①　）の存在を仮定し，精神分析学を創始したのは（　②　）である。性的なエネルギーの観点から，人間の発達段階と幼児期体験の重要性を示し，従来の児童観に変化を与えたことなどで，教育心理学に大きな貢献をした。また，その弟子たちも業績を残している。例えば，青年期において（　③　）の確立が重要であることを指摘した（　④　）は，発達心理学の研究に従事した代表者である。また，分析心理学を唱えたユングも知られている。", 
                 options: [
-                    ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期", "潜伏期", "口愛期"],
-                    ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期", "潜伏期", "口愛期"],
-                    ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期", "潜伏期", "口愛期"],
-                    ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期", "潜伏期", "口愛期"]
+                    ["前意識", "無意識", "集合的無意識"],
+                    ["アドラー", "フロイト", "ユング"],
+                    ["自己実現", "自我同一性", "劣等コンプレックス"],
+                    ["ヴィゴツキー", "ピアジェ", "エリクソン"]
                 ],
-                answer: ["感覚運動期", "前操作期", "具体的操作期", "形式的操作期"],
-                displayAnswer: "① 感覚運動期\n② 前操作期\n③ 具体的操作期\n④ 形式的操作期",
-                explanation: "ピアジェは発達に関して大変重要な人物である。発達段階の概要はぜひ押さえておきたい。特に前操作期の直観的思考や自己中心性といった特徴を実験例とともにしっかり理解し、具体的操作期でそれらの特徴が消失すると考えるとわかりやすい。"
+                answer: ["無意識", "フロイト", "自我同一性", "エリクソン"],
+                displayAnswer: "① 無意識\n② フロイト\n③ 自我同一性\n④ エリクソン"
             },
             { 
-                id: 5, 
-                point: 1,
+                id: 4, 
+                point: 5,
                 pointPerItem: 1,
-                inputCount: 1,
+                inputCount: 5,
                 ordered: true,
-                text: "ピアジェに関する次の各問いに答えよ。\n\n(2) ピアジェの提唱した「保存」の概念について簡潔に説明しているものを次の中から選べ。\n\n① 数、重さ、体積などは、物質の見かけの形態が変化しても同じであるという概念\n② 他者の視点が理解できず、自分の視点からものごとを理解する概念\n③ 自力で解決できる水準と助言で解決できる水準の間にある領域を示す概念", 
+                text: "次の文の（　　）に適する語句を選べ。\n\n一方で，まとまりのあるものは部分に分解不可能だという立場から，全体性を重視する（　①　）が生まれた。代表的な理論家は，仮現運動で知られる（　②　），理論的なまとめ役のコフカ，そして学習理論の領域で洞察説を唱えた（　③　）である。加えて，理論的研究と実践的活動の統合を図る（　④　）を唱えた（　⑤　）も，場の理論をはじめとして，学習，人格，集団，さらには発達の領域において数々の業績を残している。", 
                 options: [
-                    ["①", "②", "③"]
+                    ["行動主義心理学", "ゲシュタルト心理学", "認知心理学"],
+                    ["ジェームズ", "ヴント", "ウェルトハイマー"],
+                    ["ケーラー", "トールマン", "バンデューラ"],
+                    ["アクション・リサーチ", "フィールドワーク", "ケーススタディ"],
+                    ["ブルーナー", "レヴィン", "ソーンダイク"]
                 ],
-                answer: ["①"],
-                displayAnswer: "①",
-                explanation: "保存の概念は、具体的操作期（小学生頃）になって獲得される。見かけが変わっても、量や数などは変わらないことを理解できる。"
-            },
-            { 
-                id: 6, 
-                point: 1,
-                pointPerItem: 1,
-                inputCount: 1,
-                ordered: true,
-                text: "ピアジェに関する次の各問いに答えよ。\n\n(3) 子どもの認知発達の程度を測るために，テーブルの上の粘土などで作った高さの異なる3つの山が，見る方向によって異なることが理解できるかどうかを尋ねる問題を何というか。", 
-                options: [
-                    ["三つ山問題", "振り子問題", "サリーとアンの課題"]
-                ],
-                answer: ["三つ山問題"],
-                displayAnswer: "三つ山問題",
-                explanation: "「三つ山問題（三ツ山課題）」は、前操作期の子どもが持つ「自己中心性」（他者の視点に立つことができない状態）を確認するための有名な実験である。"
+                answer: ["ゲシュタルト心理学", "ウェルトハイマー", "ケーラー", "アクション・リサーチ", "レヴィン"],
+                displayAnswer: "① ゲシュタルト心理学\n② ウェルトハイマー\n③ ケーラー\n④ アクション・リサーチ\n⑤ レヴィン"
             }
         ];
 
@@ -260,7 +218,7 @@
 
         // フォントサイズ切り替え用の設定
         const fontSizes = ['normal', 'small', 'xsmall', 'large'];
-        let currentFontSizeIndex = 1; // 初期値を 'small' に設定
+        let currentFontSizeIndex = 1; // 初期値を 'small' に変更
 
         // DOM要素
         const startScreen = document.getElementById('start-screen');
@@ -374,9 +332,6 @@
 
         // 問題の表示
         function renderQuestion() {
-            // 問題遷移時に画面の一番上へスクロールする（スムーズスクロールなし）
-            window.scrollTo(0, 0);
-
             const q = questions[currentQuestionIndex];
             document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
             document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
@@ -464,6 +419,13 @@
                 document.getElementById('next-btn').classList.remove('hidden');
                 document.getElementById('finish-btn').classList.add('hidden');
             }
+
+            // 問題描画後に画面の一番上へスクロールする（モバイルブラウザ対応のため少し遅延させて実行）
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0; // Safari用
+                document.documentElement.scrollTop = 0; // Chrome, Firefox, IE用
+            }, 10);
         }
 
         // 解答の保存
