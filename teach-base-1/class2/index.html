@@ -332,6 +332,9 @@
 
         // 問題の表示
         function renderQuestion() {
+            // 問題遷移時に画面の一番上へスクロールする（スムーズスクロールなし）
+            window.scrollTo(0, 0);
+
             const q = questions[currentQuestionIndex];
             document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
             document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
