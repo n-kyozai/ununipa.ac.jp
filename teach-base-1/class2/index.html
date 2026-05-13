@@ -332,9 +332,6 @@
 
         // 問題の表示
         function renderQuestion() {
-            // 問題遷移時に画面の一番上へスクロールする（スムーズスクロールなし）
-            window.scrollTo(0, 0);
-
             const q = questions[currentQuestionIndex];
             document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
             document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
@@ -422,6 +419,13 @@
                 document.getElementById('next-btn').classList.remove('hidden');
                 document.getElementById('finish-btn').classList.add('hidden');
             }
+
+            // 問題描画後に画面の一番上へスクロールする（モバイルブラウザ対応のため少し遅延させて実行）
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0; // Safari用
+                document.documentElement.scrollTop = 0; // Chrome, Firefox, IE用
+            }, 10);
         }
 
         // 解答の保存
