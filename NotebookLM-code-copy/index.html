@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotebookLM プロンプトコピー</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* カスタムアニメーション */
+        @keyframes slideUp {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        .toast-enter {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 h-screen flex flex-col items-center justify-center font-sans text-slate-800 overflow-hidden">
+
+    <!-- ヘッダー部分 -->
+    <div class="text-center mb-8 px-4">
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-700 mb-2">NotebookLM プロンプトツール</h1>
+        <p class="text-sm md:text-base text-slate-500">ボタンを押すだけでプロンプトをクリップボードにコピーします</p>
+    </div>
+
+    <!-- ボタンコンテナ -->
+    <div class="w-full max-w-md px-6 space-y-4">
+        
+        <!-- スライド生成用ボタン -->
+        <button onclick="copyPrompt('slide')" class="w-full group relative flex items-center justify-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border-2 border-blue-100 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-100 overflow-hidden">
+            <div class="absolute inset-0 bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+            <div class="relative flex flex-col items-center space-y-3">
+                <div class="p-3 bg-blue-100 text-blue-600 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-lg font-bold text-slate-700">スライド生成用</h2>
+                    <p class="text-xs text-slate-500 mt-1">エリート・スタディ・グラフィック</p>
+                </div>
+            </div>
+        </button>
+
+        <!-- インフォグラフィック生成用ボタン -->
+        <button onclick="copyPrompt('info')" class="w-full group relative flex items-center justify-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border-2 border-emerald-100 hover:border-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 overflow-hidden">
+            <div class="absolute inset-0 bg-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+            <div class="relative flex flex-col items-center space-y-3">
+                <div class="p-3 bg-emerald-100 text-emerald-600 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-lg font-bold text-slate-700">インフォグラフィック用</h2>
+                    <p class="text-xs text-slate-500 mt-1">高密度情報アーキテクチャ</p>
+                </div>
+            </div>
+        </button>
+
+    </div>
+
+    <!-- トースト通知 -->
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg font-medium text-sm flex items-center space-x-2 hidden z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><path d="M20 6 9 17l-5-5"/></svg>
+        <span id="toast-message">コピーしました</span>
+    </div>
+
+    <script>
+        // プロンプトデータの定義
+        const prompts = {
+            slide: `あなたは教員採用試験の学習メンターであり、プレゼンテーションの専門家です。
+NotebookLMに読み込まれている「ソース（資料・議事録・記事・メモ等）」のみを根拠に、試験直前の復習が完結する「エリート・スタディ・グラフィック」スタイルのスライド・読み原稿を一括で作成してください。
+
+【最重要ルール（根拠・正確性）】
+- 根拠は「NotebookLMに読み込まれたソース」だけ。外部知識・一般論・推測で補完しない。
+- ソースに書かれていない固有名詞・数値・日付・断定は作らない。
+- 必要情報がソース内にない場合は「ソース内で確認できない」と明記する。
+- 重要な主張にはどのソースに基づくか根拠を添える。
+
+【カスタマイズ（試験対策用デフォルト）】
+- 聴衆：教員採用試験の受験生（自分）、および教職を目指す友人
+- 目的：試験直前の知識の定着、論理構造（因果関係）の理解、記述問題対策
+- 発表時間：約10分（調整可）
+- トーン：知的で丁寧ながら、学習者の背中を押す親しみやすい語り口
+- 1枚あたりの目安：1.5〜2分／枚
+
+【スライドデザイン：エリート・スタディ・グラフィック】
+- 背景：ルーズリーフやキャンバス地の温かみのあるテクスチャ
+- スタイル：すべての図形や矢印に「ペンによる手描きスケッチ風」の揺らぎを持たせる
+- 配色：水彩パステルカラー基調。色が重なる部分に透明感を持たせる
+- 強調要素：カラフルな「斜めに貼った手書き風の付箋（黄色、ピンク、青、緑など）」に最重要キーワードを配置
+- 補足要素：色鉛筆による波線や、手描き風の吹き出しを活用
+
+【スライド構成ルール（フロー構造の厳守）】
+時間軸や論理展開は必ず「左から右」または「上から下」へのフロー図とし、以下の構成で組み立てること。
+1. タイトル＆導入：学習の目的と全体像
+2. メイン解説（フロー）：概念や因果関係をフロー図で説明
+3. コラム（深掘り）：歴史的背景などの豆知識
+4. 演習問題：ソースから出題が予想される記述問題や選択問題を提示
+5. 解答・解説：答えだけでなく解法のプロセスをフローで解説
+6. まとめ：重要事項のチェックリスト
+
+━━━━━━━━━━━━━━━━━━━━
+A）分析メモ（ソース統合）
+━━━━━━━━━━━━━━━━━━━━
+1）コアメッセージ：今回の範囲で最も覚えるべき結論。
+2）出題ポイント：試験で問われやすい重要な事実・示唆・判断材料（5〜7個）＋根拠ソース。
+3）因果関係の整理：「なぜそうなるのか」の論理展開メモ。
+4）予想問題案：ソースから作問可能な記述・選択問題のアイデア。
+
+━━━━━━━━━━━━━━━━━━━━
+B）プレゼン設計図
+━━━━━━━━━━━━━━━━━━━━
+各スライドについて以下を出力（上記の「スライド構成ルール」に沿うこと）：
+1）スライドタイトル　2）伝える要点（1〜2行＋根拠）　3）想定所要時間　4）つなぎ（次のスライドへの誘導）
+
+▼自己点検：時間配分と構成の確認。
+▼確定スライド一覧（マスター）：自己点検後、以下の形式で全スライドを列挙する。
+  Slide 1｜タイトル
+  - 要点：…
+  - 根拠：…
+  - つなぎ：…
+  （全枚数分）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【出力指示】★Studio連携の核心★
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■前提（必ず理解してから実行すること）
+Studio機能はチャットの過去出力を参照できないため、B）で作成した確定スライド一覧の全文を、各パラメータ内に直接・完全に書き出すこと。省略・「上記参照」は絶対禁止。
+
+■出力1：チャット欄
+- A）分析メモ
+- B）プレゼン設計図（末尾に確定スライド一覧）
+
+■出力2：読み原稿（Studioテーラードレポート生成用）
+パラメータ：
+  report_type: テレプロンプター読み原稿
+  report_description: プレゼン発表用読み上げ原稿
+  language_code: ja
+  document_directive: 以下の構成で組み立てる
+
+document_directiveの構成：
+（1）冒頭指示：「以下の確定一覧とルールに従い読み原稿を作成せよ。」
+（2）【原稿ルール】：聴衆・目的・トーンは上記指定を反映。連続テキスト、段落分け。箇条書き不可。新論点の追加禁止。
+（3）【確定スライド一覧】：B）で確定した一覧を一字一句そのまま書き写す。
+
+■出力3：スライドデック（Studio生成用）
+パラメータ：
+  deck_type: presentation
+  length: dynamic
+  language_code: ja
+  user_steering_prompt: 以下の構成で組み立てる
+
+user_steering_promptの構成：
+（1）冒頭指示：「以下の確定スライド一覧に厳密に従いスライドを作成せよ。つなぎはスライドに含めないこと。」
+（2）【デザイン指定】：上記の【スライドデザイン：エリート・スタディ・グラフィック】の内容をそのまま書き写す。HTML/CSSで出力する場合は、\`transform: rotate(-3deg);\` や \`border-radius\` のランダム値を用いて手書き感と付箋の傾きを実装すること。
+（3）【確定スライド一覧】：出力2と同一の内容をそのまま書き写す。
+
+出力1→出力2→出力3の順に実行すること。`,
+
+            info: `あなたは教員採用試験の学習メンターであり、情報の構造化と視覚化の専門家です。
+NotebookLMに読み込まれている「ソース」のみを根拠に、膨大な情報を1枚のスライドに論理的かつ高密度に詰め込んだ「インフォグラフィック」スタイルのスライド・読み原稿を一括作成してください。
+
+【最重要ルール（根拠・正確性）】
+- 根拠は「NotebookLMに読み込まれたソース」だけ。外部知識・推測で補完しない。
+- ソースにない固有名詞・数値・日付・断定は絶対に作らない。
+- 情報が不足している場合は「ソース内で確認不可」と明記する。
+
+【カスタマイズ】
+- 聴衆：教員採用試験の受験生（自分）、および教職を目指す友人
+- 目的：複雑な事象の俯瞰、理論や制度の比較、教職教養の膨大な知識の構造化と暗記
+- 発表時間：約15分
+- トーン：客観的・分析的で無駄のない解説スタイル
+- 1枚あたりの目安：2.5〜3分／枚
+
+【スライドデザイン：インフォグラフィック・スタイル】
+- レイアウト：グリッド（格子）ベース。情報を2カラム、3カラム、または四象限に分割して整然と配置。
+- スタイル：装飾を極力排除したフラットデザイン。情報の視認性（S/N比）を最大化する。
+- 配色：背景はダークグレー（#1e293b）または白（#ffffff）。文字色はコントラストの高い色を使用。
+- 強調要素：最重要データ・人物名・キーワードのみに鮮やかなアクセントカラー（シアンやオレンジ）をピンポイントで使用。
+- 視覚要素：タイムライン（発達段階や年表）、比較マトリクス（表）、ベン図、関係性を示す直線的な矢印を多用する。
+
+【スライド構成ルール（情報アーキテクチャ）】
+長文は避け、名詞ベースの箇条書きと図表構造を厳守すること。
+1. サマリー：全体の結論、最重要キーワード、全体マップの提示
+2. プロセス／タイムライン：事象の推移や発達の段階を直線的に配置
+3. 比較マトリクス：複数の理論（例：環境優位説と成熟優位説など）や人物を縦横の表形式で徹底比較
+4. 構造図解：原因と結果、上位概念と下位概念をツリー構造で整理
+5. 演習・要点リスト：試験で問われるポイントを高密度リストで提示
+
+━━━━━━━━━━━━━━━━━━━━
+A）分析メモ（ソース統合と構造化）
+━━━━━━━━━━━━━━━━━━━━
+1）コア・インサイト：ソース全体から導き出される最重要の法則や傾向。
+2）比較・対立構造：ソース内にある「AとBの違い」「メリット・デメリット」の整理。
+3）ファクト抽出：人物名、理論名、年齢段階など、インフォグラフィックに使えるデータのリストアップ。
+4）構造化の軸：情報を整理するための軸（発達段階、環境vs遺伝など）の決定。
+
+━━━━━━━━━━━━━━━━━━━━
+B）プレゼン設計図
+━━━━━━━━━━━━━━━━━━━━
+各スライドについて以下を出力（長文を避け、図解できる構造で記述）：
+1）スライドタイトル　2）図解の形式（表、年表、ツリー図など）　3）詰め込む要点データ（箇条書き3〜5点）　4）想定所要時間　5）つなぎ
+
+▼確定スライド一覧（マスター）：以下の形式で列挙する。
+  Slide 1｜タイトル
+  - 形式：…
+  - 要点データ：…
+  - つなぎ：…
+  （全枚数分）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【出力指示】★Studio連携の核心★
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■前提（必ず理解してから実行すること）
+Studioのスライドデック機能・テーラードレポート機能はチャットの過去出力を参照できない。
+したがって、B）で作成した確定スライド一覧（マスター）の全文を、各パラメータ内に直接・完全に書き出すこと。省略・要約・間接参照は絶対に禁止。1スライドも欠けてはならない。
+
+■出力1：チャット欄
+- A）分析メモ
+- B）プレゼン設計図（末尾に確定スライド一覧）
+
+■出力2：読み原稿（Studioテーラードレポート生成）
+  report_type: テレプロンプター読み原稿
+  report_description: プレゼン発表用読み上げ原稿
+  language_code: ja
+  document_directive: 以下の構成で組み立てる
+
+document_directiveの構成：
+（1）冒頭指示：「プレゼンのスピーチライターとして、以下の確定スライド一覧と原稿ルールに従いテレプロンプター用読み原稿を作成せよ。」
+（2）【原稿ルール】：聴衆・目的・トーンは指定を反映。スライドが図表中心で文字が少ない分、読み原稿で「表の読み解き方」「因果関係の深い解説」を補足すること。段落分けし、箇条書き不可。
+（3）【確定スライド一覧】：B）で確定した一覧を一字一句そのまま書き写す。
+
+■出力3：スライドデック（Studio生成）
+  deck_type: presentation
+  length: dynamic
+  language_code: ja
+  user_steering_prompt: 以下の構成で組み立てる
+
+user_steering_promptの構成：
+（1）冒頭指示：「以下の確定スライド一覧に厳密に従い、情報を極限まで構造化した高密度なインフォグラフィックスライドを作成せよ。つなぎはスライドに含めないこと。」
+（2）【デザイン指定】：上記の【スライドデザイン：インフォグラフィック・スタイル】をそのまま書き写す。長い文章は排除し、表・リスト・関係図としてレイアウトすること。
+（3）【確定スライド一覧】：出力2と同一の内容をそのまま書き写す。
+
+出力1→出力2→出力3の順に実行すること。`
+        };
+
+        let toastTimeout;
+
+        function copyPrompt(type) {
+            const textToCopy = prompts[type];
+            
+            // モバイルブラウザなどの制限を回避するため、textareaを使用した確実なコピー手法を採用
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            
+            // 画面のスクロールを防ぐためのスタイリング
+            textarea.style.position = 'fixed';
+            textarea.style.top = '0';
+            textarea.style.left = '0';
+            textarea.style.opacity = '0';
+            
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                // コピー実行
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const label = type === 'slide' ? 'スライド用' : 'インフォグラフィック用';
+                    showToast(`${label}プロンプトをコピーしました！`);
+                } else {
+                    alert('コピーに失敗しました。');
+                }
+            } catch (err) {
+                console.error('コピーエラー:', err);
+                alert('お使いのブラウザではコピー機能がサポートされていません。');
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            
+            // クラスをリセットして再適用
+            toast.classList.remove('hidden', 'toast-enter');
+            void toast.offsetWidth; // リフローを強制
+            toast.classList.add('toast-enter');
+
+            // 既存のタイマーをクリア
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+
+            // 2.5秒後に非表示
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('toast-enter');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
