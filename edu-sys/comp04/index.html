@@ -23,7 +23,6 @@
             max-width: 400px;
             border-radius: 4px;
             outline: none;
-            font-size: 1rem;
             color: #333;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -41,7 +40,6 @@
             max-width: 400px;
             border-radius: 4px;
             outline: none;
-            font-size: 1rem;
             color: #333;
             cursor: pointer;
             appearance: none;
@@ -69,9 +67,20 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* フォントサイズ手動切り替え用 */
+        :root {
+            --font-scale: 0.85; /* デフォルトを一段階縮小 */
+        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
     </style>
 </head>
-<body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col fs-base transition-none">
 
     <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
     <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
@@ -79,14 +88,14 @@
     <!-- ドロワーメニュー本体 (モバイル用) -->
     <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
         <div class="header-bg text-white p-4 flex justify-between items-center">
-            <span class="font-bold text-lg">問題リスト</span>
-            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+            <span class="font-bold fs-base">問題リスト</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2">
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2 custom-scrollbar">
             <!-- JSでリストを生成 -->
         </ul>
     </nav>
@@ -97,71 +106,58 @@
         <!-- ================= スタート画面 ================= -->
         <section id="start-screen" class="w-full mx-auto">
             
-            <div class="bg-white border border-gray-300 w-full mb-6 text-sm md:text-base flex flex-col shadow-sm">
+            <div class="bg-white border border-gray-300 w-full mb-6 flex flex-col shadow-sm">
                 <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">テスト名</div>
-                    <div class="w-2/3 md:w-3/4 p-3 font-medium">レベル4</div>
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center fs-sm">テスト名</div>
+                    <div class="w-2/3 md:w-3/4 p-3 font-bold fs-sm">レベル4</div>
                 </div>
                 <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">テスト範囲</div>
-                    <div class="w-2/3 md:w-3/4 p-3 leading-relaxed">第4回授業内容</div>
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center fs-sm">テスト範囲</div>
+                    <div class="w-2/3 md:w-3/4 p-3 leading-relaxed fs-sm">第4回授業内容</div>
                 </div>
                 <!-- 出題数のプルダウン選択 -->
                 <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">出題数</div>
-                    <div class="w-2/3 md:w-3/4 p-3">
-                        <select id="question-count-select" class="border border-gray-300 rounded p-1.5 focus:border-[#005b82] outline-none">
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center fs-sm">出題数</div>
+                    <div class="w-2/3 md:w-3/4 p-3 fs-sm">
+                        <select id="question-count-select" class="border border-gray-300 rounded p-1.5 focus:border-[#005b82] outline-none fs-sm">
                             <option value="5">5問</option>
                             <option value="10" selected>10問</option>
                             <option value="20">20問</option>
-                            <!-- 重複を削除した全32問 -->
-                            <option value="all">全問（32問）</option>
+                            <option value="all">全問（33問）</option>
                         </select>
                     </div>
                 </div>
                 <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">満点</div>
-                    <div id="display-score" class="w-2/3 md:w-3/4 p-3">計算中...</div>
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center fs-sm">満点</div>
+                    <div id="display-score" class="w-2/3 md:w-3/4 p-3 fs-sm">計算中...</div>
                 </div>
                 <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">合格点数</div>
-                    <div id="display-pass-score" class="w-2/3 md:w-3/4 p-3">計算中...</div>
-                </div>
-                <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">テスト時間</div>
-                    <div id="display-test-time" class="w-2/3 md:w-3/4 p-3">計算中...</div>
-                </div>
-                <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">問題表示区分</div>
-                    <div class="w-2/3 md:w-3/4 p-3">一問題表示</div>
-                </div>
-                <div class="flex border-b border-gray-300">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">問題出題形式</div>
-                    <div class="w-2/3 md:w-3/4 p-3">ランダム</div>
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center fs-sm">テスト時間</div>
+                    <div id="display-test-time" class="w-2/3 md:w-3/4 p-3 fs-sm">計算中...</div>
                 </div>
                 <div class="flex">
-                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center">再テスト可否区分</div>
-                    <div class="w-2/3 md:w-3/4 p-3">合格後も可</div>
+                    <div class="w-1/3 md:w-1/4 bg-[#005b82] text-white p-3 font-bold flex items-center fs-sm">問題出題形式</div>
+                    <div class="w-2/3 md:w-3/4 p-3 fs-sm">ランダム</div>
                 </div>
             </div>
 
             <div class="mb-8 flex justify-center gap-6 bg-white p-4 rounded border border-gray-200 shadow-sm">
-                <span class="font-bold text-gray-700">解答形式：</span>
+                <span class="font-bold text-gray-700 fs-base">解答形式：</span>
                 <label class="flex items-center cursor-pointer">
                     <input type="radio" name="test-mode" value="descriptive" class="w-4 h-4 text-[#005b82] focus:ring-[#005b82]" checked>
-                    <span class="ml-2 text-gray-800 font-medium">記述式（直接入力）</span>
+                    <span class="ml-2 text-gray-800 font-medium fs-base">記述式（直接入力）</span>
                 </label>
                 <label class="flex items-center cursor-pointer">
                     <input type="radio" name="test-mode" value="multiple-choice" class="w-4 h-4 text-[#005b82] focus:ring-[#005b82]">
-                    <span class="ml-2 text-gray-800 font-medium">選択式（ドロップダウン）</span>
+                    <span class="ml-2 text-gray-800 font-medium fs-base">選択式（ドロップダウン）</span>
                 </label>
             </div>
 
             <div class="flex justify-center gap-4">
-                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-2.5 px-6 rounded shadow transition">
+                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-2.5 px-6 rounded shadow transition fs-base inline-block">
                     テスト一覧へ
                 </a>
-                <button id="start-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-2.5 px-8 rounded shadow transition">
+                <button id="start-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-2.5 px-8 rounded shadow transition fs-base">
                     テスト開始
                 </button>
             </div>
@@ -187,11 +183,19 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <span class="font-bold text-gray-700 ml-1">レベル4</span>
+                        <span class="font-bold text-gray-700 ml-1 fs-base">レベル4</span>
                     </div>
-                    <!-- 残り時間表示 -->
-                    <div class="bg-white px-3 md:px-4 py-1 rounded border border-gray-300 font-bold text-gray-800 text-sm md:text-base flex items-center timer-container">
-                        残り時間 <span id="timer-text" class="ml-2 font-mono">00:00</span>
+                    
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <!-- フォントサイズ切り替えボタン -->
+                        <button id="font-size-btn" class="border border-gray-400 bg-white rounded px-2 py-1 flex items-center justify-center font-bold text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none transition" style="font-size: 14px; line-height: 1.2;">
+                            ぁあ
+                        </button>
+                        
+                        <!-- 残り時間表示 -->
+                        <div class="bg-white px-3 py-1 rounded border border-gray-300 font-bold text-gray-800 flex items-center justify-center timer-container tabular-nums w-32 md:w-40 shrink-0 fs-lg">
+                            残り時間 <span id="timer-text" class="ml-1 md:ml-2 font-mono">00:00</span>
+                        </div>
                     </div>
                 </div>
 
@@ -199,19 +203,19 @@
                 <div class="bg-white rounded border border-gray-300 shadow-sm flex flex-col mb-4">
                     <!-- タイトル -->
                     <div class="bg-[#e0f2fe] p-3 md:p-4 border-b border-gray-300">
-                        <h2 id="question-number-title" class="text-base md:text-lg font-bold text-gray-800">
-                            【問題 1】<span class="text-sm font-normal ml-2 text-gray-600">（1点）</span>
+                        <h2 id="question-number-title" class="font-bold text-gray-800 fs-base">
+                            <!-- JSで生成 -->
                         </h2>
                     </div>
                     <!-- 問題文と解答欄 -->
                     <div class="p-6 md:p-8 flex flex-col gap-6 md:gap-8">
-                        <div id="question-body" class="text-base md:text-lg text-gray-800 leading-relaxed min-h-[60px]">
+                        <div id="question-body" class="text-gray-800 leading-relaxed min-h-[60px] fs-lg">
                             <!-- JSで生成 -->
                         </div>
                         
                         <!-- 解答エリア (グレー枠) -->
                         <div class="bg-[#f8fafc] border border-gray-200 rounded p-4 md:p-6">
-                            <p id="input-instruction" class="text-sm text-gray-700 mb-3 font-medium">（　　　）に入る言葉を記述してください：</p>
+                            <p id="input-instruction" class="text-gray-700 mb-3 font-medium fs-sm">（　　　）に入る言葉を記述してください：</p>
                             <div id="input-area">
                                 <!-- JSで input/select を挿入 -->
                             </div>
@@ -221,15 +225,15 @@
 
                 <!-- フッターナビゲーション -->
                 <div class="flex justify-between items-center mt-2">
-                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button id="prev-btn" class="bg-[#94a3b8] hover:bg-[#64748b] text-white font-bold py-2 px-8 rounded shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">
                         前へ
                     </button>
                     <div class="flex items-center gap-6">
-                        <span id="question-progress" class="text-gray-600 font-bold text-sm md:text-base">1 / 5</span>
-                        <button id="next-btn" class="bg-[#005b82] hover:bg-[#00476b] text-white font-bold py-2 px-8 rounded shadow-sm transition">
+                        <span id="question-progress" class="text-gray-600 font-bold fs-base">1 / 5</span>
+                        <button id="next-btn" class="header-bg hover:bg-[#00476b] text-white font-bold py-2 px-8 rounded shadow-sm transition fs-base">
                             次へ
                         </button>
-                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-8 rounded shadow-sm transition hidden">
+                        <button id="submit-confirm-btn" class="bg-[#a17f1a] hover:bg-[#856814] text-white font-bold py-2 px-8 rounded shadow-sm transition hidden fs-base">
                             テスト提出
                         </button>
                     </div>
@@ -238,14 +242,14 @@
         </section>
 
         <!-- ================= 確認モーダル ================= -->
-        <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm">
+        <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center backdrop-blur-sm px-4">
             <div class="bg-white rounded p-8 max-w-sm w-full shadow-2xl text-center mx-4 border border-gray-200">
-                <p class="text-lg font-bold text-gray-800 mb-8">テストを提出して採点しますか？</p>
+                <p class="font-bold text-gray-800 mb-8 fs-lg">テストを提出して採点しますか？</p>
                 <div class="flex justify-center gap-4">
-                    <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2.5 px-8 rounded transition">
+                    <button id="modal-cancel-btn" class="bg-[#cbd5e1] hover:bg-[#94a3b8] text-gray-800 font-bold py-2.5 px-8 rounded transition fs-base">
                         いいえ
                     </button>
-                    <button id="modal-submit-btn" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-gray-900 font-bold py-2.5 px-8 rounded transition">
+                    <button id="modal-submit-btn" class="bg-[#fbbf24] hover:bg-[#f59e0b] text-gray-900 font-bold py-2.5 px-8 rounded transition fs-base">
                         はい
                     </button>
                 </div>
@@ -255,25 +259,26 @@
         <!-- ================= 結果画面 ================= -->
         <section id="result-screen" class="hidden">
             <div class="bg-white rounded-lg shadow-md p-6 md:p-10 text-center mb-6 border border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">テスト結果</h2>
-                <div class="text-5xl font-bold text-[#005b82] mb-4" id="score-display">
+                <h2 class="font-bold text-gray-800 mb-2 border-b-2 border-[#005b82] pb-2 fs-2xl">採点結果</h2>
+                <p class="text-gray-600 mb-2 fs-lg mt-6">あなたの得点</p>
+                <div class="font-bold text-[#005b82] mb-4 fs-5xl" id="score-display">
                     -- / --
                 </div>
-                <p id="time-taken" class="text-gray-600 mb-6 font-medium">残り時間: --:--</p>
+                <p id="time-taken" class="text-gray-600 mb-6 font-medium fs-lg">残り時間: --:--</p>
             </div>
 
             <div class="bg-white rounded-lg shadow-md p-4 md:p-8 mb-8 border border-gray-200">
-                <h3 class="font-bold text-lg border-b border-gray-300 pb-2 mb-4">詳細</h3>
+                <h3 class="font-bold border-b border-gray-300 pb-2 mb-4 fs-lg">詳細</h3>
                 <div id="result-details" class="flex flex-col gap-4">
                     <!-- JSで結果詳細を生成 -->
                 </div>
             </div>
 
             <div class="flex justify-center gap-4">
-                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition">
+                <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-[#6c757d] hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition fs-base inline-block">
                     テスト一覧へ
                 </a>
-                <button onclick="location.reload();" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-8 rounded shadow transition">
+                <button onclick="location.reload();" class="header-bg hover:bg-[#00476b] text-white font-bold py-3 px-8 rounded shadow transition fs-base">
                     もう一度挑戦する
                 </button>
             </div>
@@ -283,7 +288,7 @@
 
     <script>
         // --- データ定義 ---
-        // 第4回追加分を含む、内容の重複を排除した全32問
+        // 第4回追加分を含む、内容の重複を排除した全33問
         const baseQuestions = [
             // 画像で提供された優先5問
             {
@@ -434,8 +439,13 @@
             },
             {
                 title: "教育基本法 前文",
-                text: "我々は、この理想を実現するため、個人の尊厳を重んじ、[HOLE]を希求し、公共の精神を尊び、豊かな人間性と創造性を備えた人間の育成を期するとともに、伝統を継承し、新しい文化の創造を目指す教育を推進する。",
-                correctAnswer: "真理と正義"
+                text: "我々は、この理想を実現するため、個人の尊厳を重んじ、[HOLE]と正義を希求し、公共の精神を尊び、豊かな人間性と創造性を備えた人間の育成を期するとともに、伝統を継承し、新しい文化の創造を目指す教育を推進する。",
+                correctAnswer: "真理"
+            },
+            {
+                title: "教育基本法 前文",
+                text: "我々は、この理想を実現するため、個人の尊厳を重んじ、真理と[HOLE]を希求し、公共の精神を尊び、豊かな人間性と創造性を備えた人間の育成を期するとともに、伝統を継承し、新しい文化の創造を目指す教育を推進する。",
+                correctAnswer: "正義"
             },
             {
                 title: "教育基本法 前文",
@@ -466,6 +476,10 @@
         let totalTimeLimit = 0;
         let timeLeft = 0;           
 
+        // フォントサイズ切り替え用の設定
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 1; // 初期値を 'small' (0.85) に設定
+
         // --- DOM要素 ---
         const screens = {
             start: document.getElementById('start-screen'),
@@ -475,10 +489,10 @@
         const els = {
             qCountSelect: document.getElementById('question-count-select'),
             displayScore: document.getElementById('display-score'),
-            displayPassScore: document.getElementById('display-pass-score'),
             displayTestTime: document.getElementById('display-test-time'),
             
             menuBtn: document.getElementById('menu-btn'),
+            fontSizeBtn: document.getElementById('font-size-btn'),
             timerContainer: document.querySelector('.timer-container'),
             timerText: document.getElementById('timer-text'),
             drawerOverlay: document.getElementById('drawer-overlay'),
@@ -533,6 +547,18 @@
             els.menuBtn.addEventListener('click', openDrawer);
             els.closeMenuBtn.addEventListener('click', closeDrawer);
             els.drawerOverlay.addEventListener('click', closeDrawer);
+
+            // フォントサイズ切り替えイベント
+            els.fontSizeBtn.addEventListener('click', () => {
+                currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+                const scaleMap = {
+                    'normal': 1,
+                    'small': 0.85,
+                    'xsmall': 0.7,
+                    'large': 1.15
+                };
+                document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+            });
         }
 
         // --- スタート画面の表示更新 ---
@@ -541,7 +567,6 @@
             const count = val === 'all' ? baseQuestions.length : parseInt(val, 10);
             
             els.displayScore.textContent = `${count}点`;
-            els.displayPassScore.textContent = `${count}点`;
             
             totalTimeLimit = count * TIME_PER_QUESTION;
             const minutes = Math.floor(totalTimeLimit / 60);
@@ -618,7 +643,7 @@
         function renderQuestion(index) {
             const q = parsedQuestions[index];
             
-            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="text-sm ml-2 font-normal text-gray-700">（1点）</span>`;
+            els.qNumberTitle.innerHTML = `【問題 ${index + 1}】<span class="ml-2 font-normal text-gray-700 fs-sm">（1点）</span>`;
             // プレースホルダー [HOLE] を（　　　）に置換して表示
             const displayText = q.text.replace('[HOLE]', `<span class="font-bold px-1">（　　　）</span>`).replace(/\n/g, '<br>');
             els.qBody.innerHTML = displayText;
@@ -632,7 +657,7 @@
                 els.inputInstruction.textContent = "（　　　）に入る言葉を記述してください：";
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.className = 'blank-input';
+                input.className = 'blank-input fs-base';
                 input.value = userAnswers[index];
                 
                 input.addEventListener('input', (e) => {
@@ -643,7 +668,7 @@
             } else {
                 els.inputInstruction.textContent = "（　　　）に入る言葉を選択してください：";
                 const select = document.createElement('select');
-                select.className = 'blank-select';
+                select.className = 'blank-select fs-base';
                 
                 const defaultOption = document.createElement('option');
                 defaultOption.value = "";
@@ -699,7 +724,7 @@
                 const button = document.createElement('button');
                 const isActive = idx === currentQuestionIndex;
                 
-                let baseClass = "text-center px-4 py-2.5 rounded font-medium transition border text-sm md:text-base shadow-sm ";
+                let baseClass = "text-center px-4 py-2.5 rounded font-medium transition border shadow-sm fs-base ";
                 if (isActive) {
                     baseClass += "bg-[#bfdbfe] text-black border-[#93c5fd]"; 
                 } else {
@@ -725,7 +750,7 @@
                 const li = document.createElement('li');
                 const isActive = idx === currentQuestionIndex;
                 
-                li.className = `p-3 mb-1 rounded cursor-pointer transition ${isActive ? 'bg-[#bfdbfe] font-bold text-black border border-[#93c5fd]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
+                li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${isActive ? 'bg-[#bfdbfe] font-bold text-black border border-[#93c5fd]' : 'bg-[#e2e8f0] border border-[#cbd5e1] hover:bg-[#cbd5e1] text-gray-700'}`;
                 li.innerHTML = `<div class="text-center">【問題${idx + 1}】</div>`;
                 
                 li.addEventListener('click', () => {
@@ -799,27 +824,27 @@
                 resultCard.className = `p-4 rounded border-l-4 ${isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`;
                 
                 const icon = isCorrect 
-                    ? `<span class="text-green-600 font-bold text-lg">○ 正解</span>` 
-                    : `<span class="text-red-600 font-bold text-lg">× 不正解</span>`;
+                    ? `<span class="text-green-600 font-bold fs-xl">○ 正解</span>` 
+                    : `<span class="text-red-600 font-bold fs-xl">× 不正解</span>`;
 
                 // 正解を埋め込んだテキストを生成
                 const correctHtmlText = q.text.replace('[HOLE]', `<span class="font-bold border-b-2 border-gray-400 px-1 text-black">（ ${q.correctAnswer} ）</span>`).replace(/\n/g, '<br>');
 
                 resultCard.innerHTML = `
                     <div class="flex justify-between items-center mb-2">
-                        <h4 class="font-bold text-gray-800">問題 ${idx + 1}: <span class="text-sm font-normal text-gray-600">${q.title}</span></h4>
+                        <h4 class="font-bold text-gray-800 fs-base">問題 ${idx + 1}: <span class="font-normal text-gray-600 fs-sm">${q.title}</span></h4>
                         ${icon}
                     </div>
-                    <div class="text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2">
+                    <div class="text-gray-700 bg-white p-3 rounded border border-gray-200 mb-2 fs-lg">
                         ${correctHtmlText}
                     </div>
-                    <div class="grid grid-cols-2 gap-2 text-sm mt-2">
+                    <div class="grid grid-cols-2 gap-2 mt-2 fs-sm">
                         <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
-                            <span class="text-gray-500 block text-xs">あなたの解答</span>
+                            <span class="text-gray-500 block fs-sm">あなたの解答</span>
                             <span class="font-bold ${isCorrect ? 'text-green-700' : 'text-red-700'}">${userAnswer || '（未解答）'}</span>
                         </div>
                         <div class="bg-white p-2 rounded border border-gray-100 shadow-sm">
-                            <span class="text-gray-500 block text-xs">正解</span>
+                            <span class="text-gray-500 block fs-sm">正解</span>
                             <span class="font-bold text-blue-700">${q.correctAnswer}</span>
                         </div>
                     </div>
@@ -827,7 +852,7 @@
                 els.resultDetails.appendChild(resultCard);
             });
 
-            els.scoreDisplay.textContent = `${correctCount} / ${parsedQuestions.length}`;
+            els.scoreDisplay.textContent = `${correctCount}点 / ${parsedQuestions.length}点`;
             
             const timeTakenSec = totalTimeLimit - Math.max(0, timeLeft);
             const tm = Math.floor(timeTakenSec / 60);
