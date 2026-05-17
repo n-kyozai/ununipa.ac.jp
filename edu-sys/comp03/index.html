@@ -6,15 +6,16 @@
     <title>教育制度論 レベル3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* フォントサイズ手動切り替え用のスケール変数 */
+        /* フォントサイズ手動切り替え用 */
         :root {
-            --font-scale: 0.85; /* デフォルトを一段階縮小 */
+            --font-scale: 1;
         }
-        /* htmlの基本フォントサイズをスケールさせることで、Tailwindのrem単位が全体的に拡大縮小する */
-        html {
-            font-size: calc(16px * var(--font-scale));
-            transition: font-size 0.2s ease-in-out;
-        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
 
         /* ヘッダーやアクセントのカラー */
         .header-bg { background-color: #005b82; }
@@ -77,14 +78,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-
-        /* Typography classes */
-        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
-        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
-        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
-        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
-        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
-        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
     </style>
 </head>
 <body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col fs-base transition-none">
@@ -429,7 +422,7 @@
 
         // フォントサイズ切り替え用の設定
         const fontSizes = ['normal', 'small', 'xsmall', 'large'];
-        let currentFontSizeIndex = 1; // 初期値を 'small' (0.85) に設定
+        let currentFontSizeIndex = 0;
 
         // --- DOM要素 ---
         const screens = {
