@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第5回復習問題</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 画像に合わせた深緑色をテーマカラーに設定 */
+        .theme-bg { background-color: #005c42; }
+        .theme-bg-hover:hover { background-color: #004531; }
+        .theme-text { color: #005c42; }
+        .theme-border { border-color: #005c42; }
+        .theme-ring:focus { 
+            --tw-ring-color: #005c42; 
+            border-color: #005c42; 
+        }
+
+        /* フォントサイズ手動切り替え用 */
+        :root {
+            --font-scale: 0.85; /* デフォルトを一段階縮小 */
+        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-10 fs-base flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="theme-bg text-white p-4 flex justify-between items-center">
+            <span class="font-bold text-lg fs-base">問題一覧</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2 custom-scrollbar">
+            <!-- JSで生成 -->
+        </ul>
+    </nav>
+
+    <!-- スタート画面 -->
+    <div id="start-screen" class="max-w-5xl mx-auto p-4 pt-8 w-full">
+        <div class="bg-white border border-gray-300 shadow-sm mb-6">
+            <table class="w-full border-collapse">
+                <tbody>
+                    <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テストグループ</th><td class="p-3 border border-gray-300 fs-sm">教職教養基礎</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">第5回復習問題</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">47点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">コース</th><td class="p-3 border border-gray-300 fs-sm">教育心理学</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題表示区分</th><td class="p-3 border border-gray-300 fs-sm">一問題表示</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題出題形式</th><td class="p-3 border border-gray-300 fs-sm">同一</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-8 flex justify-center gap-4">
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base">テスト一覧へ</a>
+            <button id="start-btn" class="theme-bg theme-bg-hover text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト開始</button>
+        </div>
+    </div>
+
+    <!-- テスト画面 -->
+    <div id="test-screen" class="hidden max-w-5xl mx-auto p-4 flex-col md:flex-row gap-6 w-full">
+        <!-- 左側：問題リスト (PC用) -->
+        <div class="hidden md:block w-48 shrink-0">
+            <div id="question-nav-list" class="flex flex-col gap-1">
+                <!-- JSで生成 -->
+            </div>
+        </div>
+
+        <!-- 右側：問題エリア -->
+        <div class="flex-grow">
+            <!-- ヘッダー部分 -->
+            <div class="flex justify-between items-center mb-4 bg-white p-3 rounded shadow-sm border border-gray-300">
+                <div class="flex items-center gap-2">
+                    <!-- モバイル用メニュー開閉ボタン -->
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none p-1 border border-gray-300 rounded bg-gray-50 hover:bg-gray-100 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="font-bold text-gray-700 fs-base ml-1">第5回復習問題</div>
+                </div>
+                
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- フォントサイズ切り替えボタン -->
+                    <button id="font-size-btn" class="border border-gray-400 bg-white rounded px-2 py-1 flex items-center justify-center font-bold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none" style="font-size: 14px; line-height: 1.2;">
+                        ぁあ
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border border-gray-300 rounded shadow-sm bg-white mb-6">
+                <div id="question-number" class="bg-emerald-50 px-4 py-3 border-b border-gray-300 text-gray-800 font-bold fs-base">
+                    <!-- 問題番号 -->
+                </div>
+                <div class="p-6">
+                    <!-- 問題文と、文ごとの解答欄が展開されるエリア -->
+                    <div id="question-content" class="mb-4"></div>
+
+                    <!-- 従来通り、問題文の下にまとめて解答欄を置く場合のエリア -->
+                    <div class="bg-gray-50 p-4 border rounded hidden" id="answer-container"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-t pt-4">
+                <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">前へ</button>
+                <div class="flex items-center">
+                    <span id="progress-text" class="mr-6 text-gray-600 font-bold fs-base">1 / 5</span>
+                    <button id="next-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-6 rounded transition fs-base">次へ</button>
+                    <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition fs-base">テスト提出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 採点結果画面 -->
+    <div id="result-screen" class="hidden max-w-5xl mx-auto p-4 w-full">
+        <h2 class="font-bold mb-6 text-gray-800 border-b-2 theme-border pb-2 fs-2xl">採点結果</h2>
+        
+        <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
+            <p class="text-gray-600 mb-2 fs-lg">あなたの得点</p>
+            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 47点</p>
+        </div>
+
+        <div id="result-list" class="space-y-8">
+            <!-- JSで結果を生成 -->
+        </div>
+
+        <div class="text-center mt-12 mb-8">
+            <button id="retry-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト一覧へ戻る</button>
+        </div>
+    </div>
+
+    <!-- 確認モーダル -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-auto">
+            <p class="mb-6 text-center font-bold text-gray-800 fs-lg">テストを提出して採点しますか？</p>
+            <div class="flex justify-center gap-4">
+                <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition font-bold fs-base">いいえ</button>
+                <button id="modal-ok-btn" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition font-bold fs-base">はい</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 第5回の問題データ
+        const originalQuestions = [
+            { 
+                id: 1, 
+                point: 12,
+                pointPerItem: 1,
+                inputCount: 12,
+                ordered: true,
+                labels: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+                text: `人格理解における類型論と特性論の特徴を記した次の文の（　）に適語を入れよ。`, 
+                subQuestions: [
+                    { text: "（ A ）論では、一定の観点から典型的な性格像を設定して、少数の型に当てはめて理解しようとする。（ B ）は病前性格である分裂気質、躁うつ気質、粘着気質と（ C ）型、（ D ）型、（ E ）型の体格とを関連付けた。ユングは力動論の立場から、（ F ）が向かう方向によって（ G ）型と（ H ）型に分類した。", inputIndices: [0, 1, 2, 3, 4, 5, 6, 7] },
+                    { text: "（ I ）論では、人格を構成するいくつかの基本的単位に分析して、それぞれの程度を数量的に測定して、それらの組み合わせによって表現しようとする。例えば、キャッテルはこの特性を抽出する際に（ J ）という統計的手法を用いた。この立場の理論からは多くの人格検査が作成されており、結果の表示はしばしば（ K ）化がされる。典型的には、ギルフォードの理論に基づき、12の特性を120項目で測定している（ L ）が当てはまる。", inputIndices: [8, 9, 10, 11] }
+                ],
+                options: [
+                    ["類型", "特性", "階層"], // A
+                    ["クレッチマー", "シェルドン", "ユング"], // B
+                    ["細長", "肥満", "闘士", "筋肉"], // C
+                    ["細長", "肥満", "闘士", "筋肉"], // D
+                    ["細長", "肥満", "闘士", "筋肉"], // E
+                    ["心的エネルギー（リビドー）", "無意識", "エス"], // F
+                    ["外向", "内向", "両向"], // G
+                    ["外向", "内向", "両向"], // H
+                    ["類型", "特性", "階層"], // I
+                    ["因子分析", "分散分析", "回帰分析"], // J
+                    ["プロフィール", "グラフ", "パターン"], // K
+                    ["YG性格検査", "MMPI", "内田クレペリン精神作業検査"] // L
+                ],
+                answer: ["類型", "クレッチマー", "細長", "肥満", "闘士", "心的エネルギー（リビドー）", "外向", "内向", "特性", "因子分析", "プロフィール", "YG性格検査"],
+                displayAnswer: "A. 類型\nB. クレッチマー\nC. 細長\nD. 肥満\nE. 闘士\nF. 心的エネルギー（リビドー）\nG. 外向\nH. 内向\nI. 特性\nJ. 因子分析\nK. プロフィール\nL. YG性格検査\n※GとHは順不同ですが、システム上はこの順番で正解としています。",
+                explanation: "類型論ではクレッチマーが頻出で、似た類型を提唱しているシェルドンとの違いについても確認しておきたい。ユングは分析心理学でも有名であるが、外向型と内向型の類型については、向性検査という測定道具も押さえておきたい。特性論については、ギルフォードの理論がYG性格検査を生み出したように、人格検査との関連で理解するとよい。"
+            },
+            {
+                id: 2,
+                point: 5,
+                pointPerItem: 1,
+                inputCount: 5,
+                ordered: true,
+                labels: ["(1)", "(2)", "(3)", "(4)", "(5)"],
+                text: `次の文が説明している性格検査の名称を語群から選べ。`,
+                subQuestions: [
+                    { text: "(1) 左右対称のインクのしみが描かれたカードを見て、何に見えるか答えてもらう投影法の検査である。", inputIndices: [0] },
+                    { text: "(2) 1桁の数字の足し算を連続して行わせ作業曲線などから性格を診断する検査である。", inputIndices: [1] },
+                    { text: "(3) 人物の描かれた絵を見て物語を作ってもらい、そこに欲求や達成動機が反映されていると考える投影法の検査である。", inputIndices: [2] },
+                    { text: "(4) 1本の実のなる木を描いてもらい、そこに自己像が投影されるという描画法の検査である。", inputIndices: [3] },
+                    { text: "(5) 外向性―内向性と神経症的傾向を測定する質問紙法の検査で、合計80項目から構成される。", inputIndices: [4] }
+                ],
+                options: [
+                    ["TAT（主題統覚検査）", "内田クレペリン精神作業検査", "バウム・テスト", "ロールシャッハ・テスト", "MMPI", "MPI"],
+                    ["TAT（主題統覚検査）", "内田クレペリン精神作業検査", "バウム・テスト", "ロールシャッハ・テスト", "MMPI", "MPI"],
+                    ["TAT（主題統覚検査）", "内田クレペリン精神作業検査", "バウム・テスト", "ロールシャッハ・テスト", "MMPI", "MPI"],
+                    ["TAT（主題統覚検査）", "内田クレペリン精神作業検査", "バウム・テスト", "ロールシャッハ・テスト", "MMPI", "MPI"],
+                    ["TAT（主題統覚検査）", "内田クレペリン精神作業検査", "バウム・テスト", "ロールシャッハ・テスト", "MMPI", "MPI"]
+                ],
+                answer: [
+                    "ロールシャッハ・テスト", 
+                    "内田クレペリン精神作業検査", 
+                    "TAT（主題統覚検査）", 
+                    "バウム・テスト", 
+                    "MPI"
+                ],
+                displayAnswer: "(1) ロールシャッハ・テスト\n(2) 内田クレペリン精神作業検査\n(3) TAT（主題統覚検査）\n(4) バウム・テスト\n(5) MPI",
+                explanation: "人格の測定に使われる検査は質問紙法、作業検査法、投影法に大きく分類されるが、特に投影法は頻出である。それぞれの検査は特有の課題を用いているので、その内容について確認しておくこと。考案者の名前としては、主題統覚検査（TAT）のマレー、MPIのアイゼンクは押さえておきたい。"
+            },
+            {
+                id: 3,
+                point: 4,
+                pointPerItem: 1,
+                inputCount: 4,
+                ordered: true,
+                labels: ["(1)", "(2)", "(3)", "(4)"],
+                text: `次の各文が説明している用語を次の中から選べ。`,
+                subQuestions: [
+                    { text: "(1) 心的外傷後ストレス障害ともよばれる。自らの生命の危険など、過去の過酷な体験が心的外傷となり、不安や不眠、疲労などの身体症状が現れる。", inputIndices: [0] },
+                    { text: "(2) 対人関係の形成困難や固執行動などの自閉症の特徴を有する者のうち、知的発達の遅れを伴わず、かつ言葉の遅れを伴わないものをいう。", inputIndices: [1] },
+                    { text: "(3) 学習障害ともよばれる。知能の発達に全体的な遅れはみられないが、聞く、話す、読む、書く、計算する、推論するなどの特定の能力の習得や使用が極めて困難なことをいう。中枢神経系の機能障害が原因といわれている。", inputIndices: [2] },
+                    { text: "(4) 人間の欲求は5つの階層を成しており、最も基本的な生理的欲求、安全欲求、所属・愛情欲求、承認・自尊欲求という4つの欠乏欲求が順に満たされて、最高次の自己実現欲求が生じるという理論である。マズローが提唱した。", inputIndices: [3] }
+                ],
+                options: [
+                    ["PTSD", "アスペルガー症候群", "LD", "欲求階層説", "ADHD", "ダウン症"],
+                    ["PTSD", "アスペルガー症候群", "LD", "欲求階層説", "ADHD", "ダウン症"],
+                    ["PTSD", "アスペルガー症候群", "LD", "欲求階層説", "ADHD", "ダウン症"],
+                    ["PTSD", "アスペルガー症候群", "LD", "欲求階層説", "ADHD", "ダウン症"]
+                ],
+                answer: ["PTSD", "アスペルガー症候群", "LD", "欲求階層説"],
+                displayAnswer: "(1) PTSD\n(2) アスペルガー症候群\n(3) LD\n(4) 欲求階層説",
+                explanation: "(1) 災害や事件・事故の際にその後の状態として注目を集めている。\n(2)・(3) 発達障害の範疇に含まれる。アスペルガー症候群は、自閉症及び高機能自閉症と合わせて自閉症スペクトラムとよばれる連続体の一部に位置付けられる。学習障害は特に定義が明確であるので出題されやすい。注意欠陥・多動性障害（ADHD）と混同しないように注意が必要である。また、ダウン症については、染色体異常が原因である点を確認しておきたい。\n(4) 伝統的な内容であるが、極めて頻出であるので人名とともに押さえておきたい。"
+            },
+            {
+                id: 4,
+                point: 12,
+                pointPerItem: 1,
+                inputCount: 12,
+                ordered: true,
+                labels: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+                text: `人の適応について述べた次の文の（　）に適語を入れよ。`,
+                subQuestions: [
+                    { text: "（ A ）の力動論を背景に（ B ）という概念が構成された。（ C ）は現実原則に基づき、エスの表出と（ D ）からの道徳的要請、及び外界の条件との調和を図りながら適応しようとするが、時に破綻を避けるために必ずしも適切ではない非常手段をとることがある。", inputIndices: [0, 1, 2, 3] },
+                    { text: "例えば、理屈づけや負け惜しみといわれる（ E ）、自己の欲求を他者がもっていると認知する（ F ）、自己の劣等感をカバーするために他の面で努力を払って満足する（ G ）、本来の欲求が社会的に価値の高い目的に向けられる（ H ）、自己の欲求と正反対の態度をとる（ I ）、意識していると苦痛な欲求を（ J ）へ押し込める（ K ）、合理的な対処法を放棄して未熟な段階へ逆戻りする（ L ）などがある。", inputIndices: [4, 5, 6, 7, 8, 9, 10, 11] }
+                ],
+                options: [
+                    ["フロイト", "ユング", "アドラー"], // A
+                    ["適応機制（自我防衛機制）", "防衛機制", "防衛反応"], // B
+                    ["自我", "超自我", "エス", "無意識"], // C
+                    ["自我", "超自我", "エス", "無意識"], // D
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // E
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // F
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // G
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // H
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // I
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // J
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"], // K
+                    ["合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行", "逃避"]  // L
+                ],
+                answer: ["フロイト", "適応機制（自我防衛機制）", "自我", "超自我", "合理化", "投射", "補償", "昇華", "反動形成", "無意識", "抑圧", "退行"],
+                displayAnswer: "A. フロイト\nB. 適応機制（自我防衛機制）\nC. 自我\nD. 超自我\nE. 合理化\nF. 投射\nG. 補償\nH. 昇華\nI. 反動形成\nJ. 無意識\nK. 抑圧\nL. 退行",
+                explanation: "フロイトの力動論における心的装置の図式は、適応機制の他にも、神経症のメカニズムと治療方法としての精神分析療法を理解する上で重要である。本問では抽象的な文章の中で個々の適応機制を答える形式となっているが、具体例とともに出題されることがあるので、いくつかの例を考えながら理解しておくとよい。"
+            },
+            {
+                id: 5,
+                point: 14,
+                pointPerItem: 1,
+                inputCount: 14,
+                ordered: true,
+                labels: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"],
+                text: `カウンセリングについて述べた次の文の（　）に適語を入れよ。`,
+                subQuestions: [
+                    { text: "現在、精神療法の種類は多様であるが、（ A ）によって提唱された（ B ）療法はあらゆる立場の基礎として広く受け入れられている。もともとは（ C ）的カウンセリングとよばれ、誰もが自己成長力や（ D ）傾向を有していることに信頼をおく。", inputIndices: [0, 1, 2, 3] },
+                    { text: "（ E ）は、自分自身についてのとらえ方である（ F ）と、実際の状態である（ G ）とが不一致の状態にあり、カウンセリングによって2つがより（ H ）の状態に近づいていくことを目標とする。", inputIndices: [4, 5, 6, 7] },
+                    { text: "カウンセラーに必要な態度として、カウンセラーが（ I ）していること、（ E ）に対して（ J ）を経験していること、そして（ E ）の内的枠組みに（ K ）を経験していることの必要性を挙げた。カウンセリングにおいては、前提条件として2者の信頼関係を意味する（ L ）が必要である。", inputIndices: [8, 9, 10, 11] },
+                    { text: "また、（ A ）の治療論や人間観に基づく態度は精神療法以外の教育場面においても教師の基本的態度として有効であると考えられるが、この精神を（ M ）という。ちなみに、（ A ）は集団心理療法として（ N ）を提唱したことでも知られており、様々な分野でその精神が生かされている。", inputIndices: [12, 13] }
+                ],
+                options: [
+                    ["ロジャーズ", "フロイト", "エリクソン"], // A
+                    ["来談者（クライエント）中心", "指示的", "折衷的"], // B
+                    ["非指示", "指示", "構成"], // C
+                    ["自己実現", "自己顕示", "自己肯定"], // D
+                    ["クライエント", "カウンセラー", "セラピスト"], // E
+                    ["自己概念", "経験（体験）", "理想自己"], // F
+                    ["自己概念", "経験（体験）", "理想自己"], // G
+                    ["一致", "自己一致", "不一致"], // H
+                    ["一致", "自己一致", "不一致"], // I
+                    ["無条件の肯定的関心", "条件付きの肯定的関心", "共感的理解"], // J
+                    ["共感的理解", "同情的理解", "無条件の肯定的関心"], // K
+                    ["ラポール", "転移", "カタルシス"], // L
+                    ["カウンセリング・マインド", "エンカウンター・グループ", "ピア・サポート"], // M
+                    ["エンカウンター・グループ", "構成的グループ・エンカウンター", "サイコドラマ"]  // N
+                ],
+                answer: ["ロジャーズ", "来談者（クライエント）中心", "非指示", "自己実現", "クライエント", "自己概念", "経験（体験）", "一致", "自己一致", "無条件の肯定的関心", "共感的理解", "ラポール", "カウンセリング・マインド", "エンカウンター・グループ"],
+                displayAnswer: "A. ロジャーズ\nB. 来談者（クライエント）中心\nC. 非指示\nD. 自己実現\nE. クライエント\nF. 自己概念\nG. 経験（体験）\nH. 一致\nI. 自己一致\nJ. 無条件の肯定的関心\nK. 共感的理解\nL. ラポール\nM. カウンセリング・マインド\nN. エンカウンター・グループ",
+                explanation: "児童・生徒の示す心理的問題に対して、教師がカウンセリング・マインドをもった関わりを経験することの重要性が高まっている。これはロジャーズによって提唱された来談者中心療法（非指示的カウンセリング）を基礎としており、児童・生徒に対する人間性の尊重、ラポールの形成、共感的理解などの多くの重要な態度的側面が含まれている。また、心理劇、行動療法、指示的カウンセリング、精神分析など他の技法も押さえておくとよい。"
+            }
+        ];
+
+        // 状態変数
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; 
+
+        // フォントサイズ切り替え用の設定
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 1;
+
+        // DOMContentLoaded イベントで初期化とイベントリスナーの登録を確実に行う
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM要素の取得
+            const startScreen = document.getElementById('start-screen');
+            const testScreen = document.getElementById('test-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const questionContent = document.getElementById('question-content');
+            const answerContainer = document.getElementById('answer-container');
+            const questionNavList = document.getElementById('question-nav-list');
+            const confirmModal = document.getElementById('confirm-modal');
+            const drawerOverlay = document.getElementById('drawer-overlay');
+            const drawerMenu = document.getElementById('drawer-menu');
+            const drawerList = document.getElementById('drawer-list');
+
+            // --- 関数定義 ---
+            // モバイル用メニューの開閉イベント
+            function openDrawer() {
+                drawerMenu.classList.remove('-translate-x-full');
+                drawerOverlay.classList.remove('hidden');
+            }
+
+            function closeDrawer() {
+                drawerMenu.classList.add('-translate-x-full');
+                drawerOverlay.classList.add('hidden');
+            }
+
+            // テスト開始処理
+            function startTest() {
+                questions = [...originalQuestions];
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                
+                startScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                testScreen.classList.remove('hidden');
+                testScreen.classList.add('flex');
+
+                renderNavList();
+                renderQuestion();
+            }
+
+            // 左側の問題ナビゲーションとドロワーメニューの生成
+            function renderNavList() {
+                questionNavList.innerHTML = '';
+                drawerList.innerHTML = '';
+
+                questions.forEach((_, index) => {
+                    // PC用
+                    const navItem = document.createElement('div');
+                    navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                    navItem.innerText = `【問題${index + 1}】`;
+                    
+                    navItem.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                    });
+                    questionNavList.appendChild(navItem);
+
+                    // モバイル用（ドロワーメニュー内）
+                    const li = document.createElement('li');
+                    li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 font-bold theme-text border border-emerald-400' : 'bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700'}`;
+                    li.innerHTML = `<div class="text-center">【問題${index + 1}】</div>`;
+                    
+                    li.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                        closeDrawer(); // 選択後に閉じる
+                    });
+                    drawerList.appendChild(li);
+                });
+            }
+
+            // セレクトボックス生成
+            function createSelectElement(q, i) {
+                const select = document.createElement('select');
+                select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring bg-white cursor-pointer fs-base';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                if (q.inputCount === 1 || !q.ordered) {
+                    defaultOption.text = "選択してください";
+                } else {
+                    let prefix = q.labels ? q.labels[i] : '①②③④⑤⑥⑦⑧⑨⑩'[i];
+                    defaultOption.text = `（${prefix}）を選択してください`;
+                }
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
+
+                q.options[i].forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.text = opt;
+                    if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                return select;
+            }
+
+            // 問題の表示
+            function renderQuestion() {
+                const q = questions[currentQuestionIndex];
+                document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
+                document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
+
+                questionContent.innerHTML = '';
+                answerContainer.innerHTML = '';
+
+                if (q.text) {
+                    const p = document.createElement('div');
+                    p.className = 'mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap';
+                    p.innerHTML = q.text;
+                    questionContent.appendChild(p);
+                }
+
+                if (q.subQuestions) {
+                    answerContainer.classList.add('hidden');
+
+                    q.subQuestions.forEach((sub, i) => {
+                        let subText = typeof sub === 'string' ? sub : sub.text;
+                        let inputIndices = typeof sub === 'string' ? [i] : sub.inputIndices;
+
+                        const subP = document.createElement('p');
+                        subP.className = 'mb-2 leading-relaxed whitespace-pre-wrap fs-lg text-gray-800';
+                        subP.innerText = subText;
+                        questionContent.appendChild(subP);
+
+                        inputIndices.forEach(idx => {
+                            const selectWrap = document.createElement('div');
+                            selectWrap.className = 'mb-4 bg-gray-50 p-4 border rounded';
+                            
+                            const label = document.createElement('label');
+                            label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                            
+                            let prefix = q.labels ? q.labels[idx] : '①②③④⑤⑥⑦⑧⑨⑩'[idx];
+                            let labelText = (!q.ordered || q.inputCount === 1) ? '解答を選択してください：' : `（${prefix}）を選択してください：`;
+                            label.innerText = labelText;
+                            selectWrap.appendChild(label);
+
+                            const select = createSelectElement(q, idx);
+                            selectWrap.appendChild(select);
+                            
+                            questionContent.appendChild(selectWrap);
+                        });
+                    });
+                } else {
+                    if (q.inputCount > 0) {
+                        answerContainer.classList.remove('hidden');
+                        const label = document.createElement('label');
+                        label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                        label.innerText = '解答を選択してください：';
+                        answerContainer.appendChild(label);
+
+                        for(let i = 0; i < q.inputCount; i++) {
+                            const selectWrap = document.createElement('div');
+                            selectWrap.className = 'mb-3';
+                            const select = createSelectElement(q, i);
+                            selectWrap.appendChild(select);
+                            answerContainer.appendChild(selectWrap);
+                        }
+                    } else {
+                        answerContainer.classList.add('hidden');
+                    }
+                }
+
+                // ナビゲーションの色更新
+                Array.from(questionNavList.children).forEach((el, idx) => {
+                    if (idx === currentQuestionIndex) {
+                        el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-emerald-100 border-emerald-400 theme-text';
+                    } else {
+                        el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-gray-200 border-gray-300 hover:bg-gray-300';
+                    }
+                });
+                Array.from(drawerList.children).forEach((li, idx) => {
+                    if (idx === currentQuestionIndex) {
+                        li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-emerald-100 font-bold theme-text border border-emerald-400';
+                    } else {
+                        li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700';
+                    }
+                });
+
+                // ボタン制御
+                document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+                if (currentQuestionIndex === questions.length - 1) {
+                    document.getElementById('next-btn').classList.add('hidden');
+                    document.getElementById('finish-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                    document.getElementById('finish-btn').classList.add('hidden');
+                }
+
+                // スクロールリセット
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0; 
+                    document.documentElement.scrollTop = 0;
+                }, 10);
+            }
+
+            function saveAnswer() {
+                const q = questions[currentQuestionIndex];
+                if (q.inputCount) {
+                    const inputs = testScreen.querySelectorAll('.multi-input');
+                    userAnswers[q.id] = Array.from(inputs).map(input => input.value);
+                }
+            }
+
+            function executeScoring() {
+                testScreen.classList.add('hidden');
+                testScreen.classList.remove('flex');
+                resultScreen.classList.remove('hidden');
+                confirmModal.classList.add('hidden');
+
+                let score = 0;
+                let totalPoints = 0;
+                const resultContainer = document.getElementById('result-list');
+                resultContainer.innerHTML = '';
+
+                questions.forEach((q, index) => {
+                    totalPoints += q.point;
+                    let earnedPoint = 0;
+                    let isCorrect = false;
+                    let displayUserAnswer = "";
+
+                    if (q.inputCount) {
+                        const userAnsArray = userAnswers[q.id] || Array(q.inputCount).fill("");
+                        let matchCount = 0;
+
+                        if (q.ordered) {
+                            q.answer.forEach((correctWord, i) => {
+                                if (userAnsArray[i] === correctWord) {
+                                    matchCount++;
+                                }
+                            });
+                        } else {
+                            const normalizedUserAns = [...new Set(userAnsArray.filter(ans => ans !== ''))];
+                            q.answer.forEach(correctWord => {
+                                if (normalizedUserAns.includes(correctWord)) {
+                                    matchCount++;
+                                }
+                            });
+                        }
+                        
+                        earnedPoint = matchCount * q.pointPerItem;
+                        isCorrect = earnedPoint === q.point; 
+
+                        displayUserAnswer = userAnsArray.map((ans, idx) => {
+                            const prefix = (q.inputCount > 1 && q.ordered) ? (q.labels ? q.labels[idx] : `①②③④⑤⑥⑦⑧⑨⑩`[idx]) + " " : "";
+                            return ans.trim() === "" ? `${prefix}<span class='text-gray-400'>未選択</span>` : `${prefix}${ans}`;
+                        }).join('\n');
+                    }
+                    
+                    score += earnedPoint;
+
+                    let markHtml = '';
+                    if (earnedPoint === q.point) {
+                        markHtml = '<span class="text-red-600 font-bold mr-2 fs-xl">○</span>';
+                    } else if (earnedPoint > 0) {
+                        markHtml = '<span class="text-yellow-600 font-bold mr-2 fs-xl">△</span>';
+                    } else {
+                        markHtml = '<span class="text-blue-600 font-bold mr-2 fs-xl">×</span>';
+                    }
+
+                    const explanationHtml = q.explanation ? q.explanation : '';
+                    
+                    let fullTextHtml = `<div class="mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap">${q.text}</div>`;
+                    if (q.subQuestions) {
+                        const subList = q.subQuestions.map(sq => {
+                            let text = typeof sq === 'string' ? sq : sq.text;
+                            return `<p class="mb-2 text-gray-800 whitespace-pre-wrap fs-lg">${text}</p>`;
+                        }).join('');
+                        fullTextHtml += `<div class="mb-6">${subList}</div>`;
+                    }
+
+                    const itemHtml = `
+                        <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
+                            <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center fs-base">
+                                ${markHtml}
+                                【問題${index + 1}】（${q.point}点）
+                            </div>
+                            <div class="p-4 md:p-6">
+                                ${fullTextHtml}
+                                <table class="w-full border-collapse">
+                                    <tbody>
+                                        <tr>
+                                            <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left fs-sm">正解</th>
+                                            <td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap fs-sm">${q.displayAnswer}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">学習者解答</th>
+                                            <td class="p-2 border border-gray-300 whitespace-pre-wrap fs-sm ${isCorrect ? '' : (earnedPoint > 0 ? 'text-yellow-700 font-bold' : 'text-red-600 font-bold')}">${displayUserAnswer}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">点数</th>
+                                            <td class="p-2 border border-gray-300 fs-sm">${earnedPoint}点／${q.point}点</td>
+                                        </tr>
+                                        ${explanationHtml ? `
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">問題解説</th>
+                                            <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed fs-sm">${explanationHtml}</td>
+                                        </tr>` : ''}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    resultContainer.insertAdjacentHTML('beforeend', itemHtml);
+                });
+
+                document.getElementById('total-score').innerText = `${score}点 / ${totalPoints}点`;
+
+                // 採点画面に切り替わった直後に画面の一番上へスクロールさせる
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0; 
+                    document.documentElement.scrollTop = 0;
+                }, 10);
+            }
+
+            // --- イベントリスナーの登録 ---
+            
+            // フォントサイズ変更
+            document.getElementById('font-size-btn').addEventListener('click', () => {
+                currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+                const scaleMap = {
+                    'normal': 1,
+                    'small': 0.85,
+                    'xsmall': 0.7,
+                    'large': 1.15
+                };
+                document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+            });
+
+            // ドロワー関連
+            document.getElementById('mobile-menu-btn').addEventListener('click', openDrawer);
+            document.getElementById('close-menu-btn').addEventListener('click', closeDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
+
+            // テスト進行関連
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            document.getElementById('retry-btn').addEventListener('click', () => {
+                window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html";
+            });
+
+            document.getElementById('next-btn').addEventListener('click', () => {
+                saveAnswer();
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    renderQuestion();
+                }
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                saveAnswer();
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuestion();
+                }
+            });
+
+            testScreen.addEventListener('change', (e) => {
+                if (e.target.classList.contains('answer-input')) {
+                    saveAnswer();
+                }
+            });
+
+            // 提出モーダル関連
+            document.getElementById('finish-btn').addEventListener('click', () => {
+                saveAnswer();
+                confirmModal.classList.remove('hidden');
+            });
+            document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+                confirmModal.classList.add('hidden');
+            });
+            document.getElementById('modal-ok-btn').addEventListener('click', () => {
+                executeScoring();
+            });
+            
+        }); // DOMContentLoaded の終了
+    </script>
+</body>
+</html>
