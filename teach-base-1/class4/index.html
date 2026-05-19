@@ -167,7 +167,7 @@
 
     <script>
         // 画像の内容を反映した問題データ
-        // 問題5の画像URLは text プロパティ内の <img> タグに挿入してください。
+        // バッククォート（` `）で囲んでいるため、画像URLをそのまま貼り付けても構文エラーになりません。
         const originalQuestions = [
             { 
                 id: 1, 
@@ -176,7 +176,7 @@
                 inputCount: 10,
                 ordered: true,
                 labels: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
-                text: "次の文の（　）に適する語句を選べ。", 
+                text: `次の文の（　）に適する語句を選べ。`, 
                 subQuestions: [
                     { text: "① 学習とは、（ A ）によって比較的永続的に行動が（ B ）することである。", inputIndices: [0, 1] },
                     { text: "② 動機づけとは、行動の原因となって行動を始動させ、（ C ）に向かわせる力である。とくに、学習の内容自体に動機づけられることを（ D ）動機づけという。", inputIndices: [2, 3] },
@@ -207,7 +207,7 @@
                 inputCount: 12,
                 ordered: true,
                 labels: ["人物名", "理論名", "人物名", "理論名", "人物名", "理論名", "人物名", "理論名", "人物名", "理論名", "人物名", "理論名"],
-                text: "次の文に関係する人物名と理論名をそれぞれ選べ。",
+                text: `次の文に関係する人物名と理論名をそれぞれ選べ。`,
                 subQuestions: [
                     { text: "(1) 行動をB、人格をP、環境をEとすると、行動の基本原則をB=f(P・E)という公式で表した。", inputIndices: [0, 1] },
                     { text: "(2) 問題箱に入れられたネコは、ひもを引き、扉を開け、外へ出て餌を食べることを学習する。", inputIndices: [2, 3] },
@@ -248,7 +248,7 @@
                 inputCount: 5,
                 ordered: true,
                 labels: ["A", "B", "C", "D", "E"],
-                text: "次の文の（　）に適語を入れよ。",
+                text: `次の文の（　）に適語を入れよ。`,
                 subQuestions: [
                     { text: "動機づけには、様々な種類があるが、ある活動の遂行がその活動の外にある目標を得るための手段となるものを（ A ）という。それに対して、活動を遂行すること自体が目標となるものを（ B ）という。（ A ）の例としては、賞罰、競争と協同などが挙げられ、（ B ）の例としては、興味、知的好奇心、達成欲などが挙げられる。（ A ）により（ B ）が低下する現象を（ C ）という。", inputIndices: [0, 1, 2] },
                     { text: "また、生まれてからの経験によって形成される社会的動機づけには様々なものがある。例えば、卓越した水準での成功を目指そうとする動機づけを（ D ）というが、強ければ強いほど成果が上がるとは限らないことが（ E ）の法則によって示されている。また、成功や失敗の原因をどのように考えるかによっても影響を受ける。", inputIndices: [3, 4] }
@@ -270,7 +270,7 @@
                 pointPerItem: 1,
                 inputCount: 2,
                 ordered: false,
-                text: "記憶に関する次の記述のうち、誤っているものを2つ選べ。（順不同）\n\n① 「ヒマワリ」という音を聞いて意味を思い出す過程を検索という。\n② 人間が一度に覚えられる数字は8±2桁であるとされている。\n③ 記憶には、瞬間的な感覚記憶、数十秒以内に失われる短期記憶、長い間保持される長期記憶とがある。\n④ 記銘した直後よりも、一定時間経過してからの方が思い出しやすくなる現象をプラトーという。\n⑤ 数多くの項目からなるリストを記銘して再生する際、リストの最初の方と最後の方がよく思い出されることをそれぞれ初頭効果、新近効果という。",
+                text: `記憶に関する次の記述のうち、誤っているものを2つ選べ。（順不同）\n\n① 「ヒマワリ」という音を聞いて意味を思い出す過程を検索という。\n② 人間が一度に覚えられる数字は8±2桁であるとされている。\n③ 記憶には、瞬間的な感覚記憶、数十秒以内に失われる短期記憶、長い間保持される長期記憶とがある。\n④ 記銘した直後よりも、一定時間経過してからの方が思い出しやすくなる現象をプラトーという。\n⑤ 数多くの項目からなるリストを記銘して再生する際、リストの最初の方と最後の方がよく思い出されることをそれぞれ初頭効果、新近効果という。`,
                 options: [
                     ["①", "②", "③", "④", "⑤"],
                     ["①", "②", "③", "④", "⑤"]
@@ -286,8 +286,8 @@
                 inputCount: 3,
                 ordered: true,
                 // ▼ GitHubに画像をアップした際、ここの <img> タグの src を書き換えてください ▼
-                text: "次のグラフについて各問いに答えよ。\n\n<div class='my-4 p-4 bg-gray-50 border border-gray-300 rounded text-center text-gray-500'><img src='2026-05-13_20h14_00.png
-' alt='エビングハウスの忘却曲線' class='mx-auto max-w-full h-auto'><br>※横軸に日数、縦軸に節約率(%)を示し、急激に下降したあと緩やかになるグラフ</div>",
+                // （バッククォート「`」で囲まれているため、src="URL" をそのまま貼り付けてもエラーになりません）
+                text: `次のグラフについて各問いに答えよ。\n\n<div class="my-4 p-4 bg-gray-50 border border-gray-300 rounded text-center text-gray-500"><img src="ここにGitHubの画像リンクURLを貼り付けます" alt="エビングハウスの忘却曲線" class="mx-auto max-w-full h-auto"><br>※横軸に日数、縦軸に節約率(%)を示し、急激に下降したあと緩やかになるグラフ</div>`,
                 subQuestions: [
                     { text: "(1) このグラフは何とよばれているか。", inputIndices: [0] },
                     { text: "(2) このグラフを考案した人物名を答えよ。", inputIndices: [1] },
@@ -307,397 +307,393 @@
         // 状態変数
         let questions = [];
         let currentQuestionIndex = 0;
-        let userAnswers = {}; // { questionId: ["入力1", "入力2"...] }
+        let userAnswers = {}; 
 
         // フォントサイズ切り替え用の設定
         const fontSizes = ['normal', 'small', 'xsmall', 'large'];
-        let currentFontSizeIndex = 1; // 初期値を 'small' に設定
+        let currentFontSizeIndex = 1;
 
-        // DOM要素
-        const startScreen = document.getElementById('start-screen');
-        const testScreen = document.getElementById('test-screen');
-        const resultScreen = document.getElementById('result-screen');
-        const questionContent = document.getElementById('question-content');
-        const answerContainer = document.getElementById('answer-container');
-        const questionNavList = document.getElementById('question-nav-list');
-        const confirmModal = document.getElementById('confirm-modal');
-        const drawerOverlay = document.getElementById('drawer-overlay');
-        const drawerMenu = document.getElementById('drawer-menu');
-        const drawerList = document.getElementById('drawer-list');
+        // DOMContentLoaded イベントで初期化とイベントリスナーの登録を確実に行う
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM要素の取得
+            const startScreen = document.getElementById('start-screen');
+            const testScreen = document.getElementById('test-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const questionContent = document.getElementById('question-content');
+            const answerContainer = document.getElementById('answer-container');
+            const questionNavList = document.getElementById('question-nav-list');
+            const confirmModal = document.getElementById('confirm-modal');
+            const drawerOverlay = document.getElementById('drawer-overlay');
+            const drawerMenu = document.getElementById('drawer-menu');
+            const drawerList = document.getElementById('drawer-list');
 
-        // フォントサイズ切り替えイベント
-        document.getElementById('font-size-btn').addEventListener('click', () => {
-            currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
-            const scaleMap = {
-                'normal': 1,
-                'small': 0.85,
-                'xsmall': 0.7,
-                'large': 1.15
-            };
-            document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
-        });
-
-        // モバイル用メニューの開閉イベント
-        function openDrawer() {
-            drawerMenu.classList.remove('-translate-x-full');
-            drawerOverlay.classList.remove('hidden');
-        }
-
-        function closeDrawer() {
-            drawerMenu.classList.add('-translate-x-full');
-            drawerOverlay.classList.add('hidden');
-        }
-
-        document.getElementById('mobile-menu-btn').addEventListener('click', openDrawer);
-        document.getElementById('close-menu-btn').addEventListener('click', closeDrawer);
-        drawerOverlay.addEventListener('click', closeDrawer);
-
-        // テスト開始処理
-        function startTest() {
-            questions = [...originalQuestions];
-            currentQuestionIndex = 0;
-            userAnswers = {};
-            
-            startScreen.classList.add('hidden');
-            resultScreen.classList.add('hidden');
-            testScreen.classList.remove('hidden');
-            testScreen.classList.add('flex'); // hiddenを外してflexにする
-
-            renderNavList();
-            renderQuestion();
-        }
-
-        // 左側の問題ナビゲーションとモバイル用問題一覧の生成
-        function renderNavList() {
-            questionNavList.innerHTML = '';
-            drawerList.innerHTML = '';
-
-            questions.forEach((_, index) => {
-                // PC用
-                const navItem = document.createElement('div');
-                navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
-                navItem.innerText = `【問題${index + 1}】`;
-                
-                navItem.addEventListener('click', () => {
-                    if (currentQuestionIndex !== index) {
-                        saveAnswer();
-                        currentQuestionIndex = index;
-                        renderQuestion();
-                    }
-                });
-                questionNavList.appendChild(navItem);
-
-                // モバイル用（ドロワーメニュー内）
-                const li = document.createElement('li');
-                li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 font-bold theme-text border border-emerald-400' : 'bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700'}`;
-                li.innerHTML = `<div class="text-center">【問題${index + 1}】</div>`;
-                
-                li.addEventListener('click', () => {
-                    if (currentQuestionIndex !== index) {
-                        saveAnswer();
-                        currentQuestionIndex = index;
-                        renderQuestion();
-                    }
-                    closeDrawer(); // 選択後に閉じる
-                });
-                drawerList.appendChild(li);
-            });
-        }
-
-        // セレクトボックス生成のヘルパー関数
-        function createSelectElement(q, i) {
-            const select = document.createElement('select');
-            select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring bg-white cursor-pointer fs-base';
-            
-            const defaultOption = document.createElement('option');
-            defaultOption.value = "";
-            if (q.inputCount === 1 || !q.ordered) {
-                defaultOption.text = "選択してください";
-            } else {
-                let prefix = q.labels ? q.labels[i] : '①②③④⑤⑥⑦⑧⑨⑩'[i];
-                defaultOption.text = `（${prefix}）を選択してください`;
+            // --- 関数定義 ---
+            // モバイル用メニューの開閉イベント
+            function openDrawer() {
+                drawerMenu.classList.remove('-translate-x-full');
+                drawerOverlay.classList.remove('hidden');
             }
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            select.appendChild(defaultOption);
 
-            q.options[i].forEach(opt => {
-                const option = document.createElement('option');
-                option.value = opt;
-                option.text = opt;
-                if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
-                    option.selected = true;
+            function closeDrawer() {
+                drawerMenu.classList.add('-translate-x-full');
+                drawerOverlay.classList.add('hidden');
+            }
+
+            // テスト開始処理
+            function startTest() {
+                questions = [...originalQuestions];
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                
+                startScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                testScreen.classList.remove('hidden');
+                testScreen.classList.add('flex');
+
+                renderNavList();
+                renderQuestion();
+            }
+
+            // 左側の問題ナビゲーションとドロワーメニューの生成
+            function renderNavList() {
+                questionNavList.innerHTML = '';
+                drawerList.innerHTML = '';
+
+                questions.forEach((_, index) => {
+                    // PC用
+                    const navItem = document.createElement('div');
+                    navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                    navItem.innerText = `【問題${index + 1}】`;
+                    
+                    navItem.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                    });
+                    questionNavList.appendChild(navItem);
+
+                    // モバイル用（ドロワーメニュー内）
+                    const li = document.createElement('li');
+                    li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 font-bold theme-text border border-emerald-400' : 'bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700'}`;
+                    li.innerHTML = `<div class="text-center">【問題${index + 1}】</div>`;
+                    
+                    li.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                        closeDrawer(); // 選択後に閉じる
+                    });
+                    drawerList.appendChild(li);
+                });
+            }
+
+            // セレクトボックス生成
+            function createSelectElement(q, i) {
+                const select = document.createElement('select');
+                select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring bg-white cursor-pointer fs-base';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                if (q.inputCount === 1 || !q.ordered) {
+                    defaultOption.text = "選択してください";
+                } else {
+                    let prefix = q.labels ? q.labels[i] : '①②③④⑤⑥⑦⑧⑨⑩'[i];
+                    defaultOption.text = `（${prefix}）を選択してください`;
                 }
-                select.appendChild(option);
-            });
-            return select;
-        }
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
 
-        // 問題の表示
-        function renderQuestion() {
-            const q = questions[currentQuestionIndex];
-            document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
-            document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
-
-            // コンテナのリセット
-            questionContent.innerHTML = '';
-            answerContainer.innerHTML = '';
-
-            // 全体の問題文(共通)
-            if (q.text) {
-                const p = document.createElement('div');
-                p.className = 'mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap';
-                p.innerHTML = q.text;
-                questionContent.appendChild(p);
+                q.options[i].forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.text = opt;
+                    if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                return select;
             }
 
-            // subQuestionsがある場合（小問ごとに解答欄を配置）
-            if (q.subQuestions) {
-                answerContainer.classList.add('hidden');
+            // 問題の表示
+            function renderQuestion() {
+                const q = questions[currentQuestionIndex];
+                document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
+                document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
 
-                q.subQuestions.forEach((sub, i) => {
-                    // subText と inputIndices を取り出す
-                    let subText = typeof sub === 'string' ? sub : sub.text;
-                    let inputIndices = typeof sub === 'string' ? [i] : sub.inputIndices;
+                questionContent.innerHTML = '';
+                answerContainer.innerHTML = '';
 
-                    const subP = document.createElement('p');
-                    subP.className = 'mb-2 leading-relaxed whitespace-pre-wrap fs-lg text-gray-800';
-                    subP.innerText = subText;
-                    questionContent.appendChild(subP);
+                if (q.text) {
+                    const p = document.createElement('div');
+                    p.className = 'mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap';
+                    p.innerHTML = q.text;
+                    questionContent.appendChild(p);
+                }
 
-                    // 1つの小問に対して複数の解答欄がある場合にも対応
-                    inputIndices.forEach(idx => {
-                        const selectWrap = document.createElement('div');
-                        selectWrap.className = 'mb-4 bg-gray-50 p-4 border rounded';
-                        
+                if (q.subQuestions) {
+                    answerContainer.classList.add('hidden');
+
+                    q.subQuestions.forEach((sub, i) => {
+                        let subText = typeof sub === 'string' ? sub : sub.text;
+                        let inputIndices = typeof sub === 'string' ? [i] : sub.inputIndices;
+
+                        const subP = document.createElement('p');
+                        subP.className = 'mb-2 leading-relaxed whitespace-pre-wrap fs-lg text-gray-800';
+                        subP.innerText = subText;
+                        questionContent.appendChild(subP);
+
+                        inputIndices.forEach(idx => {
+                            const selectWrap = document.createElement('div');
+                            selectWrap.className = 'mb-4 bg-gray-50 p-4 border rounded';
+                            
+                            const label = document.createElement('label');
+                            label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                            
+                            let prefix = q.labels ? q.labels[idx] : '①②③④⑤⑥⑦⑧⑨⑩'[idx];
+                            let labelText = (!q.ordered || q.inputCount === 1) ? '解答を選択してください：' : `（${prefix}）を選択してください：`;
+                            label.innerText = labelText;
+                            selectWrap.appendChild(label);
+
+                            const select = createSelectElement(q, idx);
+                            selectWrap.appendChild(select);
+                            
+                            questionContent.appendChild(selectWrap);
+                        });
+                    });
+                } else {
+                    if (q.inputCount > 0) {
+                        answerContainer.classList.remove('hidden');
                         const label = document.createElement('label');
                         label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
-                        
-                        let prefix = q.labels ? q.labels[idx] : '①②③④⑤⑥⑦⑧⑨⑩'[idx];
-                        let labelText = (!q.ordered || q.inputCount === 1) ? '解答を選択してください：' : `（${prefix}）を選択してください：`;
-                        label.innerText = labelText;
-                        selectWrap.appendChild(label);
+                        label.innerText = '解答を選択してください：';
+                        answerContainer.appendChild(label);
 
-                        const select = createSelectElement(q, idx);
-                        selectWrap.appendChild(select);
-                        
-                        questionContent.appendChild(selectWrap);
-                    });
-                });
-            } 
-            // 従来通り、問題文の下にまとめて解答欄を配置する場合
-            else {
-                if (q.inputCount > 0) {
-                    answerContainer.classList.remove('hidden');
-                    const label = document.createElement('label');
-                    label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
-                    label.innerText = '解答を選択してください：';
-                    answerContainer.appendChild(label);
-
-                    for(let i = 0; i < q.inputCount; i++) {
-                        const selectWrap = document.createElement('div');
-                        selectWrap.className = 'mb-3';
-                        const select = createSelectElement(q, i);
-                        selectWrap.appendChild(select);
-                        answerContainer.appendChild(selectWrap);
-                    }
-                } else {
-                    answerContainer.classList.add('hidden');
-                }
-            }
-
-            // ナビゲーションの色を更新（PC用・モバイル用）
-            Array.from(questionNavList.children).forEach((el, idx) => {
-                if (idx === currentQuestionIndex) {
-                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-emerald-100 border-emerald-400 theme-text';
-                } else {
-                    el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-gray-200 border-gray-300 hover:bg-gray-300';
-                }
-            });
-            Array.from(drawerList.children).forEach((li, idx) => {
-                if (idx === currentQuestionIndex) {
-                    li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-emerald-100 font-bold theme-text border border-emerald-400';
-                } else {
-                    li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700';
-                }
-            });
-
-            // ボタンの表示切り替え
-            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
-            
-            if (currentQuestionIndex === questions.length - 1) {
-                document.getElementById('next-btn').classList.add('hidden');
-                document.getElementById('finish-btn').classList.remove('hidden');
-            } else {
-                document.getElementById('next-btn').classList.remove('hidden');
-                document.getElementById('finish-btn').classList.add('hidden');
-            }
-
-            // 問題描画後に画面の一番上へスクロールする（モバイルブラウザ対応のため少し遅延させて実行）
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-                document.body.scrollTop = 0; // Safari用
-                document.documentElement.scrollTop = 0; // Chrome, Firefox, IE用
-            }, 10);
-        }
-
-        // 解答の保存
-        function saveAnswer() {
-            const q = questions[currentQuestionIndex];
-            if (q.inputCount) {
-                const inputs = document.getElementById('test-screen').querySelectorAll('.multi-input');
-                userAnswers[q.id] = Array.from(inputs).map(input => input.value);
-            }
-        }
-
-        // 採点と結果表示
-        function executeScoring() {
-            testScreen.classList.add('hidden');
-            testScreen.classList.remove('flex');
-            resultScreen.classList.remove('hidden');
-            confirmModal.classList.add('hidden');
-
-            let score = 0;
-            let totalPoints = 0;
-            const resultContainer = document.getElementById('result-list');
-            resultContainer.innerHTML = '';
-
-            questions.forEach((q, index) => {
-                totalPoints += q.point;
-                let earnedPoint = 0;
-                let isCorrect = false;
-                let displayUserAnswer = "";
-
-                if (q.inputCount) {
-                    const userAnsArray = userAnswers[q.id] || Array(q.inputCount).fill("");
-                    let matchCount = 0;
-
-                    if (q.ordered) {
-                        q.answer.forEach((correctWord, i) => {
-                            if (userAnsArray[i] === correctWord) {
-                                matchCount++;
-                            }
-                        });
+                        for(let i = 0; i < q.inputCount; i++) {
+                            const selectWrap = document.createElement('div');
+                            selectWrap.className = 'mb-3';
+                            const select = createSelectElement(q, i);
+                            selectWrap.appendChild(select);
+                            answerContainer.appendChild(selectWrap);
+                        }
                     } else {
-                        const normalizedUserAns = [...new Set(userAnsArray.filter(ans => ans !== ''))];
-                        q.answer.forEach(correctWord => {
-                            if (normalizedUserAns.includes(correctWord)) {
-                                matchCount++;
-                            }
-                        });
+                        answerContainer.classList.add('hidden');
+                    }
+                }
+
+                // ナビゲーションの色更新
+                Array.from(questionNavList.children).forEach((el, idx) => {
+                    if (idx === currentQuestionIndex) {
+                        el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-emerald-100 border-emerald-400 theme-text';
+                    } else {
+                        el.className = 'p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base bg-gray-200 border-gray-300 hover:bg-gray-300';
+                    }
+                });
+                Array.from(drawerList.children).forEach((li, idx) => {
+                    if (idx === currentQuestionIndex) {
+                        li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-emerald-100 font-bold theme-text border border-emerald-400';
+                    } else {
+                        li.className = 'p-3 mb-1 rounded cursor-pointer transition fs-base bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700';
+                    }
+                });
+
+                // ボタン制御
+                document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+                if (currentQuestionIndex === questions.length - 1) {
+                    document.getElementById('next-btn').classList.add('hidden');
+                    document.getElementById('finish-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                    document.getElementById('finish-btn').classList.add('hidden');
+                }
+
+                // スクロールリセット
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0; 
+                    document.documentElement.scrollTop = 0;
+                }, 10);
+            }
+
+            function saveAnswer() {
+                const q = questions[currentQuestionIndex];
+                if (q.inputCount) {
+                    const inputs = testScreen.querySelectorAll('.multi-input');
+                    userAnswers[q.id] = Array.from(inputs).map(input => input.value);
+                }
+            }
+
+            function executeScoring() {
+                testScreen.classList.add('hidden');
+                testScreen.classList.remove('flex');
+                resultScreen.classList.remove('hidden');
+                confirmModal.classList.add('hidden');
+
+                let score = 0;
+                let totalPoints = 0;
+                const resultContainer = document.getElementById('result-list');
+                resultContainer.innerHTML = '';
+
+                questions.forEach((q, index) => {
+                    totalPoints += q.point;
+                    let earnedPoint = 0;
+                    let isCorrect = false;
+                    let displayUserAnswer = "";
+
+                    if (q.inputCount) {
+                        const userAnsArray = userAnswers[q.id] || Array(q.inputCount).fill("");
+                        let matchCount = 0;
+
+                        if (q.ordered) {
+                            q.answer.forEach((correctWord, i) => {
+                                if (userAnsArray[i] === correctWord) {
+                                    matchCount++;
+                                }
+                            });
+                        } else {
+                            const normalizedUserAns = [...new Set(userAnsArray.filter(ans => ans !== ''))];
+                            q.answer.forEach(correctWord => {
+                                if (normalizedUserAns.includes(correctWord)) {
+                                    matchCount++;
+                                }
+                            });
+                        }
+                        
+                        earnedPoint = matchCount * q.pointPerItem;
+                        isCorrect = earnedPoint === q.point; 
+
+                        displayUserAnswer = userAnsArray.map((ans, idx) => {
+                            const prefix = (q.inputCount > 1 && q.ordered) ? (q.labels ? q.labels[idx] : `①②③④⑤⑥⑦⑧⑨⑩`[idx]) + " " : "";
+                            return ans.trim() === "" ? `${prefix}<span class='text-gray-400'>未選択</span>` : `${prefix}${ans}`;
+                        }).join('\n');
                     }
                     
-                    earnedPoint = matchCount * q.pointPerItem;
-                    isCorrect = earnedPoint === q.point; 
+                    score += earnedPoint;
 
-                    displayUserAnswer = userAnsArray.map((ans, idx) => {
-                        const prefix = (q.inputCount > 1 && q.ordered) ? (q.labels ? q.labels[idx] : `①②③④⑤⑥⑦⑧⑨⑩`[idx]) + " " : "";
-                        return ans.trim() === "" ? `${prefix}<span class='text-gray-400'>未選択</span>` : `${prefix}${ans}`;
-                    }).join('\n');
-                }
-                
-                score += earnedPoint;
+                    let markHtml = '';
+                    if (earnedPoint === q.point) {
+                        markHtml = '<span class="text-red-600 font-bold mr-2 fs-xl">○</span>';
+                    } else if (earnedPoint > 0) {
+                        markHtml = '<span class="text-yellow-600 font-bold mr-2 fs-xl">△</span>';
+                    } else {
+                        markHtml = '<span class="text-blue-600 font-bold mr-2 fs-xl">×</span>';
+                    }
 
-                let markHtml = '';
-                if (earnedPoint === q.point) {
-                    markHtml = '<span class="text-red-600 font-bold mr-2 fs-xl">○</span>';
-                } else if (earnedPoint > 0) {
-                    markHtml = '<span class="text-yellow-600 font-bold mr-2 fs-xl">△</span>';
-                } else {
-                    markHtml = '<span class="text-blue-600 font-bold mr-2 fs-xl">×</span>';
-                }
+                    const explanationHtml = q.explanation ? q.explanation : '';
+                    
+                    let fullTextHtml = `<div class="mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap">${q.text}</div>`;
+                    if (q.subQuestions) {
+                        const subList = q.subQuestions.map(sq => {
+                            let text = typeof sq === 'string' ? sq : sq.text;
+                            return `<p class="mb-2 text-gray-800 whitespace-pre-wrap fs-lg">${text}</p>`;
+                        }).join('');
+                        fullTextHtml += `<div class="mb-6">${subList}</div>`;
+                    }
 
-                const explanationHtml = q.explanation ? q.explanation : '';
-                
-                let fullTextHtml = `<div class="mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap">${q.text}</div>`;
-                if (q.subQuestions) {
-                    const subList = q.subQuestions.map(sq => {
-                        let text = typeof sq === 'string' ? sq : sq.text;
-                        return `<p class="mb-2 text-gray-800 whitespace-pre-wrap fs-lg">${text}</p>`;
-                    }).join('');
-                    fullTextHtml += `<div class="mb-6">${subList}</div>`;
-                }
-
-                const itemHtml = `
-                    <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
-                        <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center fs-base">
-                            ${markHtml}
-                            【問題${index + 1}】（${q.point}点）
+                    const itemHtml = `
+                        <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
+                            <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center fs-base">
+                                ${markHtml}
+                                【問題${index + 1}】（${q.point}点）
+                            </div>
+                            <div class="p-4 md:p-6">
+                                ${fullTextHtml}
+                                <table class="w-full border-collapse">
+                                    <tbody>
+                                        <tr>
+                                            <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left fs-sm">正解</th>
+                                            <td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap fs-sm">${q.displayAnswer}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">学習者解答</th>
+                                            <td class="p-2 border border-gray-300 whitespace-pre-wrap fs-sm ${isCorrect ? '' : (earnedPoint > 0 ? 'text-yellow-700 font-bold' : 'text-red-600 font-bold')}">${displayUserAnswer}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">点数</th>
+                                            <td class="p-2 border border-gray-300 fs-sm">${earnedPoint}点／${q.point}点</td>
+                                        </tr>
+                                        ${explanationHtml ? `
+                                        <tr>
+                                            <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">問題解説</th>
+                                            <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed fs-sm">${explanationHtml}</td>
+                                        </tr>` : ''}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="p-4 md:p-6">
-                            ${fullTextHtml}
-                            <table class="w-full border-collapse">
-                                <tbody>
-                                    <tr>
-                                        <th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left fs-sm">正解</th>
-                                        <td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap fs-sm">${q.displayAnswer}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">学習者解答</th>
-                                        <td class="p-2 border border-gray-300 whitespace-pre-wrap fs-sm ${isCorrect ? '' : (earnedPoint > 0 ? 'text-yellow-700 font-bold' : 'text-red-600 font-bold')}">${displayUserAnswer}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">点数</th>
-                                        <td class="p-2 border border-gray-300 fs-sm">${earnedPoint}点／${q.point}点</td>
-                                    </tr>
-                                    ${explanationHtml ? `
-                                    <tr>
-                                        <th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">問題解説</th>
-                                        <td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap leading-relaxed fs-sm">${explanationHtml}</td>
-                                    </tr>` : ''}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                resultContainer.insertAdjacentHTML('beforeend', itemHtml);
+                    `;
+                    resultContainer.insertAdjacentHTML('beforeend', itemHtml);
+                });
+
+                document.getElementById('total-score').innerText = `${score}点 / ${totalPoints}点`;
+            }
+
+            // --- イベントリスナーの登録 ---
+            
+            // フォントサイズ変更
+            document.getElementById('font-size-btn').addEventListener('click', () => {
+                currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+                const scaleMap = {
+                    'normal': 1,
+                    'small': 0.85,
+                    'xsmall': 0.7,
+                    'large': 1.15
+                };
+                document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
             });
 
-            document.getElementById('total-score').innerText = `${score}点 / ${totalPoints}点`;
-        }
+            // ドロワー関連
+            document.getElementById('mobile-menu-btn').addEventListener('click', openDrawer);
+            document.getElementById('close-menu-btn').addEventListener('click', closeDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
 
-        // イベントリスナーの設定
-        document.getElementById('start-btn').addEventListener('click', startTest);
-        
-        document.getElementById('retry-btn').addEventListener('click', () => {
-            window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html";
-        });
+            // テスト進行関連
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            
+            document.getElementById('retry-btn').addEventListener('click', () => {
+                window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html";
+            });
 
-        document.getElementById('next-btn').addEventListener('click', () => {
-            saveAnswer();
-            if (currentQuestionIndex < questions.length - 1) {
-                currentQuestionIndex++;
-                renderQuestion();
-            }
-        });
-
-        document.getElementById('prev-btn').addEventListener('click', () => {
-            saveAnswer();
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                renderQuestion();
-            }
-        });
-
-        document.getElementById('test-screen').addEventListener('change', (e) => {
-            if (e.target.classList.contains('answer-input')) {
+            document.getElementById('next-btn').addEventListener('click', () => {
                 saveAnswer();
-            }
-        });
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    renderQuestion();
+                }
+            });
 
-        document.getElementById('finish-btn').addEventListener('click', () => {
-            saveAnswer();
-            confirmModal.classList.remove('hidden');
-        });
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                saveAnswer();
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuestion();
+                }
+            });
 
-        document.getElementById('modal-cancel-btn').addEventListener('click', () => {
-            confirmModal.classList.add('hidden');
-        });
+            testScreen.addEventListener('change', (e) => {
+                if (e.target.classList.contains('answer-input')) {
+                    saveAnswer();
+                }
+            });
 
-        document.getElementById('modal-ok-btn').addEventListener('click', () => {
-            executeScoring();
-        });
-
+            // 提出モーダル関連
+            document.getElementById('finish-btn').addEventListener('click', () => {
+                saveAnswer();
+                confirmModal.classList.remove('hidden');
+            });
+            document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+                confirmModal.classList.add('hidden');
+            });
+            document.getElementById('modal-ok-btn').addEventListener('click', () => {
+                executeScoring();
+            });
+            
+        }); // DOMContentLoaded の終了
     </script>
 </body>
 </html>
