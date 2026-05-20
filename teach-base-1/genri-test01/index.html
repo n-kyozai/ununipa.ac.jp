@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育原理 復習問題</title>
+    <title>教育原理 復習問題（教育の意義と目的）</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 画像に合わせた深緑色をテーマカラーに設定 */
@@ -69,8 +69,8 @@
             <table class="w-full border-collapse">
                 <tbody>
                     <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テストグループ</th><td class="p-3 border border-gray-300 fs-sm">教職教養基礎</td></tr>
-                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">教育原理 復習問題</td></tr>
-                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">28点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">教育原理 復習問題（教育の意義と目的）</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">36点</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">コース</th><td class="p-3 border border-gray-300 fs-sm">教育原理</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題表示区分</th><td class="p-3 border border-gray-300 fs-sm">一問題表示</td></tr>
                     <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題出題形式</th><td class="p-3 border border-gray-300 fs-sm">同一</td></tr>
@@ -78,7 +78,7 @@
             </table>
         </div>
         <div class="text-center mt-8 flex justify-center gap-4">
-            <a href="#" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base">テスト一覧へ</a>
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base">テスト一覧へ</a>
             <button id="start-btn" class="theme-bg theme-bg-hover text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト開始</button>
         </div>
     </div>
@@ -142,7 +142,7 @@
         
         <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
             <p class="text-gray-600 mb-2 fs-lg">あなたの得点</p>
-            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 28点</p>
+            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 36点</p>
         </div>
 
         <div id="result-list" class="space-y-8">
@@ -150,7 +150,7 @@
         </div>
 
         <div class="text-center mt-12 mb-8">
-            <button id="retry-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">タイトルへ戻る</button>
+            <button id="retry-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト一覧へ戻る</button>
         </div>
     </div>
 
@@ -166,33 +166,37 @@
     </div>
 
     <script>
-        // PDF資料に基づく教育原理の問題データ
+        // 教育原理01.pdf に基づく問題データ
         const originalQuestions = [
             { 
                 id: 1, 
-                point: 10,
+                point: 14,
                 pointPerItem: 2,
-                inputCount: 5,
+                inputCount: 7,
                 ordered: true,
-                labels: ["(1)", "(2)", "(3)", "(4)", "(5)"],
-                text: `次の教育や人間についての言葉を残した人物を、語群から選べ。`, 
+                labels: ["(1)", "(2)", "(3)", "(4)", "(5)", "(6)", "(7)"],
+                text: `次の教育や人間についての考え方や言葉を残した人物を、語群から選べ。`, 
                 subQuestions: [
-                    { text: "(1) 「万物は造物主の手を離れるときは、すべてが善いものであるが、人間の手にかかると、それらがみな例外なく悪いものになっていく」", inputIndices: [0] },
-                    { text: "(2) 「人間は教育されなければならない唯一の被造物である」", inputIndices: [1] },
-                    { text: "(3) 「人間は環境の子である」", inputIndices: [2] },
-                    { text: "(4) 「教育の最大の秘訣は、教育しないことにある」", inputIndices: [3] },
-                    { text: "(5) 「教育とは、経験の意味を増加させ、その後の経験の進路を方向づける能力を高めるように経験を改造ないし再組織することである」", inputIndices: [4] }
+                    { text: "(1) 「人間は教育されなければならない唯一の被造物である」と述べた。", inputIndices: [0] },
+                    { text: "(2) 「万物は造物主の手を離れるときは、すべてが善いものであるが、人間の手にかかると、それらがみな例外なく悪いものになっていく」と著書『エミール』で述べた。", inputIndices: [1] },
+                    { text: "(3) 「人間は環境の子である」と著書『新社会観』で述べた。", inputIndices: [2] },
+                    { text: "(4) 「教育の最大の秘訣は、教育しないことにある」と著書『児童の世紀』で述べた。", inputIndices: [3] },
+                    { text: "(5) 「教育とは、経験の意味を増加させ、その後の経験の進路を方向づける能力を高めるように経験を改造ないし再組織することである」と著書『民主主義と教育』で述べた。", inputIndices: [4] },
+                    { text: "(6) 著書『こころの旅』の中で、人間を「自ら学ぶヒト」という意味で「ホモ・ディスケンス」と呼んだ。", inputIndices: [5] },
+                    { text: "(7) 人間は一義的な規定を拒む存在であり、「世界開放性」を有していると指摘した。", inputIndices: [6] }
                 ],
                 options: [
-                    ["カント", "ルソー", "ペスタロッチ", "デューイ", "オーエン", "エレン・ケイ", "ナトルプ"],
-                    ["カント", "ルソー", "ペスタロッチ", "デューイ", "オーエン", "エレン・ケイ", "ナトルプ"],
-                    ["カント", "ルソー", "ペスタロッチ", "デューイ", "オーエン", "エレン・ケイ", "ナトルプ"],
-                    ["カント", "ルソー", "ペスタロッチ", "デューイ", "オーエン", "エレン・ケイ", "ナトルプ"],
-                    ["カント", "ルソー", "ペスタロッチ", "デューイ", "オーエン", "エレン・ケイ", "ナトルプ"]
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"],
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"],
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"],
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"],
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"],
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"],
+                    ["ルソー", "カント", "ペスタロッチ", "ヘルバルト", "オーエン", "エレン・ケイ", "ナトルプ", "デューイ", "シェーラー", "神谷美恵子"]
                 ],
-                answer: ["ルソー", "カント", "オーエン", "エレン・ケイ", "デューイ"],
-                displayAnswer: "(1) ルソー\n(2) カント\n(3) オーエン\n(4) エレン・ケイ\n(5) デューイ",
-                explanation: "先人たちの有名な言葉と人物の結びつきは頻出です。ルソーは『エミール』、カントは『教育学』、オーエンは『新社会観』、エレン・ケイは『児童の世紀』、デューイは『民主主義と教育』といった著書名も併せて覚えておきましょう。"
+                answer: ["カント", "ルソー", "オーエン", "エレン・ケイ", "デューイ", "神谷美恵子", "シェーラー"],
+                displayAnswer: "(1) カント\n(2) ルソー\n(3) オーエン\n(4) エレン・ケイ\n(5) デューイ\n(6) 神谷美恵子\n(7) シェーラー",
+                explanation: "先人たちの名言と著書、人物名の結びつきは非常に重要です。ルソー（エミール）、カント（教育学）、オーエン（新社会観）、エレン・ケイ（児童の世紀）、デューイ（民主主義と教育）などの代表的なキーワードを確実に押さえておきましょう。"
             },
             {
                 id: 2,
@@ -203,44 +207,46 @@
                 labels: ["(1)", "(2)", "(3)", "(4)", "(5)"],
                 text: `次の説明文に該当する最も適切な教育用語を、語群から選べ。`,
                 subQuestions: [
-                    { text: "(1) 学校で意図的に編成された教育課程ではなく、学校の雰囲気や教師の些細な言動など、無意識のうちに子供に影響を与える教育作用。", inputIndices: [0] },
+                    { text: "(1) 学校の雰囲気や教師の些細な言動など、意図的に編成されていないが結果的に子どもに影響を与える教育作用。", inputIndices: [0] },
                     { text: "(2) 知識や技能の習得そのものではなく、学習を通じて思考力や判断力などの精神的諸能力を形成する働き。", inputIndices: [1] },
-                    { text: "(3) ひとつの知識や技能を習得したことが、別の知識や技能の習得を容易にする（あるいは妨げる）現象。", inputIndices: [2] },
+                    { text: "(3) ひとつの知識や技能を習得したことが、別の知識や技能の習得を容易にしたり妨げたりする現象。", inputIndices: [2] },
                     { text: "(4) 教師が教材を介さずに、直接子どもに働きかけて道徳的な態度などを形成する教育作用。", inputIndices: [3] },
-                    { text: "(5) 小中学校などの義務教育段階で基本とされている、所定の教育課程を一定年限の間に学ぶことを求める考え方。", inputIndices: [4] }
+                    { text: "(5) 教師が教材を介して子どもに知識・技能を伝える教育作用であり、知育に該当するもの。", inputIndices: [4] }
                 ],
                 options: [
-                    ["実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育", "明示的カリキュラム", "隠れたカリキュラム", "履修主義", "修得主義"],
-                    ["実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育", "明示的カリキュラム", "隠れたカリキュラム", "履修主義", "修得主義"],
-                    ["実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育", "明示的カリキュラム", "隠れたカリキュラム", "履修主義", "修得主義"],
-                    ["実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育", "明示的カリキュラム", "隠れたカリキュラム", "履修主義", "修得主義"],
-                    ["実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育", "明示的カリキュラム", "隠れたカリキュラム", "履修主義", "修得主義"]
+                    ["明示的カリキュラム", "隠れたカリキュラム", "実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育"],
+                    ["明示的カリキュラム", "隠れたカリキュラム", "実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育"],
+                    ["明示的カリキュラム", "隠れたカリキュラム", "実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育"],
+                    ["明示的カリキュラム", "隠れたカリキュラム", "実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育"],
+                    ["明示的カリキュラム", "隠れたカリキュラム", "実質陶冶", "形式陶冶", "学習の転移", "教授", "訓育"]
                 ],
-                answer: ["隠れたカリキュラム", "形式陶冶", "学習の転移", "訓育", "履修主義"],
-                displayAnswer: "(1) 隠れたカリキュラム\n(2) 形式陶冶\n(3) 学習の転移\n(4) 訓育\n(5) 履修主義",
-                explanation: "(1) 潜在的カリキュラムとも呼ばれます。\n(2) 内容そのものを重視する「実質陶冶」との違いに注意しましょう。\n(4) 教師と子どもの二項関係で成立するのが「訓育（徳育）」、教材を介する三項関係が「教授（知育）」です。\n(5) 高校で採用されることが多い、成果を評価して認定する考え方は「修得主義」です。"
+                answer: ["隠れたカリキュラム", "形式陶冶", "学習の転移", "訓育", "教授"],
+                displayAnswer: "(1) 隠れたカリキュラム\n(2) 形式陶冶\n(3) 学習の転移\n(4) 訓育\n(5) 教授",
+                explanation: "対になる概念の違いを理解しておきましょう。\n・「隠れたカリキュラム（潜在的カリキュラム）」⇔「明示的カリキュラム」\n・「形式陶冶（精神的能力の形成）」⇔「実質陶冶（知識・技能そのものの習得）」\n・「訓育（教師と子どもの二項関係）」⇔「教授（教師・教材・子どもの三項関係）」"
             },
             {
                 id: 3,
-                point: 8,
+                point: 12,
                 pointPerItem: 2,
-                inputCount: 4,
+                inputCount: 6,
                 ordered: true,
-                labels: ["A", "B", "C", "D"],
-                text: `教育の意義や日本の教育法制に関する次の文の（　）に適語を入れよ。`,
+                labels: ["A", "B", "C", "D", "E", "F"],
+                text: `教育の制度や目的についての次の文の（　）に適語を入れよ。`,
                 subQuestions: [
-                    { text: "人間は一義的な規定を拒む存在であり、シェーラーの言葉を借りれば（ A ）を有していると言える。また、神谷美恵子は『こころの旅』の中で、人間を「教育されなければならないヒト」ではなく、「自ら学ぶヒト」という意味で（ B ）と呼んだ。", inputIndices: [0, 1] },
-                    { text: "日本の教育の目的は、教育基本法第1条において「（ C ）を目指し、平和で民主的な国家及び社会の（ D ）として必要な資質を備えた心身ともに健康な国民の育成を期して行われなければならない」と定められている。", inputIndices: [2, 3] }
+                    { text: "我が国の義務教育の修了・卒業の認定においては、制度上は一定の課程の修了を要求する（ A ）を採っているが、実際の運用においては基本的に一定の年齢に達したことによる（ B ）が採られている。また、課程の修了について、所定の教育課程を一定年限の間に学ぶことを求める考え方を（ C ）、成果を評価して認定する考え方を（ D ）という。", inputIndices: [0, 1, 2, 3] },
+                    { text: "日本の教育の目的は、教育基本法第1条において「（ E ）を目指し、平和で民主的な国家及び社会の（ F ）として必要な資質を備えた心身ともに健康な国民の育成を期して行われなければならない」と定められている。", inputIndices: [4, 5] }
                 ],
                 options: [
-                    ["世界開放性", "可塑性", "ホモ・エドゥカンドゥス", "ホモ・ディスケンス"], // A
-                    ["世界開放性", "可塑性", "ホモ・エドゥカンドゥス", "ホモ・ディスケンス"], // B
-                    ["人格の完成", "国家の繁栄", "個人の自立"], // C
-                    ["形成者", "指導者", "構成員"] // D
+                    ["年齢主義", "課程主義", "履修主義", "修得主義"], // A
+                    ["年齢主義", "課程主義", "履修主義", "修得主義"], // B
+                    ["年齢主義", "課程主義", "履修主義", "修得主義"], // C
+                    ["年齢主義", "課程主義", "履修主義", "修得主義"], // D
+                    ["人格の完成", "個人の自立", "国家の繁栄"], // E
+                    ["形成者", "構成員", "指導者"] // F
                 ],
-                answer: ["世界開放性", "ホモ・ディスケンス", "人格の完成", "形成者"],
-                displayAnswer: "A. 世界開放性\nB. ホモ・ディスケンス\nC. 人格の完成\nD. 形成者",
-                explanation: "教育基本法第1条の「人格の完成」と「国家及び社会の形成者」は非常に重要なキーワードです。また、人間のあり方を多角的に捉える概念として、「世界開放性」や「ホモ・ディスケンス」などの用語も確認しておきましょう。"
+                answer: ["課程主義", "年齢主義", "履修主義", "修得主義", "人格の完成", "形成者"],
+                displayAnswer: "A. 課程主義\nB. 年齢主義\nC. 履修主義\nD. 修得主義\nE. 人格の完成\nF. 形成者",
+                explanation: "制度上の原則と実際の運用の違い（課程主義と年齢主義）や、義務教育段階（履修主義）と高等学校（修得主義）の違いを押さえてください。また、教育基本法第1条の「人格の完成」と「国家及び社会の形成者」は教職教養において最重要キーワードの一つです。"
             }
         ];
 
@@ -603,8 +609,7 @@
             document.getElementById('start-btn').addEventListener('click', startTest);
             
             document.getElementById('retry-btn').addEventListener('click', () => {
-                startScreen.classList.remove('hidden');
-                resultScreen.classList.add('hidden');
+                window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html";
             });
 
             document.getElementById('next-btn').addEventListener('click', () => {
