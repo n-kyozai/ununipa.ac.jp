@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教員採用試験対策 おすすめYouTubeチャンネルまとめ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* フォントサイズと行間のスケーリング用設定 */
+        :root {
+            --font-scale: 1; /* 初期スケール */
+        }
+
+        /* スケール切り替え用クラス (.fs-*) */
+        .fs-small { --font-scale: 0.9; }
+        .fs-medium { --font-scale: 1.0; }
+        .fs-large { --font-scale: 1.1; }
+
+        /* Tailwindのテキストサイズクラスに !important を指定して直接スケーリング */
+        .text-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+        .text-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .text-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .text-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .text-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .text-3xl { font-size: calc(1.875rem * var(--font-scale)) !important; line-height: calc(2.25rem * var(--font-scale)) !important; }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+        }
+    </style>
+    <script>
+        // フォントサイズを変更する関数
+        function setFontSize(size) {
+            // 選択されたボタンのスタイルを更新
+            document.querySelectorAll('.font-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600');
+            });
+            const activeBtn = document.getElementById(`btn-${size}`);
+            activeBtn.classList.remove('bg-white', 'text-slate-600');
+            activeBtn.classList.add('bg-blue-600', 'text-white');
+
+            // サイズの適用: body要素のCSSクラス（.fs-*）を切り替える
+            const body = document.body;
+            body.classList.remove('fs-small', 'fs-medium', 'fs-large');
+            body.classList.add(`fs-${size}`);
+        }
+    </script>
+</head>
+<body class="fs-medium bg-slate-50 text-slate-800 antialiased selection:bg-blue-200 selection:text-blue-900">
+
+    <!-- ヘッダー部分：タイトルとフォントサイズ変更ボタン -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center">
+                <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                    教採対策YouTubeまとめ
+                </span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-sm font-medium text-slate-500 hidden sm:inline-block">文字サイズ:</span>
+                <div class="flex bg-slate-100 p-1 rounded-lg border border-slate-200 shadow-inner">
+                    <button id="btn-small" onclick="setFontSize('small')" class="font-btn px-3 py-1 text-sm font-medium rounded-md transition-colors bg-white text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" aria-label="文字サイズ 小">小</button>
+                    <button id="btn-medium" onclick="setFontSize('medium')" class="font-btn px-3 py-1 text-sm font-medium rounded-md transition-colors bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" aria-label="文字サイズ 中">中</button>
+                    <button id="btn-large" onclick="setFontSize('large')" class="font-btn px-3 py-1 text-sm font-medium rounded-md transition-colors bg-white text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" aria-label="文字サイズ 大">大</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- 導入文 -->
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4 leading-tight">
+                「中学校社会」「高校地理歴史」「高校公民」を目指す大学2回生へ
+            </h1>
+            <p class="text-base sm:text-lg text-slate-600 leading-relaxed">
+                教員採用試験（教採）対策として受験生から特に評価が高く、現在大学2回生であるあなたに役立つYouTubeチャンネルを、学習分野別に整理してまとめました。<br class="hidden sm:block">
+                スキマ時間の活用や、専門教科の学び直しにぜひお役立てください。
+            </p>
+        </section>
+
+        <!-- 1. 教職教養・教育法規・教育時事対策 -->
+        <section>
+            <div class="mb-6 border-l-4 border-blue-500 pl-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">1. 教職教養・教育法規・教育時事対策 <span class="text-base font-normal text-slate-500 ml-2">（1次筆記試験向け）</span></h2>
+                <p class="mt-2 text-slate-600">筆記試験の足切りを回避し、高得点を狙うための「教職教養」や「教育時事」を網羅できる定番の対策チャンネルです。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">きょうさい対策ブログ<br><span class="text-sm font-normal text-slate-500">【教員採用試験対策】</span></h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-blue-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-blue-800 mb-1">概要・特徴</span>
+                                1次筆記試験の合格に必要な教職教養、教育法規、最新の教育時事や教員倫理の問題・解説を豊富に発信している大人気チャンネルです。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                自治体の募集要項分析や、新設された制度（「主務教諭」など）、働き方改革といった最新の教育時事、教育法規100選などの「聞き流し・穴埋め動画」が非常に充実しています。通学時間などのスキマ時間を使った高速復習やインプットに最適です。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@skyosai" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">教採セミナー</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-blue-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-blue-800 mb-1">概要・特徴</span>
+                                「すぐに眠くなってしまう、つまらない教職教養の勉強を分かりやすく」をコンセプトに、教育原理、教育法規、教育心理、日本教育史などを丁寧に解説しています。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                特に「学習指導要領（総則・特別活動・道徳など）」や「教育基本法・いじめ防止対策推進法などの頻出法規」を聞き流せるプレイリストが強力です。音読される条文を耳から脳に刻み込むことで、法令判定問題への対応力が劇的に向上します。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@kyousaiseminar" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">ぼーろじっく</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-blue-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-blue-800 mb-1">概要・特徴</span>
+                                現役合格を果たした大学生の目線も交えつつ、教職教養の「理解」に特化した解説を行うチャンネルです。単にキーワードを暗記するのではなく、条文の背景や意味を噛み砕いて説明してくれます。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                「条文と法令一致対策」などの実践的な動画に加え、「教採直前の大学生の1日」といったモチベーションを高めるVlogも投稿されており、大学2回生の今からモチベーションを維持するペースメーカーとして役立ちます。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@ぼーろじっく" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. 人物評価・面接・模擬授業対策 -->
+        <section>
+            <div class="mb-6 border-l-4 border-emerald-500 pl-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">2. 人物評価・面接・模擬授業対策 <span class="text-base font-normal text-slate-500 ml-2">（2次試験向け）</span></h2>
+                <p class="mt-2 text-slate-600">北九州市や佐賀県、山口県などの「人物重視」の2次選考を突破するための、実践的な指導技術や自己分析、面接対策を学べるチャンネルです。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">【教採対策ch】金井志津乃</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-emerald-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-emerald-800 mb-1">概要・特徴</span>
+                                大学4年生の時に高校地理歴史の試験に一発合格した元高校教諭が運営する、最短合格のための2次対策特化型チャンネルです。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                自己分析の進め方、面接官に響く志願書の書き方、面接での入退室の実演、頻出質問への具体的な回答構築法など、実践的な面接対策動画が目白押しです。マニュアル的な回答を脱却し、説得力のある「自分の言葉」で話すためのノウハウが体系的に解説されています。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@kanai-kyousai" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">だいぶつ先生ネット<br><span class="text-sm font-normal text-slate-500">【教員採用試験対策ちゃんねる】</span></h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-emerald-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-emerald-800 mb-1">概要・特徴</span>
+                                8ヶ月間の猛勉強で3府県の教採に全勝合格した元公立学校教員が運営するチャンネルです。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                2次試験の集団討論や個人面接の対策を主軸としており、受験生同士の対話や討論での立ち振る舞い、協調性のアピール方法などを論理的に解説しています。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@だいぶつ先生ネット教員採用" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">教採塾チャンネル<br><span class="text-sm font-normal text-slate-500">（岸上隆文）</span></h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-emerald-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-emerald-800 mb-1">概要・特徴</span>
+                                これまで5,000人以上の受験生を指導してきた実力派講師が、模擬授業や場面指導、願書の書き方などを教えるチャンネルです。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                単に教科書通りに教えるのではなく、5分や10分といった短い模擬授業の中で、いかに「子供役の受験生を適切に巻き込み、主体的・対話的な授業をつくるか」という、双方向のやり取りのコツが具体的に実演・解説されています。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@kyousaijuku.0123" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. 専門教科（社会・地歴・公民）の知識補強・学び直し -->
+        <section>
+            <div class="mb-6 border-l-4 border-indigo-500 pl-4">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">3. 専門教科（社会・地歴・公民）の知識補強・学び直し</h2>
+                <p class="mt-2 text-slate-600">社会科の専門試験（共通テスト〜難関私大レベル）を攻略するにあたり、教科書や参考書を読む前の「全体像の把握」や「苦手分野の克服」を、映像授業で効率よく進められるチャンネルです。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">とある男が授業してみた<br><span class="text-sm font-normal text-slate-500">（葉一）</span></h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-indigo-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-indigo-800 mb-1">概要・特徴</span>
+                                登録者数180万人を超える、日本トップクラスの教育YouTuberが運営するチャンネルです。小・中・高校の主要科目を網羅しています。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                教採専用ではないものの、中学社会科（地理・歴史・公民）の全単元が美しく整理されたホワイトボードで丁寧に解説されています。自分が専攻していない、苦手な社会科分野（例：地歴専攻における公民経済分野など）の基礎的な知識を短時間で学び直すのに最適です。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@toaruotokohaichi" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">教育YouTuber ムンディ先生のホームルーム</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-indigo-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-indigo-800 mb-1">概要・特徴</span>
+                                世界史や日本史の「歴史の流れ」を1枚の地図やストーリーから分かりやすく解説してくれるチャンネルです。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                地理歴史の専門筆記試験では、細かい年号や用語の暗記以上に、出来事の因果関係が問われます。ムンディ先生の動画は「歴史の大枠（ストーリー）を素早く頭に叩き込む」ことに特化しているため、本格的な問題演習に入る前の導入期に非常に適しています。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@HistoriaMundi" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">miniいけ先生の倫政チャンネル</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-indigo-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-indigo-800 mb-1">概要・特徴</span>
+                                公民科目の「倫理」や「政治・経済」をピンポイントで、かつ非常に分かりやすく解説してくれる特化型チャンネルです。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                高校公民や公共の範囲における、複雑な経済理論（マクロ経済や金融政策）、思想史（倫理分野の主要な思想家の概念）を視覚的に理解することができます。大学の教科書だけでは理解しづらい抽象的なテーマを、受験生目線で整理し直すのに大変便利です。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@miniikesensei" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
+                    <div class="p-5 flex-grow">
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">中田敦彦のYouTube大学</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="bg-indigo-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-indigo-800 mb-1">概要・特徴</span>
+                                日本史・世界史などの歴史授業や、最新の時事・経済ニュースを圧倒的なエンターテインメント性で解説しています。
+                            </div>
+                            <div class="bg-orange-50 p-3 rounded-lg text-slate-700">
+                                <span class="block font-semibold text-orange-800 mb-1">おすすめの活用法</span>
+                                机に向かうのが少し億劫な日の「勉強の息抜き」として歴史や時事問題の動画を視聴することで、教養試験の「社会科学・時事問題」や、専門教科の「歴史の背景」を楽しみながらインプットできます。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-100 mt-auto">
+                        <a href="https://www.youtube.com/@NKTofficial" target="_blank" rel="noopener noreferrer" class="w-full inline-flex justify-center items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.418-4.814a2.507 2.507 0 0 1 1.768-1.768C5.746 5 12 5 12 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd"></path></svg>
+                            チャンネルを見る
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- アドバイスセクション -->
+        <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-lg mt-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                <svg class="w-7 h-7 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                大学2回生の今から始める「YouTube勉強法」のアドバイス
+            </h2>
+            <div class="space-y-6">
+                <div class="bg-white/10 rounded-xl p-5 backdrop-blur-sm border border-white/20">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">「教職教養」は通学時・ランニング時などの『耳学（聞き流し）』をルーティンにする</h3>
+                    <p class="text-slate-200 leading-relaxed">
+                        教育法規（教育基本法など）や学習指導要領は、まず「教採セミナー」や「きょうさい対策ブログ」の聞き流し動画を毎日30分聴くことから始めましょう。2回生の間にこれを習慣化しておくだけで、3回生の春に問題集を解く際、驚くほどスラスラと頭に入るようになります。
+                    </p>
+                </div>
+                <div class="bg-white/10 rounded-xl p-5 backdrop-blur-sm border border-white/20">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">専門教科は「理解」を優先し、YouTubeで大枠を捉える</h3>
+                    <p class="text-slate-200 leading-relaxed">
+                        高校地歴や公民の細かな用語暗記にいきなり入るのではなく、まずは「ムンディ先生」や「miniいけ先生」などの授業動画を用いて「歴史の流れ」や「政治経済の仕組み」の大枠（概要）を理解しましょう。全体像を理解した上で市販の過去問・参考書に進むのが、最も効率的な学習ステップです。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-white border-t border-slate-200 mt-16 py-8">
+        <div class="max-w-5xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>© 教員採用試験対策 YouTubeチャンネルまとめ</p>
+            <p class="mt-2">「中学校社会」「高校地理歴史」「高校公民」を目指す皆さんを応援しています。</p>
+        </div>
+    </footer>
+
+</body>
+</html>
