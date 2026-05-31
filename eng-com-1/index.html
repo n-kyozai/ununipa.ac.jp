@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ja" class="size-normal">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>英コミュ 新出単語・表現 検索・学習アプリ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ご要望：切り替えはスムーズNG。一瞬でフォントサイズを切り替えるため、
+           フォントサイズ関連にはtransitionを一切設定せず、即時適用します。 */
+        html, body, p, span, h1, h2, h3, button, div, td, th {
+            transition: none !important;
+        }
+
+        /* フォントサイズ定義（htmlのベースサイズを変更することで、remを使用しているすべての文字サイズが連動して一瞬で変わります） */
+        html.size-normal { font-size: 16px; }
+        html.size-small { font-size: 14px; }
+        html.size-xsmall { font-size: 11.5px; }
+        html.size-large { font-size: 20px; }
+
+        /* スクロールバーのカスタマイズ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+        }
+        
+        /* タブレット向けタップ時ハイライトの抑制 */
+        button, a, div {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- ヘッダー -->
+    <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+            <!-- ユニット選択トグルボタン -->
+            <button onclick="toggleSidebar(true)" class="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 border border-slate-200 dark:border-slate-700" title="ユニットメニューを開く">
+                <svg class="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                <span class="text-sm">ユニット選択</span>
+            </button>
+            
+            <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
+
+            <div class="hidden sm:block">
+                <h1 class="font-black text-lg leading-tight tracking-wider text-blue-600 dark:text-blue-400">英コミュ 新出単語</h1>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Useful words & expressions</p>
+            </div>
+        </div>
+
+        <!-- コントロール群 -->
+        <div class="flex items-center space-x-2">
+            <!-- フォント調整ボタン "あぁ" -->
+            <button onclick="cycleFontSize()" class="relative flex items-center space-x-1 px-4 py-2 rounded-lg bg-blue-600 text-white font-black text-sm hover:bg-blue-700 active:scale-95 shadow-sm" title="文字サイズを変更">
+                <span>あぁ</span>
+                <span id="font-size-badge" class="bg-blue-800 text-blue-100 text-[10px] px-1.5 py-0.2 rounded font-bold">標準</span>
+            </button>
+
+            <!-- ダークモード切り替え -->
+            <button onclick="toggleDarkMode()" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95">
+                <svg class="w-5 h-5 dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg class="w-5 h-5 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1-0 011-1zM5.05 6.464A1 1 0 106.46 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- メインレイアウト -->
+    <div class="flex-1 flex relative h-[calc(100vh-58px)] overflow-hidden">
+        
+        <!-- 背景オーバーレイ（サイドバー展開時のみ表示） -->
+        <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-45 hidden transition-opacity duration-150"></div>
+
+        <!-- スライドトグルのサイドバー (ドロワー形式) -->
+        <aside id="sidebar" class="fixed top-0 bottom-0 left-0 w-80 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-5 flex flex-col space-y-4 z-50 transform -translate-x-full transition-transform duration-200 ease-in-out shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">ユニット選択リスト</span>
+                <!-- 閉じるボタン -->
+                <button onclick="toggleSidebar(false)" class="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- ユニットボタン群のコンテナ -->
+            <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="unit-buttons-container">
+                <!-- JSで動的にUnit1〜24のボタンを生成 -->
+            </div>
+        </aside>
+
+        <!-- 単語一覧メインエリア -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950">
+            <!-- 検索 & 現在のユニット状態表示バー -->
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/40 flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 items-center justify-between shrink-0">
+                <!-- 検索バー -->
+                <div class="relative w-full md:w-96">
+                    <input type="text" id="search-input" oninput="handleSearch()" placeholder="英単語・日本語でキーワード検索..." class="w-full pl-9 pr-10 py-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white">
+                    <span class="absolute left-3 top-3 text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <button id="clear-search-btn" onclick="clearSearch()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hidden">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <!-- 状態インジケータ -->
+                <div class="flex items-center space-x-3 text-sm text-slate-600 dark:text-slate-400 w-full md:w-auto justify-between md:justify-end">
+                    <span id="view-title" class="font-extrabold text-slate-800 dark:text-slate-100 text-base md:text-lg border-b-2 border-blue-600 dark:border-blue-400 pb-0.5">Unit 1 Putting things in place</span>
+                    <span id="word-count" class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200/50 dark:border-blue-900/30 px-3 py-1 rounded-full text-xs font-bold text-blue-700 dark:text-blue-300">0件の表現</span>
+                </div>
+            </div>
+
+            <!-- 単語カードグリッドリスト（タブレットやPCで横に何枚も並ぶレイアウト） -->
+            <div class="flex-1 overflow-y-auto px-4 py-4" id="cards-container">
+                <div class="max-w-7xl mx-auto">
+                    <!-- グリッド構造: スマホで1〜2列、タブレット縦で2〜3列、タブレット横やPCで3〜4列表示 -->
+                    <div id="words-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- 動的に単語カードが挿入されます -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 音声再生通知用トースト -->
+    <div id="toast" class="fixed bottom-6 right-6 px-4 py-2.5 bg-slate-800 text-white text-xs font-bold rounded-xl shadow-xl opacity-0 pointer-events-none z-50"></div>
+
+    <!-- アプリケーションデータ & ロジック -->
+    <script>
+        // 1. 新出単語・表現のデータベース（日本語訳つき）
+        const wordData = [
+            {
+                unit: 1,
+                title: "Unit 1 Putting things in place",
+                words: [
+                    { english: "closet", japanese: "クローゼット、押し入れ" },
+                    { english: "wastepaper basket", japanese: "くずかご" },
+                    { english: "pennant", japanese: "ペナント（細長い三角旗）" },
+                    { english: "in front of ...", japanese: "〜の前に" },
+                    { english: "speakers", japanese: "スピーカー" },
+                    { english: "on the right side of ...", japanese: "〜の右側に" },
+                    { english: "computer monitor and keyboard", japanese: "コンピュータのモニターとキーボード" },
+                    { english: "above...", japanese: "〜の上に、その上" },
+                    { english: "trash can", japanese: "ゴミ箱" },
+                    { english: "below...", japanese: "〜の下に" },
+                    { english: "power outlet", japanese: "コンセント、電源プラグ" },
+                    { english: "between the... and the", japanese: "〜と〜の間に" },
+                    { english: "ottoman/foot stool", japanese: "オットマン／足台" },
+                    { english: "on the wall", japanese: "壁に（かかって）" },
+                    { english: "coat stand", japanese: "コート掛け" },
+                    { english: "in the middle of the floor", japanese: "床の真ん中に" },
+                    { english: "teddy bear", japanese: "テディベア（クマのぬいぐるみ）" }
+                ]
+            },
+            {
+                unit: 2,
+                title: "Unit 2 Simple drawings",
+                words: [
+                    { english: "triangle", japanese: "三角形" },
+                    { english: "below", japanese: "下方に" },
+                    { english: "square", japanese: "正方形、四角" },
+                    { english: "vertical", japanese: "垂直の、縦の" },
+                    { english: "rectangle", japanese: "長方形" },
+                    { english: "horizontal", japanese: "水平の、横の" },
+                    { english: "circle", japanese: "円、丸" },
+                    { english: "white", japanese: "白色" },
+                    { english: "thin line", japanese: "細い線" },
+                    { english: "gray", japanese: "灰色、グレー" },
+                    { english: "thick line", japanese: "太い線" },
+                    { english: "dark gray", japanese: "濃い灰色、ダークグレー" },
+                    { english: "to the left/right", japanese: "左へ／右へ" },
+                    { english: "cross", japanese: "交差する、十字" },
+                    { english: "in the middle", japanese: "真ん中に" },
+                    { english: "ninety degrees", japanese: "90度" },
+                    { english: "above", japanese: "上方に" }
+                ]
+            },
+            {
+                unit: 3,
+                title: "Unit 3 Spot the difference",
+                words: [
+                    { english: "fireplace", japanese: "暖炉" },
+                    { english: "on the wall/floor", japanese: "壁に／床に" },
+                    { english: "firewood", japanese: "薪（まき）" },
+                    { english: "next to", japanese: "〜の隣に" },
+                    { english: "feed", japanese: "（動物などに）餌をあげる、食べ物を与える" },
+                    { english: "between", japanese: "〜の間に" },
+                    { english: "fly a kite", japanese: "凧揚げをする" },
+                    { english: "on the left/right", japanese: "左側に／右側に" },
+                    { english: "cross one's legs", japanese: "脚を組む" },
+                    { english: "hold something", japanese: "何かを持つ" },
+                    { english: "under", japanese: "〜の下に" },
+                    { english: "There is/are", japanese: "〜がある／いる" },
+                    { english: "above", japanese: "〜の上に" }
+                ]
+            },
+            {
+                unit: 4,
+                title: "Unit 4 Taking out the garbage",
+                words: [
+                    { english: "fish bone", japanese: "魚の骨" },
+                    { english: "disposable bento box", japanese: "使い捨てのお弁当箱" },
+                    { english: "apple core", japanese: "リンゴの芯" },
+                    { english: "toothpaste tube", japanese: "歯磨き粉のチューブ" },
+                    { english: "bucket", japanese: "バケツ" },
+                    { english: "soap dispenser", japanese: "ソープディスペンサー" },
+                    { english: "pan", japanese: "なべ、フライパン" },
+                    { english: "spice jar", japanese: "調味料の瓶" },
+                    { english: "kettle", japanese: "やかん、ケトル" },
+                    { english: "whisky bottle", japanese: "ウイスキーのボトル" },
+                    { english: "light bulb", japanese: "電球" },
+                    { english: "tuna can", japanese: "ツナ缶" },
+                    { english: "cup and saucer", japanese: "カップ＆ソーサー" },
+                    { english: "There is/are", japanese: "〜がある／いる" },
+                    { english: "an empty bag of potato chips/crisps", japanese: "ポテトチップスの空き袋" },
+                    { english: "The fifth category is", japanese: "5番目の区分は" }
+                ]
+            },
+            {
+                unit: 5,
+                title: "Unit 5 Fantastic flags",
+                words: [
+                    { english: "stripe", japanese: "縞（ストライプ）" },
+                    { english: "sun", japanese: "太陽" },
+                    { english: "thick/thin line", japanese: "太い線／細い線" },
+                    { english: "crescent moon", japanese: "三日月" },
+                    { english: "star", japanese: "星" },
+                    { english: "a half/third", japanese: "半分／3分の1" },
+                    { english: "cross", japanese: "十字" },
+                    { english: "horizontal/vertical", japanese: "水平の（横の）／垂直の（縦の）" },
+                    { english: "x shape", japanese: "Xの形" },
+                    { english: "diagonal", japanese: "対角線の、斜めの" },
+                    { english: "rectangle", japanese: "長方形" },
+                    { english: "top/middle/bottom", japanese: "上部／中央／下部" },
+                    { english: "square", japanese: "正方形" },
+                    { english: "left/center/right", japanese: "左／中央／右" },
+                    { english: "circle", japanese: "円" },
+                    { english: "touch the edge", japanese: "端（ふち）に触れる" },
+                    { english: "triangle", japanese: "三角形" },
+                    { english: "divide in half", japanese: "半分に分ける" },
+                    { english: "point", japanese: "点、先端、指し示す" },
+                    { english: "divide into thirds", japanese: "3等分する" },
+                    { english: "Union Jack", japanese: "ユニオンジャック（イギリス国旗）" },
+                    { english: "top left corner", japanese: "左上隅" },
+                    { english: "image", japanese: "画像、イメージ" },
+                    { english: "bottom right corner", japanese: "右下隅" },
+                    { english: "picture", japanese: "写真、絵" },
+                    { english: "a line at 45 (90) degrees", japanese: "45度（90度）の線" },
+                    { english: "background", japanese: "背景" }
+                ]
+            },
+            {
+                unit: 6,
+                title: "Unit 6 Daily scenes",
+                words: [
+                    { english: "A man is...ing", japanese: "男の人が〜している" },
+                    { english: "In the corner is a ...", japanese: "隅には〜がある" },
+                    { english: "Some people are ...ing", japanese: "何人かの人々が〜している" },
+                    { english: "On the floor are some", japanese: "床にはいくつか〜がある" },
+                    { english: "There is a ...", japanese: "〜がひとつあります" },
+                    { english: "There is the sound of...", japanese: "〜の音が聞こえる" },
+                    { english: "There are some", japanese: "いくつか〜があります" },
+                    { english: "There is the smell of", japanese: "〜の匂いがする" }
+                ]
+            },
+            {
+                unit: 7,
+                title: "Unit 7 Tom's accident",
+                words: [
+                    { english: "trip over", japanese: "〜につまずく" },
+                    { english: "get a nosebleed", japanese: "鼻血が出る" },
+                    { english: "fall", japanese: "転ぶ、落ちる" },
+                    { english: "twist her ankle", japanese: "彼女の足首をひねる（捻挫する）" },
+                    { english: "break a bone", japanese: "骨折する" },
+                    { english: "I blacked out.", japanese: "目の前が真っ暗になった（意識を失った）。" },
+                    { english: "be stung by a bee", japanese: "蜂に刺される" },
+                    { english: "I hurt my knee.", japanese: "膝を痛めた。" },
+                    { english: "cut his finger", japanese: "彼の指を切る（切り傷を作る）" },
+                    { english: "I was in a lot of pain.", japanese: "痛みがとてもひどかった。" }
+                ]
+            },
+            {
+                unit: 8,
+                title: "Unit 8 The truth about me",
+                words: [
+                    { english: "When I was in elementary school, I", japanese: "私が小学生だった時、私は〜" },
+                    { english: "Most people think that I'm ...", japanese: "たいていの人は私が〜だと思っている" },
+                    { english: "I used to love", japanese: "以前は〜が大好きだった" },
+                    { english: "I'm really good at", japanese: "私は〜が本当に得意だ" },
+                    { english: "I'm in the habit of ...", japanese: "私は〜する習慣がある" },
+                    { english: "I used to live in", japanese: "以前〜に住んでいた" },
+                    { english: "I'm really afraid of...", japanese: "私は〜が本当に怖い" },
+                    { english: "One day I hope to", japanese: "いつか〜したいと願っている" },
+                    { english: "My part-time job is ...", japanese: "私のアルバイトは〜" }
+                ]
+            },
+            {
+                unit: 9,
+                title: "Unit 9 Who are they?",
+                words: [
+                    { english: "Who is the man/woman...?", japanese: "〜しているあの男性／女性は誰ですか？" },
+                    { english: "He/She is talking with ...", japanese: "彼／彼女は〜と話している" },
+                    { english: "Is he/she ... ?", japanese: "彼／彼女は〜ですか？" },
+                    { english: "He/She is holding ...", japanese: "彼／彼女は〜を持っている" },
+                    { english: "He/She is standing next to ...", japanese: "彼／彼女は〜の隣に立っている" },
+                    { english: "The woman with", japanese: "〜を持っている／身につけている女性" },
+                    { english: "There is/are ...", japanese: "〜がある／いる" },
+                    { english: "The man/woman who", japanese: "〜している男性／女性" },
+                    { english: "He/She is wearing ...", japanese: "彼／彼女は〜を身につけている" },
+                    { english: "How do you spell his/her name?", japanese: "彼／彼女の名前の綴りはどう書きますか？" },
+                    { english: "He/She is in ... (e.g. a dress)", japanese: "彼／彼女は〜（ドレスなど）を着ている" }
+                ]
+            },
+            {
+                unit: 10,
+                title: "Unit 10 Search for something in common",
+                words: [
+                    { english: "I did too!", japanese: "私もそうしました！" },
+                    { english: "when we were in high school", japanese: "私たちが高校生だった時" },
+                    { english: "We all used to", japanese: "私たちはみんな以前〜していた" },
+                    { english: "Me too.", japanese: "私も。" },
+                    { english: "All of us enjoy", japanese: "私たち全員が〜を楽しんでいる" },
+                    { english: "The same for me.", japanese: "私も同じです。" },
+                    { english: "Three of us are", japanese: "私たちのうち3人は〜だ" },
+                    { english: "Is it the same for you, too?", japanese: "あなたにとっても同じですか？" },
+                    { english: "Two of us often", japanese: "私たちのうち2人はよく〜する" },
+                    { english: "No, not me.", japanese: "いいえ、私は違います。" }
+                ]
+            },
+            {
+                unit: 11,
+                title: "Unit 11 Doing the dishes",
+                words: [
+                    { english: "then", japanese: "それから、その時" },
+                    { english: "How about...?", japanese: "〜はどうですか？" },
+                    { english: "after that", japanese: "その後で" },
+                    { english: "Can you repeat that?", japanese: "もう一度繰り返していただけますか？" },
+                    { english: "comes first. I guess", japanese: "〜が最初に来る、と思う" },
+                    { english: "What does... mean?", japanese: "〜はどういう意味ですか？" },
+                    { english: "comes next because", japanese: "〜の理由で、次に〜が来る" },
+                    { english: "Why don't we check our answers?", japanese: "答え合わせをしませんか？" },
+                    { english: "This order could be wrong.", japanese: "この順番は間違っているかもしれない。" }
+                ]
+            },
+            {
+                unit: 12,
+                title: "Unit 12 A fishy story",
+                words: [
+                    { english: "fishing", japanese: "釣り" },
+                    { english: "fall over", japanese: "倒れる、転ぶ" },
+                    { english: "pier", japanese: "桟橋、突堤" },
+                    { english: "sail away", japanese: "出航する、去る" },
+                    { english: "boat", japanese: "ボート、舟" },
+                    { english: "After that ...", japanese: "その後..." },
+                    { english: "bucket", japanese: "バケツ" },
+                    { english: "Then", japanese: "それから" },
+                    { english: "gangway", japanese: "タラップ、歩み板" },
+                    { english: "When", japanese: "〜のとき" },
+                    { english: "fall into the sea", japanese: "海に落ちる" },
+                    { english: "In the end, ...", japanese: "最後に、結局..." }
+                ]
+            },
+            {
+                unit: 13,
+                title: "Unit 13 Safe driving",
+                words: [
+                    { english: "Where does this line belong?", japanese: "この行はどこに当てはまりますか？" },
+                    { english: "Could you read that again?", japanese: "もう一度読んでいただけますか？" },
+                    { english: "(e.g. \"the\")", japanese: "（例：'the'）" },
+                    { english: "The last word of this line is", japanese: "この行の最後の単語は〜です" },
+                    { english: "What do you think comes next?", japanese: "次は何が来ると思いますか？" },
+                    { english: "so the first word of the next line must be", japanese: "だから、次の行の最初の単語は〜（例：名詞）でなければならない" },
+                    { english: "What does this word mean?", japanese: "この単語はどういう意味ですか？" },
+                    { english: "That doesn't make sense.", japanese: "それは辻褄が合わない、意味が通らない。" },
+                    { english: "This must follow", japanese: "これは〜の後に続くに違いない" }
+                ]
+            },
+            {
+                unit: 14,
+                title: "Unit 14 Arrange a meeting",
+                words: [
+                    { english: "get together", japanese: "集まる、会う" },
+                    { english: "reserve a room", japanese: "部屋を予約する" },
+                    { english: "meet up", japanese: "集まる、待ち合わせる" },
+                    { english: "have plans", japanese: "予定がある" },
+                    { english: "busy", japanese: "忙しい" },
+                    { english: "I'm unavailable on Wednesday.", japanese: "水曜日は都合が悪いです。" },
+                    { english: "make time", japanese: "時間を作る" },
+                    { english: "Why don't we meet at 3 o'clock?", japanese: "3時に会いませんか？" },
+                    { english: "arrange a time", japanese: "時間を決める、時間を調整する" },
+                    { english: "Are you free on Thursday?", japanese: "木曜日は空いていますか？" },
+                    { english: "fully-booked", japanese: "満室の、予約でいっぱいの" },
+                    { english: "Do you have time on Monday?", japanese: "月曜日に時間はありますか？" }
+                ]
+            },
+            {
+                unit: 15,
+                title: "Unit 15 Storytelling with a cartoon",
+                words: [
+                    { english: "(Wet Paint)", japanese: "「ペンキ塗りたて」" },
+                    { english: "(Home Video)", japanese: "「ホームビデオ」" },
+                    { english: "old door", japanese: "古いドア" },
+                    { english: "new video camera", japanese: "新しいビデオカメラ" },
+                    { english: "poor condition", japanese: "ひどい状態" },
+                    { english: "excited", japanese: "わくわくした、興奮した" },
+                    { english: "paint", japanese: "ペンキ、ペンキを塗る" },
+                    { english: "took a video", japanese: "ビデオを撮った" },
+                    { english: "children", japanese: "子どもたち" },
+                    { english: "made a home movie", japanese: "自作の動画を作った" },
+                    { english: "playing", japanese: "遊んでいる" },
+                    { english: "record memories", japanese: "思い出を記録する" },
+                    { english: "dog", japanese: "犬" },
+                    { english: "daughter", japanese: "娘" },
+                    { english: "wanted to go inside", japanese: "中に入りたがった" },
+                    { english: "suddenly", japanese: "突然、いきなり" },
+                    { english: "scratched", japanese: "ひっかき傷をつけた" },
+                    { english: "neighbor's house", japanese: "隣人の家" },
+                    { english: "shocked", japanese: "衝撃を受けた、ショックを受けた" },
+                    { english: "ball", japanese: "ボール" },
+                    { english: "thieves", japanese: "泥棒たち" },
+                    { english: "stealing", japanese: "盗んでいる" },
+                    { english: "hit", japanese: "あたる、ぶつかる" },
+                    { english: "caught on camera", japanese: "カメラに捉えられた" },
+                    { english: "ran into the door", japanese: "ドアに走り込んでぶつかった" },
+                    { english: "called the police", japanese: "警察を呼んだ" },
+                    { english: "made dirty marks", japanese: "汚れた跡をつけた" },
+                    { english: "evidence", japanese: "証拠" },
+                    { english: "upset", japanese: "うろたえた、怒った" },
+                    { english: "arrested", japanese: "逮捕された" }
+                ]
+            },
+            {
+                unit: 16,
+                title: "Unit 16 Storytelling with a video",
+                words: [
+                    { english: "bus stop", japanese: "バス停" },
+                    { english: "open an umbrella", japanese: "傘を開く" },
+                    { english: "suddenly", japanese: "突然" },
+                    { english: "get wet", japanese: "濡れる" },
+                    { english: "sometime later", japanese: "しばらくして" },
+                    { english: "wear a down coat", japanese: "ダウンコートを着ている" },
+                    { english: "wear a diving suit", japanese: "潜水服を着ている" },
+                    { english: "check the time", japanese: "時間を確認する" },
+                    { english: "flood", japanese: "洪水、水浸しになる" },
+                    { english: "fall down on the ground", japanese: "地面に倒れ込む" },
+                    { english: "a sound of thunder", japanese: "雷の音" },
+                    { english: "cheeks blush", japanese: "頬が赤らむ" },
+                    { english: "fall in love", japanese: "恋に落ちる" }
+                ]
+            },
+            {
+                unit: 17,
+                title: "Unit 17 Find the odd one out",
+                words: [
+                    { english: "odd one out", japanese: "仲間はずれ" },
+                    { english: "plural", japanese: "複数形" },
+                    { english: "different", japanese: "違った、異なる" },
+                    { english: "singular", japanese: "単数形" },
+                    { english: "this is the only one", japanese: "これが唯一のものです" },
+                    { english: "it's pronounced", japanese: "〜と発音されます" },
+                    { english: "noun", japanese: "名詞" },
+                    { english: "rhyme", japanese: "韻（いん）を踏む" },
+                    { english: "adjective", japanese: "形容詞" },
+                    { english: "collocate", japanese: "共起する、連語をなす" },
+                    { english: "verb", japanese: "動詞" }
+                ]
+            },
+            {
+                unit: 18,
+                title: "Unit 18 Recognize the process",
+                words: [
+                    { english: "First", japanese: "最初に" },
+                    { english: "dress well", japanese: "きちんとした服装をする" },
+                    { english: "Next", japanese: "次に" },
+                    { english: "take a breath", japanese: "息を吸う、一呼吸置く" },
+                    { english: "After that", japanese: "その後で" },
+                    { english: "Don't forget to", japanese: "〜するのを忘れないで" },
+                    { english: "Finally", japanese: "最後に" },
+                    { english: "Be careful not to", japanese: "〜しないように気をつけて" },
+                    { english: "arrange", japanese: "整える、手配する" },
+                    { english: "Make sure", japanese: "必ず〜するようにする" },
+                    { english: "insert money", japanese: "お金を入れる" },
+                    { english: "Be careful when you do it.", japanese: "行う時は注意してください。" }
+                ]
+            },
+            {
+                unit: 19,
+                title: "Unit 19 Complete the story",
+                words: [
+                    { english: "subject", japanese: "主語、主題" },
+                    { english: "proposition", japanese: "命題（または前置詞 preposition のこと）" },
+                    { english: "noun", japanese: "名詞" },
+                    { english: "conjunction", japanese: "接続詞" },
+                    { english: "pronoun", japanese: "代名詞" },
+                    { english: "What do you think is written here?", japanese: "ここには何が書かれていると思いますか？" },
+                    { english: "verb", japanese: "動詞" },
+                    { english: "This can/may/must be ...", japanese: "これは〜であるはずだ／かもしれない／に違いない" },
+                    { english: "adjective", japanese: "形容詞" },
+                    { english: "Perhaps we need ... here.", japanese: "もしかしたらここには〜が必要です。" },
+                    { english: "adverb", japanese: "副詞" },
+                    { english: "This should be written in the past tense.", japanese: "これは過去形で書かれるべきです。" }
+                ]
+            },
+            {
+                unit: 20,
+                title: "Unit 20 Get a different perspective",
+                words: [
+                    { english: "while...", japanese: "〜する間に、〜の一方で" },
+                    { english: "convenient to by (bus/car, etc.)", japanese: "（バス・車等で）行くのに便利である" },
+                    { english: "though...", japanese: "〜だけれども" },
+                    { english: "wooden flooring", japanese: "木製のフローリング床" },
+                    { english: "both... and", japanese: "〜と〜の両方" },
+                    { english: "carpet flooring", japanese: "カーペット敷きの床" },
+                    { english: "There is/are...", japanese: "〜があります" },
+                    { english: "updated bathroom", japanese: "リフォームされた新しい浴室" },
+                    { english: "is located in", japanese: "〜に位置している" },
+                    { english: "built-in shelving", japanese: "作り付けの棚" }
+                ]
+            },
+            {
+                unit: 21,
+                title: "Unit 21 Love match",
+                words: [
+                    { english: "handsome", japanese: "ハンサムな" },
+                    { english: "artistic", japanese: "芸術的な、芸術家の" },
+                    { english: "good-looking", japanese: "見栄えが良い、端正な" },
+                    { english: "wealthy", japanese: "富裕な、裕福な" },
+                    { english: "cute", japanese: "可愛い" },
+                    { english: "businessman", japanese: "ビジネスマン、実業家" },
+                    { english: "sociable", japanese: "社交的な" },
+                    { english: "career woman", japanese: "キャリアウーマン" },
+                    { english: "hard-working", japanese: "勤勉な、働き者の" },
+                    { english: "tradesman", japanese: "商人、小売業者、職人" },
+                    { english: "athlete", japanese: "運動選手、アスリート" },
+                    { english: "These two people should be happy together.", japanese: "この二人は一緒にいて幸せになるはずだ。" }
+                ]
+            },
+            {
+                unit: 22,
+                title: "Unit 22 Super schools",
+                words: [
+                    { english: "trouble", japanese: "心配、困難、トラブル" },
+                    { english: "practical", japanese: "実用的な、実践的な" },
+                    { english: "problem", japanese: "問題" },
+                    { english: "tuition fee", japanese: "授業料" },
+                    { english: "improve", japanese: "改善する、高める" },
+                    { english: "commute", japanese: "通学する、通勤する" },
+                    { english: "propose", japanese: "提案する" },
+                    { english: "agreement", japanese: "合意、協定" },
+                    { english: "suggest", japanese: "提案する" },
+                    { english: "conclusion", japanese: "結論" },
+                    { english: "request", japanese: "要求、要望" },
+                    { english: "order of priority", japanese: "優先順位" },
+                    { english: "consider significant", japanese: "重要であるとみなす" },
+                    { english: "teaching staff", japanese: "教職員、指導スタッフ" },
+                    { english: "cost", japanese: "費用、コスト" },
+                    { english: "office staff", japanese: "事務職員" },
+                    { english: "idea", japanese: "考え、アイデア" },
+                    { english: "facilities", japanese: "設備、施設" },
+                    { english: "opinion", japanese: "意見" },
+                    { english: "service", japanese: "サービス、奉仕" },
+                    { english: "compromise", japanese: "妥協、歩み寄り" },
+                    { english: "extracurricular activities", japanese: "部活動、課外活動" },
+                    { english: "I think they may get along well.", japanese: "彼らはうまくやっていけるかもしれないと思います。" },
+                    { english: "I know what you mean, but I don't think so.", japanese: "おっしゃる意味は分かりますが、そうは思いません。" }
+                ]
+            },
+            {
+                unit: 23,
+                title: "Unit 23 Mad inventions",
+                words: [
+                    { english: "These go together because", japanese: "〜という理由でこれらは一緒になります" },
+                    { english: "It should", japanese: "それは〜するべきだ" },
+                    { english: "This device can", japanese: "この装置は〜することができる" },
+                    { english: "The device must be", japanese: "その装置は〜でなければならない、に違いない" },
+                    { english: "It may", japanese: "それは〜かもしれない" },
+                    { english: "I know what you mean, but", japanese: "おっしゃる意味は分かりますが、しかし〜" }
+                ]
+            },
+            {
+                unit: 24,
+                title: "Unit 24 Group members",
+                words: [
+                    { english: "[buildings]", japanese: "［建物］（カテゴリ）" },
+                    { english: "middle-aged", japanese: "中年の" },
+                    { english: "high", japanese: "高い" },
+                    { english: "long", japanese: "長い" },
+                    { english: "low", japanese: "低い" },
+                    { english: "short", japanese: "短い、背が低い" },
+                    { english: "thin", japanese: "薄い、細い" },
+                    { english: "curly", japanese: "巻き毛の、くせ毛の" },
+                    { english: "wide", japanese: "広い、幅広の" },
+                    { english: "wavy", japanese: "ウェーブのかかった、波状の" },
+                    { english: "square", japanese: "四角い、正方形の" },
+                    { english: "shaved", japanese: "剃った、スキンヘッド" },
+                    { english: "pointed", japanese: "尖った" },
+                    { english: "blonde", japanese: "ブロンドの、金髪の" },
+                    { english: "modern", japanese: "現代的な、最新の" },
+                    { english: "dark", japanese: "濃い、暗い、黒っぽい" },
+                    { english: "old", japanese: "古い、高齢の" },
+                    { english: "bald", japanese: "はげた" },
+                    { english: "traditional", japanese: "伝統的な" },
+                    { english: "beard", japanese: "（あご・ほおの）ひげ" },
+                    { english: "urban", japanese: "都会の、都市の" },
+                    { english: "moustache", japanese: "（口の上の）ひげ" },
+                    { english: "rural", japanese: "田舎の、地方の" },
+                    { english: "slim", japanese: "ほっそりした、スリムな" },
+                    { english: "Western", japanese: "西の、西洋の" },
+                    { english: "overweight", japanese: "太りすぎの" },
+                    { english: "Asian", japanese: "アジアの、アジア人" },
+                    { english: "male", japanese: "男性、オス" },
+                    { english: "office", japanese: "事務所、オフィス" },
+                    { english: "female", japanese: "女性、メス" },
+                    { english: "building", japanese: "建物、ビル" },
+                    { english: "glasses", japanese: "メガネ" },
+                    { english: "house", japanese: "家、住宅" },
+                    { english: "plain", japanese: "無地の、明らかな" },
+                    { english: "shop", japanese: "店、店舗" },
+                    { english: "striped", japanese: "ストライプの、縞模様のある" },
+                    { english: "brick", japanese: "レンガ" },
+                    { english: "shirt", japanese: "シャツ" },
+                    { english: "glass", japanese: "ガラス、コップ" },
+                    { english: "sweater", japanese: "セーター" },
+                    { english: "concrete", japanese: "コンクリート" },
+                    { english: "wrinkles", japanese: "シワ" },
+                    { english: "wood", japanese: "木、木材" },
+                    { english: "Caucasian", japanese: "白人（コーカサス系）の" },
+                    { english: "[people]", japanese: "［人々］（カテゴリ）" },
+                    { english: "young", japanese: "若い" },
+                    { english: "African", japanese: "アフリカの、アフリカ人" }
+                ]
+            }
+        ];
+
+        // 2. アプリの状態管理
+        let currentUnit = 1; // 常に1つのUnitを選択 (初期値: Unit 1)
+        let fontSizeMode = 'normal'; // 'normal', 'small', 'xsmall', 'large'
+        let searchQuery = '';
+
+        // 初期化処理
+        window.onload = function() {
+            // ダークモード初期設定
+            if (localStorage.getItem('com_dark') === 'true' || 
+                (!('com_dark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            // フォントサイズ復元
+            const savedFontSize = localStorage.getItem('com_font_size') || 'normal';
+            applyFontSize(savedFontSize);
+
+            // UIの構築
+            generateUnitButtons();
+            selectUnit(1); // 初期起動時はUnit 1
+        }
+
+        // 3. UI生成機能
+        // 左側のユニット選択ボタンを自動生成
+        function generateUnitButtons() {
+            const container = document.getElementById('unit-buttons-container');
+            container.innerHTML = '';
+            
+            wordData.forEach(item => {
+                const button = document.createElement('button');
+                button.id = `unit-btn-${item.unit}`;
+                button.onclick = () => {
+                    selectUnit(item.unit);
+                    toggleSidebar(false); // 選択したら自動でサイドバーを閉じる
+                };
+                button.className = 'w-full px-4 py-3 text-sm rounded-xl text-left whitespace-nowrap flex items-center justify-between bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold border border-slate-200/60 dark:border-slate-700 transition-all duration-150';
+                
+                let shortTitle = item.title;
+                if(shortTitle.length > 25) {
+                    shortTitle = shortTitle.substring(0, 22) + '...';
+                }
+
+                button.innerHTML = `
+                    <span>U${item.unit} ${shortTitle.split(' ').slice(2).join(' ')}</span>
+                    <span class="text-xs bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full font-medium">${item.words.length}</span>
+                `;
+                container.appendChild(button);
+            });
+        }
+
+        // 現在のアクティブな単語・表現を表示
+        function renderWords() {
+            const gridContainer = document.getElementById('words-grid');
+            gridContainer.innerHTML = '';
+
+            let filteredWords = [];
+
+            // 1ユニットのみを厳密に対象とする
+            const u = wordData.find(u => u.unit === currentUnit);
+            if (u) {
+                u.words.forEach(w => {
+                    filteredWords.push({ ...w, unitNum: u.unit });
+                });
+            }
+
+            // 検索キーワードによるフィルタリング
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.toLowerCase().trim();
+                filteredWords = filteredWords.filter(w => 
+                    w.english.toLowerCase().includes(q) || 
+                    w.japanese.toLowerCase().includes(q)
+                );
+            }
+
+            // 表示件数の更新
+            document.getElementById('word-count').innerText = `${filteredWords.length}件の表現`;
+
+            if (filteredWords.length === 0) {
+                gridContainer.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-400">
+                        <svg class="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-sm font-bold">該当する表現が見つかりません</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 各単語のHTML生成（見やすく整理されたカード構造）
+            filteredWords.forEach(w => {
+                const card = document.createElement('div');
+                
+                // 単語カードのデザイン
+                // shadow（影）と rounded-2xl（大きな角丸）で直感的なカード感、hover時に少し浮き上がるような小さなスケール感
+                card.className = "relative bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm hover:shadow-md dark:hover:border-blue-500/50 hover:border-blue-300 transition-all duration-150 flex flex-col justify-between min-h-[140px]";
+                
+                card.innerHTML = `
+                    <!-- カード上部: 英語 & スピーカーボタン -->
+                    <div class="flex items-start justify-between space-x-2 mb-3">
+                        <span class="font-extrabold text-blue-600 dark:text-blue-400 text-lg md:text-xl tracking-wide leading-tight select-all break-words pr-8">
+                            ${w.english}
+                        </span>
+                        <!-- 音声読み上げボタン（右上に固定配置） -->
+                        <button onclick="speak('${w.english.replace(/'/g, "\\'")}')" class="absolute top-3.5 right-3.5 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 active:scale-95 transition-all" title="音声を再生">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- カード中央区切り線 -->
+                    <div class="w-full h-px bg-slate-100 dark:bg-slate-800/80 my-2"></div>
+
+                    <!-- カード下部: 日本語 -->
+                    <div class="mt-1">
+                        <span class="text-slate-700 dark:text-slate-200 text-sm md:text-base font-bold leading-relaxed break-words block">
+                            ${w.japanese}
+                        </span>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // 4. 操作機能
+
+        // ユニット切り替え
+        function selectUnit(unitId) {
+            currentUnit = unitId;
+            
+            // アクティブボタンのスタイル調整
+            document.querySelectorAll('#unit-buttons-container button').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white', 'dark:bg-blue-600', 'border-transparent');
+                btn.classList.add('bg-slate-50', 'dark:bg-slate-800', 'text-slate-800', 'dark:text-slate-100', 'border-slate-200/60', 'dark:border-slate-700');
+            });
+
+            const activeBtn = document.getElementById(`unit-btn-${unitId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-50', 'dark:bg-slate-800', 'text-slate-800', 'dark:text-slate-100', 'border-slate-200/60', 'dark:border-slate-700');
+                activeBtn.classList.add('bg-blue-600', 'text-white', 'border-transparent');
+            }
+
+            // 右側の状態表示タイトルの変更
+            const viewTitle = document.getElementById('view-title');
+            const u = wordData.find(u => u.unit === unitId);
+            if (u) {
+                viewTitle.innerText = u.title;
+            }
+
+            renderWords();
+            
+            // タブレットでスクロール位置を最上部にリセット
+            const container = document.getElementById('cards-container');
+            container.scrollTop = 0;
+        }
+
+        // サイドバーの開閉トグル
+        function toggleSidebar(open) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (open) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // 5. フォントサイズの循環変更機能 ("あぁ" ボタン用)
+        // 段階：標準(normal) -> 小(small) -> 極小(xsmall) -> 大(large) -> 標準に戻る
+        function cycleFontSize() {
+            let nextSize = 'normal';
+            if (fontSizeMode === 'normal') {
+                nextSize = 'small';
+            } else if (fontSizeMode === 'small') {
+                nextSize = 'xsmall';
+            } else if (fontSizeMode === 'xsmall') {
+                nextSize = 'large';
+            } else if (fontSizeMode === 'large') {
+                nextSize = 'normal';
+            }
+
+            applyFontSize(nextSize);
+        }
+
+        function applyFontSize(size) {
+            fontSizeMode = size;
+            localStorage.setItem('com_font_size', size);
+
+            // html要素に設定された全てのサイズクラスを一旦削除
+            document.documentElement.classList.remove('size-normal', 'size-small', 'size-xsmall', 'size-large');
+            
+            // クラスを即座に適用（スムーズなし・アニメーションなし）
+            document.documentElement.classList.add(`size-${size}`);
+
+            // UI上のインジケーターテキスト更新
+            const badge = document.getElementById('font-size-badge');
+            if (size === 'normal') badge.innerText = "標準";
+            if (size === 'small') badge.innerText = "小";
+            if (size === 'xsmall') badge.innerText = "極小";
+            if (size === 'large') badge.innerText = "大";
+        }
+
+        // 6. 検索処理
+        function handleSearch() {
+            const input = document.getElementById('search-input');
+            searchQuery = input.value;
+            
+            const clearBtn = document.getElementById('clear-search-btn');
+            if (searchQuery.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            renderWords();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('search-input');
+            input.value = '';
+            searchQuery = '';
+            document.getElementById('clear-search-btn').classList.add('hidden');
+            renderWords();
+        }
+
+        // 7. その他のユーティリティ
+
+        // ダークモード切り替え
+        // toggleDarkMode() で、Tailwindの「class」ベースのダークモードを瞬時に切り替えます。
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('com_dark', isDark);
+        }
+
+        // 簡易トースト表示
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 1200);
+        }
+
+        // Web Speech API による音声読み上げ (英語)
+        function speak(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast("音声合成に非対応のブラウザです");
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            let speakText = text.replace(/\(.*\)/g, '').replace(/\.\.\./g, '').trim();
+            
+            const utterance = new SpeechSynthesisUtterance(speakText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.95; // 授業で聞き取りやすいよう、少しだけゆっくりめ
+
+            const voices = window.speechSynthesis.getVoices();
+            const englishVoice = voices.find(v => v.lang.startsWith('en'));
+            if (englishVoice) {
+                utterance.voice = englishVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>
