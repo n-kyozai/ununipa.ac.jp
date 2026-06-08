@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【九州共立大学】業界研究ノート作成システム - キャリア基礎演習Ⅱ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* 印刷・提出用PDF A4最適化 */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-area {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            textarea, input {
+                border: 1px solid #1e293b !important;
+                background: transparent !important;
+                color: black !important;
+                resize: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col transition-all duration-300">
+
+    <!-- ヘッダー (印刷時は非表示) -->
+    <header class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-blue-950 px-2.5 py-1.5 rounded-lg font-black text-sm tracking-widest shadow-inner">
+                    KKU
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-wide flex items-center gap-2">
+                        九州共立大学 <span class="text-xs bg-blue-800 text-blue-100 px-2 py-0.5 rounded font-medium">キャリア基礎演習Ⅱ</span>
+                    </h1>
+                    <p class="text-[11px] text-blue-200">2026/6/8 1限 @207教室 「オリジナル業界研究ノート作成手順」対応</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="togglePrintPreview()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 px-4 rounded-lg text-xs flex items-center gap-1.5 transition-all">
+                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                    <span id="btn-preview-text">提出用レイアウトを確認</span>
+                </button>
+                <button onclick="triggerPrint()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-5 rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-md transform hover:scale-[1.02]">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    A4印刷 / PDF保存
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインレイアウト -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- 左サイドバー: 授業ナビ&IR検索ツール (印刷時は非表示) -->
+        <section id="sidebar" class="lg:col-span-4 space-y-6 no-print">
+            
+            <!-- 学生プロファイル -->
+            <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl p-5 shadow-sm relative overflow-hidden">
+                <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+                    <i data-lucide="award" class="w-24 h-24"></i>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/10 p-2.5 rounded-xl">
+                        <i data-lucide="user-check" class="w-5 h-5 text-blue-300"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-blue-300 tracking-wider font-semibold">ワークシート作成者</span>
+                        <div class="text-sm font-bold">25A1188 長畔 武留 さん</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 授業プロセスナビゲーター -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4 border-b pb-3">
+                    <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                        <i data-lucide="check-square" class="text-blue-900"></i>
+                        本日の進捗チェックリスト
+                    </h3>
+                    <span id="progress-percent" class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">0% 完了</span>
+                </div>
+                <div class="space-y-3.5">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="chk-step1" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="updateProgress()">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">手順1: 10業界から2つ選ぶ</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">メーカー(アシックス) と サービス(コナミ) が推奨セットされています。</p>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="chk-step2" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="updateProgress()">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">手順2: 顧客・製品・いいなと思う点</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">企業のビジネスモデルと言語化された「本音」を記述します。</p>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="chk-step3" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="updateProgress()">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">手順3: IR・働き方の特色を調べる</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">業績や平均年齢など、客観的数値を1つ以上入力します。</p>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="chk-step4" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="updateProgress()">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">手順4: 他業界との比較（魅力・不安）</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">面接官の評価を少し意識しながら魅力・不安を整理。</p>
+                        </div>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="chk-step5" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" onchange="updateProgress()">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">手順5: この業界を志望する本音の理由</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">最後に自分軸と合致した志望動機に落とし込みます。</p>
+                        </div>
+                    </label>
+                </div>
+                <!-- プログレスバー -->
+                <div class="w-full bg-slate-100 rounded-full h-1.5 mt-4">
+                    <div id="progress-bar-fill" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- ★10業界IRデータベース検索ツール (授業を大幅に効率化する新機能) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                <h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5 mb-2">
+                    <i data-lucide="database" class="text-indigo-600"></i>
+                    10業界 企業IR・特色データベース
+                </h3>
+                <p class="text-[10px] text-slate-500 leading-relaxed mb-3">
+                    授業手順書にある10業界の代表的な企業の「本物のデータ」です。選択すると、顧客層、代表製品、特色（IRデータ）が確認でき、提出用紙に瞬時にコピーできます！
+                </p>
+
+                <!-- 業界セレクター -->
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 mb-1">業界を選択</label>
+                        <select id="db-industry-select" onchange="onDatabaseSelect()" class="w-full px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-700">
+                            <option value="manufacturer">👟 メーカー (アシックス)</option>
+                            <option value="service">🏊 サービス (コナミスポーツ)</option>
+                            <option value="it">💻 通信・ソフトウェア (LINEヤフー)</option>
+                            <option value="retail">🏪 小売 (ファーストリテイリング)</option>
+                            <option value="trading">🏢 商社 (伊藤忠商事)</option>
+                            <option value="finance">🏦 金融 (福岡銀行)</option>
+                            <option value="government">🏛️ 官公庁・公社・団体 (北九州市役所)</option>
+                            <option value="construction">🏗️ 建設・不動産 (大和ハウス工業)</option>
+                            <option value="medical">🏥 医療・福祉 (武田薬品工業)</option>
+                            <option value="media">📺 マスコミ (フジ・メディアHD)</option>
+                        </select>
+                    </div>
+
+                    <!-- DBプレビューカード -->
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-2 text-xs">
+                        <div>
+                            <span class="text-[9px] font-extrabold text-slate-400 uppercase">代表企業</span>
+                            <p id="db-company-name" class="font-bold text-slate-800">株式会社アシックス</p>
+                        </div>
+                        <div>
+                            <span class="text-[9px] font-extrabold text-indigo-500 uppercase">主要顧客 / 商品価値</span>
+                            <p id="db-customers-products" class="text-[11px] text-slate-600 leading-relaxed">競技愛好家、学生部活層。高機能シューズやスポーツテックを通じた健康・競技力向上価値の提供。</p>
+                        </div>
+                        <div>
+                            <span class="text-[9px] font-extrabold text-emerald-600 uppercase">IR特色（売上・平均年齢・特徴）</span>
+                            <p id="db-ir-info" class="text-[11px] text-slate-600 leading-relaxed">売上高：4,846億円。平均年齢：39.8歳。海外売上比率8割のグローバル。有給取得率高く、リモートワークやフルフレックス推進。</p>
+                        </div>
+                    </div>
+
+                    <!-- 転記ボタン -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="copyDbTo('A')" class="bg-blue-900 hover:bg-blue-800 text-white font-bold py-2 rounded-lg text-[10px] flex items-center justify-center gap-1 shadow-sm">
+                            <i data-lucide="arrow-right-left" class="w-3 h-3"></i> 業界 A にコピー
+                        </button>
+                        <button onclick="copyDbTo('B')" class="bg-indigo-950 hover:bg-indigo-900 text-white font-bold py-2 rounded-lg text-[10px] flex items-center justify-center gap-1 shadow-sm">
+                            <i data-lucide="arrow-right-left" class="w-3 h-3"></i> 業界 B にコピー
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- アクションコントロール -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-col gap-2.5">
+                <button onclick="openModal('restore')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    初期サンプル（スポーツ関連）に戻す
+                </button>
+                <button onclick="openModal('clear')" class="w-full text-red-500 hover:bg-red-50 hover:text-red-700 font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    すべての入力フォームを空にする
+                </button>
+            </div>
+        </section>
+
+        <!-- 右コンテンツ：提出用オリジナル・業界研究ノート（用紙サイズ） -->
+        <section id="print-sheet-container" class="lg:col-span-8 space-y-6 print-area">
+            
+            <!-- 学生情報記入カード -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 print-area relative overflow-hidden">
+                <!-- 装飾ライン -->
+                <div class="absolute top-0 left-0 w-2.5 h-full bg-blue-900"></div>
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4 mb-4">
+                    <div>
+                        <span class="text-[10px] font-black text-blue-900 bg-blue-50 px-2.5 py-1 rounded">キャリア基礎演習Ⅱ 第8回 提出用</span>
+                        <h2 class="text-lg font-bold text-slate-900 mt-2 flex items-center gap-2">
+                            オリジナル・業界研究ノート
+                        </h2>
+                    </div>
+                    <div class="text-right text-[10px] text-slate-400 font-medium no-print">
+                        ※提出時は右上の印刷ボタンを押してください。
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">学籍番号</label>
+                        <input type="text" id="student_id" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1">氏名</label>
+                        <input type="text" id="student_name" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-slate-50">
+                    </div>
+                </div>
+            </div>
+
+            <!-- タブコントロール (印刷時は両方を美しく見せるための構成にします) -->
+            <div class="bg-slate-200/70 p-1 rounded-xl flex gap-1 no-print">
+                <button onclick="switchTab('type1')" id="tab-type1" class="flex-1 py-3 text-xs font-bold rounded-lg transition-all shadow-sm bg-white text-blue-950">
+                    📂 【例1】気になる2つの業界の情報（手順1〜3）
+                </button>
+                <button onclick="switchTab('type2')" id="tab-type2" class="flex-1 py-3 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+                    ⚖️ 【例2】2業界の比較＆志望理由（手順4〜5）
+                </button>
+            </div>
+
+            <!-- 【例1】気になる2業界の情報 -->
+            <div id="content-type1" class="space-y-6">
+                
+                <!-- 業界選択エリア -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4 relative">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
+                        <span class="bg-blue-900 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                        <h3 class="text-sm font-bold text-slate-900">業界名と気になる企業名の指定 (手順1-①,②)</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- 業界A -->
+                        <div class="space-y-3">
+                            <label class="block text-xs font-extrabold text-blue-900">【業界 A】の業界名</label>
+                            <input type="text" id="industry_a_name" oninput="onLabelInputChange()" placeholder="例: メーカー" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-slate-50/50">
+                            
+                            <label class="block text-xs font-extrabold text-blue-900">気になる企業名</label>
+                            <input type="text" id="company_a_name" oninput="onLabelInputChange()" placeholder="例: 株式会社アシックス" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white">
+                        </div>
+                        
+                        <!-- 業界B -->
+                        <div class="space-y-3">
+                            <label class="block text-xs font-extrabold text-indigo-900">【業界 B】の業界名</label>
+                            <input type="text" id="industry_b_name" oninput="onLabelInputChange()" placeholder="例: サービス" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all bg-slate-50/50">
+                            
+                            <label class="block text-xs font-extrabold text-indigo-900">気になる企業名</label>
+                            <input type="text" id="company_b_name" oninput="onLabelInputChange()" placeholder="例: コナミスポーツ株式会社" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all bg-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 業界詳細 (手順2-③) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- 業界A詳細 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                        <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+                            <h3 id="panel-title-a" class="text-xs font-extrabold text-slate-800">【業界A】顧客・商品・いいなと思う点</h3>
+                            <span class="text-[9px] font-bold bg-blue-50 text-blue-800 px-2 py-0.5 rounded">業界A</span>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">主要な顧客層（誰をターゲットにしているか）</label>
+                            <textarea id="t1_a_customers" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">主な商品や提供・販売している価値</label>
+                            <textarea id="t1_a_products" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">企業の「いいな、と思うポイント」</label>
+                            <textarea id="t1_a_good_points" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 業界B詳細 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                        <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+                            <h3 id="panel-title-b" class="text-xs font-extrabold text-slate-800">【業界B】顧客・商品・いいなと思う点</h3>
+                            <span class="text-[9px] font-bold bg-indigo-50 text-indigo-800 px-2 py-0.5 rounded">業界B</span>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">主要な顧客層（誰をターゲットにしているか）</label>
+                            <textarea id="t1_b_customers" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">主な商品や提供・販売している価値</label>
+                            <textarea id="t1_b_products" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 mb-1">企業の「いいな、と思うポイント」</label>
+                            <textarea id="t1_b_good_points" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 企業の特色（業績・平均年齢・働き方・福利厚生などIR情報） -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2.5">
+                        <span class="bg-blue-900 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                        <h3 class="text-sm font-bold text-slate-900">気になる企業の特色（売上・平均年齢・働き方など最大2つ） (手順2-④)</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label id="ir-label-a" class="block text-xs font-bold text-blue-900">【メーカー (アシックス)】の特色</label>
+                            <textarea id="t1_a_features" rows="4" placeholder="（例）売上高：4,846億円（2023年12月期 ※過去最高利益）、平均年齢：39.8歳。海外売上比率が8割と高く、グローバルに活躍できる環境。" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label id="ir-label-b" class="block text-xs font-bold text-indigo-900">【サービス (コナミスポーツ)】の特色</label>
+                            <textarea id="t1_b_features" rows="4" placeholder="（例）売上高：3,603億円（コナミグループ）、平均年齢：38.5歳。社員向けのフィットネスジム無料利用制度や、社内スポーツ推進制度など健康支援が手厚い。" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 【例2】2業界の比較＆志望理由 -->
+            <div id="content-type2" class="hidden space-y-6">
+                
+                <!-- 魅力と比較 (手順1-②) -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                    <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-900 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                            <h3 class="text-sm font-bold text-slate-900">他業界と比較して魅力的な点</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label id="compare-merit-a" class="block text-xs font-bold text-blue-900">【メーカー】の魅力的な点</label>
+                            <textarea id="t2_a_merit" rows="3" placeholder="（例）自らの強みである「スポーツ経験」を製品開発や営業に直接活かして、グローバルに活躍できる点。" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label id="compare-merit-b" class="block text-xs font-bold text-indigo-900">【サービス】の魅力的な点</label>
+                            <textarea id="t2_b_merit" rows="3" placeholder="（例）子どもからシニアまで目の前の顧客の健康や笑顔をダイレクトに作り出せ、成長をそばで支援できるやりがい。" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 不安・気になる点の比較 (手順2-②) -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                    <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-900 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                            <h3 class="text-sm font-bold text-slate-900">他業界と比較して気になる点 / 不安な点</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label id="compare-demerit-a" class="block text-xs font-bold text-blue-900">【メーカー】の気になる点 / 心配な点</label>
+                            <textarea id="t2_a_demerit" rows="3" placeholder="（例）世界的な強豪ブランドが多く、市場競争が激しいため、日々の売上目標や営業活動に対するノルマ管理が厳しそう。" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label id="compare-demerit-b" class="block text-xs font-bold text-indigo-900">【サービス】の気になる点 / 心配な点</label>
+                            <textarea id="t2_b_demerit" rows="3" placeholder="（例）一般的な企業と違い、スクール運営に伴う変則的なシフト（土日勤務、夜間勤務）が発生し、一定の体力面が要求される点。" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- この業界への志望理由 (手順2-④) -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+                    <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-900 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">5</span>
+                            <h3 class="text-sm font-bold text-slate-900">この業界（または代表企業）を志望する理由</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
+                            <label id="reason-label-a" class="block text-xs font-bold text-blue-900">【メーカー (アシックス)】の志望理由</label>
+                            <textarea id="t2_a_reason" rows="4" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label id="reason-label-b" class="block text-xs font-bold text-indigo-900">【サービス (コナミスポーツ)】の志望理由</label>
+                            <textarea id="t2_b_reason" rows="4" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 印刷時の提出用紙フッター -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 font-semibold">
+                <div class="flex items-center gap-1.5">
+                    <span class="font-extrabold text-blue-950">九州共立大学</span> キャリア基礎演習Ⅱ
+                </div>
+                <div>2026/6/8 1限 @207教室「オリジナル業界研究ノート」</div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- フッター (印刷時は非表示) -->
+    <footer class="bg-slate-900 text-slate-500 text-xs py-4 text-center border-t border-slate-800 no-print mt-12">
+        <p>© 2026 KYUSHU KYORITSU UNIVERSITY. All Rights Reserved. (長畔 武留 提出物)</p>
+    </footer>
+
+    <!-- ★カスタムモーダル overlay (alertやconfirmを排除するためのデザイン設計) -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden transition-all">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 border border-slate-100 transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-3 text-amber-600 mb-3" id="modal-header-icon">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                <h4 id="modal-title" class="text-sm font-black text-slate-800">確認</h4>
+            </div>
+            <p id="modal-body-text" class="text-xs text-slate-600 leading-relaxed mb-5">ここにメッセージが入ります。</p>
+            <div class="flex justify-end gap-2 text-xs font-bold">
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors">キャンセル</button>
+                <button id="modal-confirm-btn" class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-xl transition-colors">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div id="toast-notify" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transform translate-y-10 opacity-0 transition-all duration-300 pointer-events-none z-50">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-text">保存されました。</span>
+    </div>
+
+    <!-- JavaScript 制御 -->
+    <script>
+        // Lucideアイコン適用
+        lucide.createIcons();
+
+        // 授業10業界の精密IRデータベース定義
+        const industryDb = {
+            manufacturer: {
+                industry: "メーカー",
+                company: "株式会社アシックス",
+                customers: "・BtoC: 一般のスポーツ愛好家、学生の部活層、国内外のプロアスリート。\n・BtoB: 全国の中学・高校（指定体育着やユニフォーム契約）、スポーツ用品専門店、自治体。",
+                products: "・商品: 高機能ランニングシューズ、テニス/野球等の各種競技シューズ、スポーツウェア、スマートシューズ（アプリ開発含む）。",
+                good_points: "・ただのウェアや靴（モノ）を売るのではなく、「競技パフォーマンスの向上」「怪我の予防」といったアスリートの夢を支える本質的な価値を生み出している点。",
+                features: "・売上高：4,846億円（2023年12月期 ※過去最高利益）\n・平均年齢：39.8歳\n・特色: 海外売上比率が全体の約8割を占めており、若手のうちからグローバルを視野に仕事ができること。リモートワークやフルフレックス推進で高い有給取得率。",
+                merit: "自分のこれまでのスポーツ経験と大学での専門知識をそのまま最大の強みとして活かし、国内外のスポーツ愛好家の挑戦を製品面でサポートできる点。",
+                demerit: "世界市場で他国巨大ブランドとの競争が激しいため、競合ひしめく中で店舗シェアを獲得するための戦略性や行動力が不可欠である点。",
+                reason: "メーカー業界の「グローバルな事業規模と最高レベルの製品品質」に大きな魅力を感じています。これまで自分がスポーツを継続できた感謝を、今度は製品を通じた最高の安心として世界に届けたいと考えて志望しています。"
+            },
+            service: {
+                industry: "サービス",
+                company: "コナミスポーツ株式会社",
+                customers: "・BtoC: ジュニアスクールに通う子どもたちと保護者、健康志向の一般大人層、健康増進を図るシニア層。\n・BtoB: 福利厚生として提携する一般企業、学校（水泳指導委託）。",
+                products: "・商品: 全国フィットネスクラブの施設サービス、各種専門キッズスクール（体操・水泳・ダンス等）の運動カリキュラムや指導指導力、大人向けのパーソナルサポート。",
+                good_points: "・スポーツの本来持つ「楽しさ」「成長の歓び」を目の前の顧客に直接提供し、運動を継続することで社会の健康寿命の延伸にダイレクトに関わる点。",
+                features: "・売上高：3,603億円（コナミグループ連結）\n・平均年齢：38.5歳\n・特色: 新人に対する指導研修カリキュラムが非常に体系化されており、自社スポーツジムの無料利用制度、スポーツ推薦制度など「健康推進」がカルチャーとなっている。",
+                merit: "スクールでの子どもたちの成長や会員の方々が健康になって笑顔を見せてくれる変化を最も近い距離で実感でき、指導の専門性を発揮できる点。",
+                demerit: "一般的なオフィスワークと異なり、スクール開講（夕方〜夜間）や週末のスクール運営に合わせて変則的なシフト（土日勤務、夜間対応）に対応する体力がいる点。",
+                reason: "フィットネス・サービス業界の「相手の健やかな成長と健康に最も近い場所で貢献できる点」に最も魅力を感じています。大学での専門授業や自身の経験を直接活かして地域の人々を元気にしたいと考え、志望しています。"
+            },
+            it: {
+                industry: "通信・ソフトウェア",
+                company: "LINEヤフー株式会社",
+                customers: "・BtoC: LINEやYahoo! JAPANを利用する国内ほぼ全ての個人ユーザー。\n・BtoB: サービス上に広告を出稿する企業、ECプラットフォームに参画する個人・法人商店。",
+                products: "・商品: コミュニケーションアプリ「LINE」、ポータルサイト「Yahoo! JAPAN」、ネット通販「Yahoo!ショッピング」、キャッシュレス決済「PayPay」などのITサービス。",
+                good_points: "・日本中の人々の生活インフラとなるソフトウェアを自社開発し、いつでも・どこでも便利さとつながりを提供していること。",
+                features: "・売上高：1兆5,600億円\n・平均年齢：37.2歳\n・特色: 全社規模でリモートワークが推進されており、自由度の高いフレックス勤務が可能。常に先端技術（AI等）を社会へ実装するスピード感。",
+                merit: "自分のつくったコードやシステム、関わった企画が数千万人のユーザーに即座に届き、社会の利便性をダイレクトに底上げできるダイナミックさ。",
+                demerit: "IT業界の技術革新のスピードが異次元に早いため、常に自主的な学びと専門スキルのアップデートをし続けなければ取り残されてしまう点。",
+                reason: "IT業界の「社会全体を一瞬で便利にするインフラ的な影響力」に圧倒的な魅力を感じています。特に最先端のAIテクノロジーと身近なサービスが融合することで生まれる新たなつながりを作りたいと考え、志望しています。"
+            },
+            retail: {
+                industry: "小売",
+                company: "株式会社ファーストリテイリング",
+                customers: "・BtoC: 世界中すべての「LifeWear（生活を快適にするカジュアル服）」を求める一般消費者、スポーツ選手など。",
+                products: "・商品: ユニクロ・ジーユー等の世界中の店舗で展開されるアパレル製品、快適素材（ヒートテック・エアリズム等）による日常生活の質的向上価値。",
+                good_points: "・店舗という最前線でお客様の実際の声を拾い、製品の企画開発から生産、販売までを一気通貫で行うビジネスモデルで世界に挑戦している点。",
+                features: "・売上高：2兆7,600億円\n・平均年齢：38.0歳\n・特色: 「完全実力主義」の風土があり、若手のうちから店長などの店舗経営を任される。グローバルでのキャリア育成プログラムや高い英語力推進が特徴。",
+                merit: "目の前のお客様に「最高のサービスと接客」を提供しつつ、自らが1店舗の売上や人材育成をマネジメントする経営者視点を若手から培える点。",
+                demerit: "店舗の現場作業（陳列、在庫、急な応援対応）は肉体労働の側面が強く、世界標準の高い成果目標に応えるために日々強固な責任感とタフさがいる点。",
+                reason: "小売業界の最高峰である「全員が経営者として徹底的にお客様目線を追求するカルチャー」に惹かれました。世界ブランドとしての店舗展開に携わり、衣食住の「衣」から社会を変えたいと志望しています。"
+            },
+            trading: {
+                industry: "商社",
+                company: "伊藤忠商事株式会社",
+                customers: "・BtoB: 世界各地の資源・エネルギー企業、繊維・食品流通会社、海外政府、小売店など。",
+                products: "・商品: 繊維、機械、エネルギー、化学品、金属、食料などに関するトレード（仲介貿易）と、国内外の事業に自ら資金を投じて経営に入る「事業投資」。",
+                good_points: "・「売り手よし、買い手よし、世間よし」の精神で、世界中から良いモノを発見し、最も必要とされる場所に届けるグローバル流通網の構築価値。",
+                features: "・売上高：13兆円（グループ総取扱高含む）\n・平均年齢：42.1歳\n・特色: 「個の力」が非常に強く求められる。朝型勤務の導入など健康的かつ生産的な働き方を推進しており、海外駐在比率も極めて高い。",
+                merit: "世界的な一大プロジェクト（物資の供給から大規模提携まで）を自らの交渉力と目利き、人脈によってゼロからデザインできる巨大なやりがい。",
+                demerit: "語学力だけでなく、多種多様な取引先を巻き込むタフな交渉力が必要であり、異文化への適応、地政学的リスクに伴う精神的プレッシャーが大きい点。",
+                reason: "「人の魅力、個の人間力がそのまま事業となる総合商社のダイナミックさ」に強く憧れます。自身の粘り強い交渉力と挑戦心をもって世界市場を切り拓く先頭に立ちたいと志望しています。"
+            },
+            finance: {
+                industry: "金融",
+                company: "株式会社福岡銀行",
+                customers: "・BtoC: 九州エリアを中心とする地域住民（預金・住宅ローン、資産形成）。\n・BtoB: 地場中小企業から大手企業までの融資、新規事業支援、事業承継支援。",
+                products: "・商品: 資金決済サービス、融資による成長資金供給、コンサルティングによる企業経営課題解決、個人向けの安心なライフプラン設計価値。",
+                good_points: "・地域社会の経済血液である「お金」を融通することで、新しい会社が誕生したり地域の挑戦を物心両面で支える揺るぎないインフラ価値。",
+                features: "・総資産：20兆円（ふくおかFG）\n---------------\n・特色: 九州随一の地方銀行として地元からの信頼が極めて厚い。若手行員への手厚い教育制度、安定した雇用、DXによる次世代デジタルバンク戦略をリード。",
+                merit: "地場企業の社長や地域の人々と極めて深い信頼関係（コンサルタント関係）を築き、地元の経済発展や街づくりを根幹から支える実感が得られる点。",
+                demerit: "他業界に比べて顧客のお金を預かる責任上、1円の差異も許されないなど事務処理や法令順守に対する規律が非常に厳しく、徹底した誠実さと正確性を伴う点。",
+                reason: "地方銀行としての「地域経済・街づくりへの圧倒的な貢献度と信頼性の高さ」に強く惹かれました。資金面から地元の企業の挑戦を全力で支え、九州全体を活性化するパートナーになりたいと志望しています。"
+            },
+            government: {
+                industry: "官公庁・公社・団体",
+                company: "北九州市役所",
+                customers: "・住民: 北九州市に居住するすべての市民、市内で事業を営む企業や団体、観光客。",
+                products: "・商品: 福祉サービス、防災安全、教育環境の整備、スポーツ・文化施設の企画管理、都市インフラ開発、スポーツコミッションなどの地域経済活性化施策。",
+                good_points: "・民間企業のような「営利目的」ではなく、100%「すべての市民の利益と幸福増進、不平等の解消、暮らしやすさの実現」に直結する仕事であること。",
+                features: "・年間予算：約6,000億円\n---------------\n・特色: 抜群の安定性を誇り、産休・育休の取得率やワークライフバランスが極めて高水準。部署異動が3年前後で発生するため、ゼネラリストとしての幅広い能力が磨かれる。",
+                merit: "自分の愛する地域やスポーツイベントを通じて街全体をプロモートし、住民の暮らしと安全を制度・インフラの両面からずっと支え続けられる確実な社会価値。",
+                demerit: "予算措置や各種施策の決定プロセスが慎重であり、非常に多くの法的根拠と住民合意、手続きが必要となるため、民間のベンチャー的なスピード感はない点。",
+                reason: "「営利追求ではなく、生まれ育った街の全ての住民のために尽くせる唯一無二の公益性の高さ」に魅力を感じました。特にスポーツイベント振興を通じて、地域の一体感と健康的な生活環境の創出を市役所から主導したいと志望しています。"
+            },
+            construction: {
+                industry: "建設・不動産",
+                company: "大和ハウス工業株式会社",
+                customers: "・BtoC: 戸建て住宅やマンションを購入する一般個人・ファミリー層。\n・BtoB: 物流倉庫・商業施設・医療福祉施設を建設する企業、土地の有効活用を目指す地主。",
+                products: "・商品: 注文住宅、分譲マンション、大規模物流倉庫、商業複合ビル。および省エネや高い耐震技術を通じた生涯の安心とサステナブルな空間価値。",
+                good_points: "・「建物の先にある未来を創る」精神で、更地だった場所を人が集まる賑やかな街、あるいは最新のサプライチェーンを支える物流インフラへ変革する価値。",
+                features: "・売上高：4兆9,000億円\n・平均年齢：39.0歳\n・特色: ハウスメーカーNo.1の売上規模。成果を出した社員へのインセンティブが充実。ダイバーシティ推進や施工の自動化、働き方改革（週休2日徹底）に注力。",
+                merit: "数十億円規模のダイナミックな街づくりを手がけ、地図に残るような建物を自らのアイデアと熱量で形作っていく生涯誇れるやりがい。",
+                demerit: "多種多様な設計士、現場監督、協力企業、地主など多くの関係者を調整するタフさが求められ、工事スケジュールや厳しい品質基準に伴う責任圧力が大きい点。",
+                reason: "「衣食住の『住』を根底から変革し、地図と歴史に永続的に残る建物をデザインする責任感」に心を動かされました。大和ハウスの高い技術力を以て、安心かつ活気溢れる街づくりを手がけたいと志望しています。"
+            },
+            medical: {
+                industry: "医療・福祉",
+                company: "武田薬品工業株式会社",
+                customers: "・BtoB: 医療機関の医師・薬剤師、製薬卸。およびそれらを介して治療を必要とする全世界の患者たち。",
+                products: "・商品: がん領域、消化器系、神経精神疾患などの画期的な治療薬（医薬品）、最新の希少疾患治療法、および新薬開発による人々の命そのものの救命価値。",
+                good_points: "・不治の病と闘う人々に最新の治療法を届ける研究開発を通じ、生命の尊厳そのものを守る、地球上で極めて神聖な役割を担っていること。",
+                features: "・売上高：4兆2,000億円\n・平均年齢：42.5歳\n・特色: 研究開発費に年間5,000億円以上を投じる世界的メガファーマ。グローバルスタンダードの福利厚生と多様性にあふれる環境が特徴。",
+                merit: "自分が携わった新薬やその適正情報の提供（MR業務など）により、これまで救えなかった患者を救い、医療現場の課題解決に直接関与できる高い意義。",
+                demerit: "人の命に関わるため厳しい倫理基準や薬機法制限があり、1つの新薬を生み出すまでに何百億、十数年の歳月と困難な失敗プロセスを乗り越えねばならない点。",
+                reason: "医薬品・医療業界の「人間の生命そのもの、世界中の病気と闘う人々へ最大の安心と未来を供給できる絶対的な使命感」に敬意を抱き志望しています。信頼されるMRとして、最先端の治療をいち早く医師に届け、命を救う架け橋となりたいです。"
+            },
+            media: {
+                industry: "マスコミ",
+                company: "株式会社フジ・メディアHD",
+                customers: "・BtoC: テレビ番組や映像コンテンツ、SNS等を通じてエンタメを視聴するすべての一般個人、ファン層。\n・BtoB: 番組枠でCMを放送する広告代理店・スポンサー企業。",
+                products: "・商品: 地上波番組放送、ニュース報道、映像・アニメの配給、イベントの企画開催。および、人々へ共通の話題、驚き、感動、流行などの文化的付加価値の提供。",
+                good_points: "・日々起こる社会の変化を正確に広く伝える報道価値と、人々の退屈な時間を笑顔と楽しさに変えるエンタメの力で日本中を元気にする力。",
+                features: "・売上高：5,300億円\n・平均年齢：41.2歳\n・特色: クリエイティブで明るい風土、高い自由度。テレビ事業だけでなくゲーム、観光事業など多角化経営。有給取得推進やコンプライアンス管理に力を入れている。",
+                merit: "トレンドや文化の流行発信地として、自らが仕掛けた番組や企画コンテンツが世間で広く話題になり、流行の発火点となる瞬間の圧倒的なワクワク感。",
+                demerit: "放送時間の厳守や24時間のニュース対応、SNS等でのコンプライアンスの目など、激務になりがちな側面があり、精神的な強さとマルチタスク対応がいる点。",
+                reason: "マスコミ業界の「数千万人に一瞬で共通の感動や笑顔、気づきを伝えられる巨大な情報拡散力と影響力の魅力」に強く惹かれました。スポーツ報道や番組制作を通じ、スポーツ選手たちの熱いドラマを鮮明に発信し、社会全体を熱狂させたいと志望しています。"
+            }
+        };
+
+        // タブ切り替え
+        let currentTab = 'type1';
+        function switchTab(type) {
+            currentTab = type;
+            const t1Tab = document.getElementById('tab-type1');
+            const t2Tab = document.getElementById('tab-type2');
+            const t1Content = document.getElementById('content-type1');
+            const t2Content = document.getElementById('content-type2');
+
+            if (type === 'type1') {
+                t1Tab.classList.add('bg-white', 'text-blue-950', 'shadow-sm');
+                t1Tab.classList.remove('text-slate-600', 'hover:text-slate-900');
+                t2Tab.classList.remove('bg-white', 'text-blue-950', 'shadow-sm');
+                t2Tab.classList.add('text-slate-600', 'hover:text-slate-900');
+                t1Content.classList.remove('hidden');
+                t2Content.classList.add('hidden');
+            } else {
+                t2Tab.classList.add('bg-white', 'text-blue-950', 'shadow-sm');
+                t2Tab.classList.remove('text-slate-600', 'hover:text-slate-900');
+                t1Tab.classList.remove('bg-white', 'text-blue-950', 'shadow-sm');
+                t1Tab.classList.add('text-slate-600', 'hover:text-slate-900');
+                t2Content.classList.remove('hidden');
+                t1Content.classList.add('hidden');
+            }
+            saveToLocalStorage();
+        }
+
+        // ラベル連動更新
+        function onLabelInputChange() {
+            const indA = document.getElementById('industry_a_name').value || '業界A';
+            const indB = document.getElementById('industry_b_name').value || '業界B';
+            const companyA = document.getElementById('company_a_name').value || '企業A';
+            const companyB = document.getElementById('company_b_name').value || '企業B';
+
+            // 例1ラベル
+            document.getElementById('panel-title-a').innerText = `【${indA} / ${companyA}】顧客・商品・いいなと思う点`;
+            document.getElementById('panel-title-b').innerText = `【${indB} / ${companyB}】顧客・商品・いいなと思う点`;
+            document.getElementById('ir-label-a').innerText = `【${indA} (${companyA})】の特色（売上、平均年齢、制度など）`;
+            document.getElementById('ir-label-b').innerText = `【${indB} (${companyB})】の特色（売上、平均年齢、制度など）`;
+
+            // 例2ラベル
+            document.getElementById('compare-merit-a').innerText = `【${indA}】の他業界と比較して魅力的な点`;
+            document.getElementById('compare-merit-b').innerText = `【${indB}】の他業界と比較して魅力的な点`;
+            document.getElementById('compare-demerit-a').innerText = `【${indA}】の他業界と比較して気になる点 / 不安な点`;
+            document.getElementById('compare-demerit-b').innerText = `【${indB}】の他業界と比較して気になる点 / 不安な点`;
+            document.getElementById('reason-label-a').innerText = `【${indA} (${companyA})】への志望理由`;
+            document.getElementById('reason-label-b').innerText = `【${indB} (${companyB})】への志望理由`;
+
+            saveToLocalStorage();
+        }
+
+        // DB選択時のUI表示更新
+        function onDatabaseSelect() {
+            const select = document.getElementById('db-industry-select');
+            const data = industryDb[select.value];
+            if (data) {
+                document.getElementById('db-company-name').innerText = data.company;
+                document.getElementById('db-customers-products').innerText = `${data.customers.split('\n')[0].substring(0,60)}... / ${data.products.split('\n')[0].substring(0,60)}...`;
+                document.getElementById('db-ir-info').innerText = data.features.replace(/\n/g, ' ');
+            }
+        }
+
+        // データベースからワークシート(AまたはB)へのデータコピー
+        function copyDbTo(target) {
+            const select = document.getElementById('db-industry-select');
+            const data = industryDb[select.value];
+            if (!data) return;
+
+            if (target === 'A') {
+                document.getElementById('industry_a_name').value = data.industry;
+                document.getElementById('company_a_name').value = data.company;
+                document.getElementById('t1_a_customers').value = data.customers;
+                document.getElementById('t1_a_products').value = data.products;
+                document.getElementById('t1_a_good_points').value = data.good_points;
+                document.getElementById('t1_a_features').value = data.features;
+                document.getElementById('t2_a_merit').value = data.merit;
+                document.getElementById('t2_a_demerit').value = data.demerit;
+                document.getElementById('t2_a_reason').value = data.reason;
+                showToast(`業界A に ${data.company} のデータを反映しました！`);
+            } else {
+                document.getElementById('industry_b_name').value = data.industry;
+                document.getElementById('company_b_name').value = data.company;
+                document.getElementById('t1_b_customers').value = data.customers;
+                document.getElementById('t1_b_products').value = data.products;
+                document.getElementById('t1_b_good_points').value = data.good_points;
+                document.getElementById('t1_b_features').value = data.features;
+                document.getElementById('t2_b_merit').value = data.merit;
+                document.getElementById('t2_b_demerit').value = data.demerit;
+                document.getElementById('t2_b_reason').value = data.reason;
+                showToast(`業界B に ${data.company} のデータを反映しました！`);
+            }
+            onLabelInputChange();
+            saveToLocalStorage();
+        }
+
+        // プログレスバー更新
+        function updateProgress() {
+            const steps = ['chk-step1', 'chk-step2', 'chk-step3', 'chk-step4', 'chk-step5'];
+            let checkedCount = 0;
+            steps.forEach(id => {
+                if (document.getElementById(id).checked) checkedCount++;
+            });
+            const percent = Math.round((checkedCount / steps.length) * 100);
+            document.getElementById('progress-percent').innerText = `${percent}% 完了`;
+            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+
+            // 進捗もローカルストレージに格納
+            const progressData = {};
+            steps.forEach(id => {
+                progressData[id] = document.getElementById(id).checked;
+            });
+            localStorage.setItem('kku_career_progress_v3', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('kku_career_progress_v3');
+            if (saved) {
+                const progressData = JSON.parse(saved);
+                const steps = ['chk-step1', 'chk-step2', 'chk-step3', 'chk-step4', 'chk-step5'];
+                steps.forEach(id => {
+                    if (progressData[id] !== undefined) {
+                        document.getElementById(id).checked = progressData[id];
+                    }
+                });
+            }
+            updateProgress();
+        }
+
+        // トースト通知表示
+        function showToast(message) {
+            const toast = document.getElementById('toast-notify');
+            document.getElementById('toast-text').innerText = message;
+            toast.className = "fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transform translate-y-0 opacity-100 transition-all duration-300 pointer-events-auto z-50";
+            setTimeout(() => {
+                toast.className = "fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transform translate-y-10 opacity-0 transition-all duration-300 pointer-events-none z-50";
+            }, 3000);
+        }
+
+        // モーダル制御（自前実装でconfirm/alert撤廃）
+        let modalActionType = '';
+        function openModal(actionType) {
+            modalActionType = actionType;
+            const modal = document.getElementById('custom-modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body-text');
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+
+            if (actionType === 'clear') {
+                title.innerText = "すべての入力をクリア";
+                body.innerText = "現在入力されているすべての業界研究ノートデータ（学籍番号、名前を除く）を消去し、完全に空白にします。よろしいですか？";
+                confirmBtn.className = "px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl transition-colors";
+            } else if (actionType === 'restore') {
+                title.innerText = "初期サンプルにリセット";
+                body.innerText = "現在の入力内容を破棄し、長畔さんのこれまでの学び・軸にぴったりな「アシックス（メーカー）＆ コナミスポーツ（サービス）」の推奨モデル回答を自動セットします。よろしいですか？";
+                confirmBtn.className = "px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-xl transition-colors";
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('.transform').classList.remove('scale-95');
+                modal.querySelector('.transform').classList.add('scale-100');
+            }, 50);
+
+            confirmBtn.onclick = executeModalAction;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.querySelector('.transform').classList.remove('scale-100');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        function executeModalAction() {
+            if (modalActionType === 'clear') {
+                inputIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && id !== 'student_id' && id !== 'student_name') {
+                        el.value = '';
+                    }
+                });
+                onLabelInputChange();
+                saveToLocalStorage();
+                showToast("すべての入力フォームをリセットしました。");
+            } else if (modalActionType === 'restore') {
+                setValuesFromObject(initialCustomData);
+                showToast("アシックス＆コナミの推奨モデル回答をセットしました！");
+            }
+            closeModal();
+        }
+
+        // 印刷プレビューレイアウト（提出時チェック用）
+        let isPrintPreview = false;
+        function togglePrintPreview() {
+            isPrintPreview = !isPrintPreview;
+            const sidebar = document.getElementById('sidebar');
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            const printBtnText = document.getElementById('btn-preview-text');
+            const mainContainer = document.querySelector('main');
+
+            if (isPrintPreview) {
+                sidebar.classList.add('no-print', 'hidden');
+                header.classList.add('hidden');
+                footer.classList.add('hidden');
+                mainContainer.classList.remove('grid-cols-1', 'lg:grid-cols-12');
+                mainContainer.classList.add('grid-cols-1');
+                printBtnText.innerText = "通常編集画面に戻る";
+                
+                // 印刷プレビュー時は強制的にタブ1とタブ2両方表示（スクロールして見渡せるように）
+                document.getElementById('content-type1').classList.remove('hidden');
+                document.getElementById('content-type2').classList.remove('hidden');
+                document.querySelectorAll('.no-print').forEach(el => el.classList.add('hidden'));
+
+                // 印刷ガイドライン用の枠線をシートに適用
+                document.getElementById('print-sheet-container').classList.add('max-w-4xl', 'mx-auto', 'border-2', 'border-slate-300', 'p-6', 'bg-white', 'shadow-xl');
+            } else {
+                sidebar.classList.remove('no-print', 'hidden');
+                header.classList.remove('hidden');
+                footer.classList.remove('hidden');
+                mainContainer.classList.add('grid-cols-1', 'lg:grid-cols-12');
+                printBtnText.innerText = "提出用レイアウトを確認";
+                
+                // 元のタブ表示に直す
+                switchTab(currentTab);
+                document.querySelectorAll('.no-print').forEach(el => el.classList.remove('hidden'));
+                document.getElementById('print-sheet-container').classList.remove('max-w-4xl', 'mx-auto', 'border-2', 'border-slate-300', 'p-6', 'bg-white', 'shadow-xl');
+            }
+        }
+
+        function triggerPrint() {
+            // 自動的にプレビューモードにして印刷ダイアログを叩く
+            if (!isPrintPreview) {
+                togglePrintPreview();
+            }
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        // 長畔さん専用の高品質スポーツモデル推奨データ
+        const initialCustomData = {
+            student_id: "25A1188",
+            student_name: "長畔 武留",
+            // 業界A (アシックス)
+            industry_a_name: "メーカー（スポーツ用品・アパレル）",
+            company_a_name: "株式会社アシックス",
+            t1_a_customers: "・BtoC: 一般のランナー・スポーツ愛好家、全国の中学高校の部活生、トップアスリート。\n・BtoB: スポーツ用品専門店・量販店、オリジナルユニフォーム等を一括契約する学校法人や実業団チーム。",
+            t1_a_products: "・商品・サービス: 国内外で極めて高評価を得ている長距離ランニングシューズ、テニス・野球・ラグビー等の競技専用シューズ、アスリートの心身を保護する機能性アパレル（吸汗速乾・高透湿性ウェア）。",
+            t1_a_good_points: "・単にスポーツシューズや服という「物」を提供するだけでなく、それを使うことによる「怪我の予防による安全の担保」「自己記録更新の喜び」「人々の健康寿命向上」という本質的な人間的価値を提供している点。",
+            t1_a_features: "・売上高：4,846億円（2023年12月期：過去最高益）\n・平均年齢：39.8歳\n・特色: 海外売上比率が8割に達するグローバルブランド。若手の挑戦を積極的に後押しする風土があり、リモートワークやフルフレックス推進で高い有給取得率を誇る。",
+            // 業界B (コナミスポーツ)
+            industry_b_name: "サービス（フィットネス・スクール運営）",
+            company_b_name: "コナミスポーツ株式会社",
+            t1_b_customers: "・BtoC: スイミング・体操スクール等に通う子どもたちと保護者、健康的な生活・体型維持を目的とする一般大人層、健康寿命の延伸を意識するアクティブシニア層。\n・BtoB: 福利厚生施設として提携する民間一般企業。",
+            t1_b_products: "・商品・サービス: 全国約300拠点での総合フィットネス施設の提供、独自の指導メソッドに基づいたジュニア向けの体育・水泳・ダンスの専門スクール運営、健康的なダイエット推進パーソナルプログラム。",
+            t1_b_good_points: "・スポーツを通じた楽しさと達成感を直接身近に伝えることで、目の前のお客様に「健康と満面の笑顔」をダイレクトに生み出せること。地域コミュニティ全体の元気創出のハブとなっている点。",
+            t1_b_features: "・売上高：3,603億円（コナミグループ全体）\n・平均年齢：38.5歳\n・特色: 福利厚生として自社スポーツジムが全国どこでも無料で使い放題の特典や、スポーツに直結する公的資格支援制度等があり、社員自身の健康管理とスキル育成を推奨している。",
+            
+            // 比較編
+            t2_a_merit: "メーカー業界は、自らが全力で打ち込んできた「スポーツ経験・指導知識」を製品提案時に抜群の説得力（強み）としてそのまま還元でき、さらに世界8割を占めるグローバルフィールドに挑める点。",
+            t2_b_merit: "フィットネスサービス業界は、お客様と1対1で深く向き合える。特に子どもたちの技術上達のプロセスや、シニアの方々の健康回復を最も身近で一緒に分かち合え、指導力の専門性を発揮できる点。",
+            t2_a_demerit: "国内外に強力な競合メガブランドが多数ひしめく厳しい市場環境にある。店舗でのシューズ導入比率や売上目標（ノルマ）の必達など、日々強固な自律性とタフな営業力がいる点。",
+            t2_b_demerit: "一般的な土日休みのオフィスワークとは完全に異なり、スクールの運営時間帯に合わせるための変則的な勤務シフト（夜間帯や土日祝のレッスン対応、合宿イベント引率）により、基礎的な体力が強く求められる点。",
+            
+            // 志望理由
+            t2_a_reason: "メーカー業界の「グローバルな事業規模と、モノを通じて世界中の人々の健康にアプローチできる力」に強く惹かれています。これまで私自身が多くのスポーツギアに助けられてきた恩返しを、自らの言葉と経験による情熱的な提案を通じて、国内外の競技者や健康を志す人々の最適な安心へとつなぎたく、アシックスを第一志望としています。",
+            t2_b_reason: "サービス・フィットネス業界の「お客様と最も近い距離で触れ合い、心身の健康と明るい笑顔を直接的に創出できること」に大きなやりがいを感じています。大学で培ったスポーツ指導の専門実践や、コミュニケーション力を駆使し、子どもたちに運動の素晴らしさを全身で伝え、人生を豊かにする伴走者になりたいと考えて志望しています。"
+        };
+
+        const inputIds = [
+            'student_id', 'student_name',
+            'industry_a_name', 'company_a_name', 't1_a_customers', 't1_a_products', 't1_a_good_points', 't1_a_features',
+            'industry_b_name', 'company_b_name', 't1_b_customers', 't1_b_products', 't1_b_good_points', 't1_b_features',
+            't2_a_merit', 't2_b_merit', 't2_a_demerit', 't2_b_demerit', 't2_a_reason', 't2_b_reason'
+        ];
+
+        // データのセーブロード
+        function saveToLocalStorage() {
+            const data = {
+                activeTab: currentTab
+            };
+            inputIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    data[id] = element.value;
+                }
+            });
+            localStorage.setItem('kku_career_industry_note_20260608_v3', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('kku_career_industry_note_20260608_v3');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                if (data.activeTab) {
+                    switchTab(data.activeTab);
+                }
+                inputIds.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element && data[id] !== undefined) {
+                        element.value = data[id];
+                    }
+                });
+            } else {
+                setValuesFromObject(initialCustomData);
+            }
+            onLabelInputChange();
+        }
+
+        function setValuesFromObject(obj) {
+            inputIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && obj[id] !== undefined) {
+                    element.value = obj[id];
+                }
+            });
+            saveToLocalStorage();
+            onLabelInputChange();
+        }
+
+        // ページロード
+        window.onload = function() {
+            loadFromLocalStorage();
+            loadProgress();
+            onDatabaseSelect();
+        };
+    </script>
+</body>
+</html>
