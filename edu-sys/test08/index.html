@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育法規のふりかえりテスト - 第8回</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ベースとなる青色（アカデミックで権威ある色調） */
+        .theme-bg { background-color: #005088; }
+        .theme-text { color: #005088; }
+        /* 選択・強調用のライトブルー */
+        .theme-bg-light { background-color: #e5f1f4; border-color: #005088; }
+        
+        /* フォントサイズ手動切り替え（管理コンサルティング資料のような可読性重視） */
+        :root {
+            --font-scale: 1;
+        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+
+        /* スムーズな遷移 */
+        .drawer-transition { transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans min-h-screen pb-10 fs-base">
+
+    <!-- スタート画面 -->
+    <div id="start-screen" class="max-w-5xl mx-auto p-4 pt-8">
+        <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden mb-6">
+            <div class="theme-bg p-4">
+                <h2 class="text-white font-bold text-xl">テスト情報</h2>
+            </div>
+            <table class="w-full border-collapse">
+                <tbody>
+                    <tr><th class="w-1/3 bg-gray-100 p-4 border-b border-gray-200 text-left fs-sm">テスト名</th><td class="p-4 border-b border-gray-200 font-bold fs-sm text-blue-900">第8回課題</td></tr>
+                    <tr><th class="bg-gray-100 p-4 border-b border-gray-200 text-left fs-sm">テスト説明</th><td class="p-4 border-b border-gray-200 fs-sm">教育法規の重要項目に関するふりかえり演習です。<br>合格点（満点）を目指して繰り返し学習してください。</td></tr>
+                    <tr><th class="bg-gray-100 p-4 border-b border-gray-200 text-left fs-sm">合格点数</th><td class="p-4 border-b border-gray-200 fs-sm">10点</td></tr>
+                    <tr><th class="bg-gray-100 p-4 border-b border-gray-200 text-left fs-sm">テスト時間</th><td class="p-4 border-b border-gray-200 fs-sm">2分</td></tr>
+                    <tr><th class="bg-gray-100 p-4 border-b border-gray-200 text-left fs-sm">問題表示区分</th><td class="p-4 border-b border-gray-200 fs-sm">一問題表示</td></tr>
+                    <tr><th class="bg-gray-100 p-4 border-b border-gray-200 text-left fs-sm">問題出題形式</th><td class="p-4 border-b border-gray-200 fs-sm">ランダム</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-10 flex justify-center gap-6">
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/edu-sys/index.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-10 rounded-full shadow-md transition duration-200 fs-base">テスト一覧へ</a>
+            <button id="start-btn" class="theme-bg hover:bg-blue-900 text-white font-bold py-4 px-14 rounded-full shadow-md transition duration-200 fs-base">テスト開始</button>
+        </div>
+    </div>
+
+    <!-- テストメイン画面 -->
+    <div id="test-screen" class="hidden max-w-6xl mx-auto p-4 flex flex-col md:flex-row gap-8">
+        
+        <!-- 左側サイドバー（デスクトップ用） -->
+        <aside class="hidden md:block w-52 shrink-0">
+            <div id="question-nav-list" class="flex flex-col gap-2 sticky top-4">
+                <!-- JSでナビゲーションボタンを生成 -->
+            </div>
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-grow">
+            <!-- ヘッダーエリア -->
+            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="flex items-center gap-4">
+                    <!-- モバイル用ハンバーガーメニュー -->
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="font-bold text-gray-800 fs-base border-l-4 border-blue-800 pl-3">第8回課題</div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <!-- フォントサイズ切替 -->
+                    <button id="font-size-btn" class="border border-gray-300 bg-white hover:bg-gray-50 rounded-lg px-3 py-2 flex items-center justify-center font-bold text-gray-700 shadow-sm transition" title="文字サイズ変更">
+                        ぁあ
+                    </button>
+                    <!-- 固定幅タイマー -->
+                    <div id="timer-display" class="text-red-700 font-bold fs-lg bg-red-50 px-4 py-2 rounded-lg border border-red-100 whitespace-nowrap shrink-0 w-36 text-center tabular-nums shadow-inner">残り 2:00</div>
+                </div>
+            </div>
+            
+            <!-- 問題カード -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-xl mb-8 overflow-hidden transition-all duration-300">
+                <div id="question-number" class="bg-gray-50 px-6 py-4 border-b border-gray-200 text-blue-900 font-extrabold fs-base">
+                    <!-- 問題番号 -->
+                </div>
+                <div class="p-8 md:p-12">
+                    <p id="question-text" class="mb-10 leading-relaxed fs-lg font-medium text-gray-800"></p>
+                    <div class="bg-blue-50 p-6 md:p-8 rounded-xl border border-blue-100">
+                        <label class="block font-bold text-gray-600 mb-4 fs-sm" for="answer-input">（　　　）に入る言葉を入力してください：</label>
+                        <input type="text" id="answer-input" class="w-full md:w-2/3 bg-white shadow-sm border-2 border-blue-200 rounded-lg py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:border-blue-600 focus:ring-0 fs-xl transition-colors" autocomplete="off" placeholder="解答を入力...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- フッターナビゲーション -->
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <button id="prev-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-8 rounded-lg transition disabled:opacity-30 disabled:cursor-not-allowed fs-base">前へ</button>
+                <div class="flex items-center gap-6">
+                    <span id="progress-text" class="text-gray-500 font-bold fs-base tracking-widest">1 / 10</span>
+                    <button id="next-btn" class="theme-bg hover:bg-blue-900 text-white font-bold py-3 px-10 rounded-lg shadow transition fs-base">次へ</button>
+                    <button id="finish-btn" class="hidden bg-yellow-500 hover:bg-yellow-600 text-yellow-950 font-bold py-3 px-10 rounded-lg shadow transition fs-base">テスト提出</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- モバイル用ドロワーメニュー -->
+    <div id="mobile-nav-overlay" class="hidden fixed inset-0 bg-black bg-opacity-60 z-40 md:hidden transition-opacity"></div>
+    <div id="mobile-nav-drawer" class="fixed inset-y-0 left-0 transform -translate-x-full drawer-transition bg-white w-72 shadow-2xl z-50 md:hidden flex flex-col">
+        <div class="flex justify-between items-center p-5 border-b border-gray-100 theme-bg">
+            <span class="font-extrabold text-white fs-base">問題一覧</span>
+            <button id="mobile-nav-close" class="text-white hover:text-gray-200 transition">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-nav-list" class="p-5 flex flex-col gap-3 overflow-y-auto flex-grow bg-gray-50">
+            <!-- JSでナビゲーションボタンを生成 -->
+        </div>
+    </div>
+
+    <!-- 採点結果画面 -->
+    <div id="result-screen" class="hidden max-w-5xl mx-auto p-4">
+        <div class="text-center py-10">
+            <h2 class="font-extrabold text-gray-800 fs-2xl mb-8">採点結果詳細</h2>
+            
+            <div class="bg-white border border-gray-200 rounded-3xl shadow-2xl p-10 mb-12 max-w-md mx-auto">
+                <p class="text-gray-500 font-bold mb-4 fs-base">YOUR SCORE</p>
+                <div class="flex justify-center items-baseline gap-2 mb-6">
+                    <span id="total-score" class="font-black theme-text fs-5xl" style="font-size: 80px;">0</span>
+                    <span class="text-gray-400 font-bold fs-xl">/ 10</span>
+                </div>
+                <div id="pass-status" class="py-3 px-6 rounded-full font-bold fs-lg inline-block"></div>
+            </div>
+        </div>
+
+        <div id="result-list" class="space-y-6">
+            <!-- 詳細結果を生成 -->
+        </div>
+
+        <div class="text-center mt-16 mb-10">
+            <button id="retry-btn" class="theme-bg hover:bg-blue-900 text-white font-black py-5 px-16 rounded-full shadow-2xl transition duration-300 fs-lg transform hover:scale-105">再テストを行う</button>
+        </div>
+    </div>
+
+    <!-- 提出確認モーダル -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full transform transition-all">
+            <div class="text-center mb-8">
+                <div class="bg-yellow-100 text-yellow-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <p class="font-black text-gray-800 fs-lg">テストを提出しますか？</p>
+                <p class="text-gray-500 fs-sm mt-2">提出後は解答の修正ができません。</p>
+            </div>
+            <div class="flex gap-4">
+                <button id="modal-cancel-btn" class="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-bold fs-base">いいえ</button>
+                <button id="modal-ok-btn" class="flex-1 py-3 bg-yellow-500 text-yellow-950 rounded-xl hover:bg-yellow-600 transition font-bold fs-base">提出する</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 問題データ（画像から抽出した全10問）
+        const originalQuestions = [
+            { id: 1, text: "全てのこどもが、…、心身の状況、置かれている環境等にかかわらず、その権利の擁護が図られ、将来にわたって（　　　）を送ることができる社会の実現を目指して、", answer: "幸福な生活" },
+            { id: 2, text: "国民は、その保護する子に、別に法律で定めるところにより、（　　　）を受けさせる義務を負う", answer: "普通教育" },
+            { id: 3, text: "国及び地方公共団体は、家庭教育の（　　　）を尊重しつつ、保護者に対する学習の機会及び情報提供その他の家庭教育を支援するために必要な施策を講ずるよう努めなければならない。", answer: "自主性" },
+            { id: 4, text: "父母その他の保護者は、子の教育について第一義的責任を有するものであって、生活のために必要な（　　　）を身に付けさせるとともに、", answer: "習慣" },
+            { id: 5, text: "国及び地方公共団体は、能力があるにもかかわらず、経済的理由によって修学が困難な者に対して、（　　　）の措置を講じなければならない。", answer: "奨学" },
+            { id: 6, text: "我々日本国民は、たゆまぬ努力によって築いてきた平和で平和な国家を更に発展させるとともに、世界の平和と人類の（　　　）の向上に貢献することを願うものである。", answer: "福祉" },
+            { id: 7, text: "国民一人一人が、自己の（　　　）を磨き、豊かな人生を送ることができるよう、その生涯にわたって、あらゆる機会に、あらゆる場所において学習することができ、その成果を適切に生かすことのできる社会の実現が図られなければならない。", answer: "人格" },
+            { id: 8, text: "小学校においては、文部科学大臣の（　　　）を経た教科用図書又は文部科学省が著作の名義を有する教科用図書を使用しなければならない。", answer: "検定" },
+            { id: 9, text: "すべて国民は、法律の定めるところにより、その（　　　）に応じて、ひとしく教育を受ける権利を有する。", answer: "能力" },
+            { id: 10, text: "幼児期の教育は、生涯にわたる（　　　）の基礎を培う重要なものであることにかんがみ、国及び地方公共団体は、幼児の健やかな成長に資する…", answer: "人格形成" }
+        ];
+
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let timeLeft = 120;
+        let timerInterval = null;
+
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 0;
+
+        const startScreen = document.getElementById('start-screen');
+        const testScreen = document.getElementById('test-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const answerInput = document.getElementById('answer-input');
+        const questionNavList = document.getElementById('question-nav-list');
+        const mobileNavList = document.getElementById('mobile-nav-list');
+        const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+        const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+
+        // フォントサイズ切り替えロジック
+        document.getElementById('font-size-btn').addEventListener('click', () => {
+            currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+            const scaleMap = { 'normal': 1, 'small': 0.85, 'xsmall': 0.7, 'large': 1.15 };
+            document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+        });
+
+        // ドロワー制御
+        function openDrawer() {
+            mobileNavOverlay.classList.remove('hidden');
+            setTimeout(() => mobileNavDrawer.classList.remove('-translate-x-full'), 10);
+        }
+        function closeDrawer() {
+            mobileNavDrawer.classList.add('-translate-x-full');
+            setTimeout(() => mobileNavOverlay.classList.add('hidden'), 300);
+        }
+        document.getElementById('mobile-menu-btn').addEventListener('click', openDrawer);
+        document.getElementById('mobile-nav-close').addEventListener('click', closeDrawer);
+        mobileNavOverlay.addEventListener('click', closeDrawer);
+
+        // シャッフル
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startTest() {
+            questions = shuffle(originalQuestions);
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            timeLeft = 120;
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            testScreen.classList.remove('hidden');
+            renderNav();
+            renderQuestion();
+            startTimer();
+        }
+
+        function renderNav() {
+            const createBtn = (index, isMobile) => {
+                const btn = document.createElement('button');
+                const activeClass = "theme-bg text-white shadow-lg";
+                const inactiveClass = "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50";
+                btn.className = `w-full py-3 px-4 rounded-xl font-bold text-center transition-all duration-200 fs-sm ${index === currentQuestionIndex ? activeClass : inactiveClass}`;
+                btn.innerText = `問 ${index + 1}`;
+                btn.onclick = () => {
+                    saveAnswer();
+                    currentQuestionIndex = index;
+                    renderQuestion();
+                    if(isMobile) closeDrawer();
+                };
+                return btn;
+            };
+
+            questionNavList.innerHTML = '';
+            mobileNavList.innerHTML = '';
+            questions.forEach((_, i) => {
+                questionNavList.appendChild(createBtn(i, false));
+                mobileNavList.appendChild(createBtn(i, true));
+            });
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('question-number').innerText = `【問題 ${currentQuestionIndex + 1} / 10】`;
+            document.getElementById('question-text').innerText = q.text;
+            document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / 10`;
+            answerInput.value = userAnswers[q.id] || "";
+            
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('finish-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('finish-btn').classList.add('hidden');
+            }
+            
+            // ナビボタンのアクティブ状態更新
+            [questionNavList, mobileNavList].forEach(nav => {
+                Array.from(nav.children).forEach((btn, i) => {
+                    if(i === currentQuestionIndex) {
+                        btn.className = btn.className.replace(/bg-white|text-gray-600|hover:bg-gray-50/g, "").concat(" theme-bg text-white");
+                    } else {
+                        btn.className = btn.className.replace(/theme-bg|text-white/g, "").concat(" bg-white text-gray-600");
+                    }
+                });
+            });
+        }
+
+        function saveAnswer() {
+            const qId = questions[currentQuestionIndex].id;
+            userAnswers[qId] = answerInput.value.trim();
+        }
+
+        function startTimer() {
+            const updateDisplay = () => {
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                document.getElementById('timer-display').innerText = `残り ${m}:${s.toString().padStart(2, '0')}`;
+                if(timeLeft < 30) document.getElementById('timer-display').classList.add('text-red-600', 'animate-pulse');
+            };
+            updateDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    saveAnswer();
+                    executeScoring();
+                }
+            }, 1000);
+        }
+
+        function executeScoring() {
+            if (timerInterval) clearInterval(timerInterval);
+            testScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            document.getElementById('confirm-modal').classList.add('hidden');
+
+            let score = 0;
+            const resultContainer = document.getElementById('result-list');
+            resultContainer.innerHTML = '';
+
+            questions.forEach((q, i) => {
+                const userAns = userAnswers[q.id] || "";
+                const isCorrect = userAns === q.answer;
+                if (isCorrect) score++;
+
+                const card = `
+                    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+                        <div class="flex items-center gap-3 p-4 border-b ${isCorrect ? 'bg-green-50' : 'bg-red-50'}">
+                            <span class="font-black fs-lg ${isCorrect ? 'text-green-600' : 'text-red-600'}">${isCorrect ? '○' : '×'}</span>
+                            <span class="font-bold fs-base">問 ${i + 1}</span>
+                        </div>
+                        <div class="p-6">
+                            <p class="mb-4 text-gray-700 fs-base">${q.text}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-3 bg-gray-50 rounded-lg">
+                                    <p class="text-xs text-gray-400 font-bold mb-1">正解</p>
+                                    <p class="font-bold fs-base text-gray-800">${q.answer}</p>
+                                </div>
+                                <div class="p-3 ${isCorrect ? 'bg-gray-50' : 'bg-red-50'} rounded-lg">
+                                    <p class="text-xs text-gray-400 font-bold mb-1">あなたの解答</p>
+                                    <p class="font-bold fs-base ${isCorrect ? 'text-gray-800' : 'text-red-600'}">${userAns || '(未入力)'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultContainer.insertAdjacentHTML('beforeend', card);
+            });
+
+            document.getElementById('total-score').innerText = score;
+            const status = document.getElementById('pass-status');
+            if (score === 10) {
+                status.innerText = "PERFECT / 合格";
+                status.className = "py-3 px-6 rounded-full font-bold fs-lg inline-block bg-green-100 text-green-700";
+            } else {
+                status.innerText = "不合格 (満点を目指しましょう)";
+                status.className = "py-3 px-6 rounded-full font-bold fs-lg inline-block bg-red-100 text-red-700";
+            }
+        }
+
+        // イベント登録
+        document.getElementById('start-btn').onclick = startTest;
+        document.getElementById('retry-btn').onclick = () => {
+            startScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+        };
+        document.getElementById('next-btn').onclick = () => {
+            saveAnswer();
+            currentQuestionIndex++;
+            renderQuestion();
+        };
+        document.getElementById('prev-btn').onclick = () => {
+            saveAnswer();
+            currentQuestionIndex--;
+            renderQuestion();
+        };
+        document.getElementById('finish-btn').onclick = () => {
+            saveAnswer();
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        };
+        document.getElementById('modal-cancel-btn').onclick = () => {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        };
+        document.getElementById('modal-ok-btn').onclick = executeScoring;
+
+        // Enterキーで次へ（デスクトップ利便性向上）
+        answerInput.onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (currentQuestionIndex < questions.length - 1) {
+                    document.getElementById('next-btn').click();
+                } else {
+                    document.getElementById('finish-btn').click();
+                }
+            }
+        };
+    </script>
+</body>
+</html>
