@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第14回復習問題</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 深緑色をテーマカラーに設定 */
+        .theme-bg { background-color: #005c42; }
+        .theme-bg-hover:hover { background-color: #004531; }
+        .theme-text { color: #005c42; }
+        .theme-border { border-color: #005c42; }
+        .theme-ring:focus { 
+            --tw-ring-color: #005c42; 
+            border-color: #005c42; 
+        }
+
+        /* フォントサイズ手動切り替え用 */
+        :root {
+            --font-scale: 0.85; /* デフォルトを一段階縮小 */
+        }
+        .fs-base { font-size: calc(1rem * var(--font-scale)) !important; line-height: calc(1.5rem * var(--font-scale)) !important; }
+        .fs-lg { font-size: calc(1.125rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-xl { font-size: calc(1.25rem * var(--font-scale)) !important; line-height: calc(1.75rem * var(--font-scale)) !important; }
+        .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
+        .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
+        .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+
+        /* サイドバー用カスタムスクロールバー */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen pb-10 fs-base flex flex-col">
+
+    <!-- ドロワーメニュー用オーバーレイ (モバイル用) -->
+    <div id="drawer-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
+    <!-- ドロワーメニュー本体 (モバイル用) -->
+    <nav id="drawer-menu" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col md:hidden">
+        <div class="theme-bg text-white p-4 flex justify-between items-center">
+            <span class="font-bold text-lg fs-base">問題一覧</span>
+            <button id="close-menu-btn" class="p-1 hover:bg-white hover:bg-opacity-20 rounded focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <ul id="drawer-list" class="flex-1 overflow-y-auto p-2 custom-scrollbar">
+            <!-- JSで生成 -->
+        </ul>
+    </nav>
+
+    <!-- スタート画面 -->
+    <div id="start-screen" class="max-w-5xl mx-auto p-4 pt-8 w-full">
+        <div class="bg-white border border-gray-300 shadow-sm mb-6">
+            <table class="w-full border-collapse">
+                <tbody>
+                    <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テストグループ</th><td class="p-3 border border-gray-300 fs-sm">教職教養基礎</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">テスト名</th><td class="p-3 border border-gray-300 font-bold fs-sm">第14回復習問題</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">満点</th><td class="p-3 border border-gray-300 fs-sm">17点</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">コース</th><td class="p-3 border border-gray-300 fs-sm">教育原理</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題表示区分</th><td class="p-3 border border-gray-300 fs-sm">一問題表示</td></tr>
+                    <tr><th class="theme-bg text-white p-3 border border-gray-300 text-left fs-sm">問題出題形式</th><td class="p-3 border border-gray-300 fs-sm">同一</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-8 flex justify-center gap-4">
+            <a href="https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded shadow transition duration-200 inline-block fs-base">テスト一覧へ</a>
+            <button id="start-btn" class="theme-bg theme-bg-hover text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト開始</button>
+        </div>
+    </div>
+
+    <!-- テスト画面 -->
+    <div id="test-screen" class="hidden max-w-5xl mx-auto p-4 flex-col md:flex-row gap-6 w-full">
+        <!-- 左側：問題リスト (PC用) -->
+        <div class="hidden md:block w-48 shrink-0">
+            <div id="question-nav-list" class="flex flex-col gap-1">
+                <!-- JSで生成 -->
+            </div>
+        </div>
+
+        <!-- 右側：問題エリア -->
+        <div class="flex-grow">
+            <!-- ヘッダー部分 -->
+            <div class="flex justify-between items-center mb-4 bg-white p-3 rounded shadow-sm border border-gray-300">
+                <div class="flex items-center gap-2">
+                    <!-- モバイル用メニュー開閉ボタン -->
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none p-1 border border-gray-300 rounded bg-gray-50 hover:bg-gray-100 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div class="font-bold text-gray-700 fs-base ml-1">第14回復習問題</div>
+                </div>
+                
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- フォントサイズ切り替えボタン -->
+                    <button id="font-size-btn" class="border border-gray-400 bg-white rounded px-2 py-1 flex items-center justify-center font-bold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none" style="font-size: 14px; line-height: 1.2;">
+                        ぁあ
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border border-gray-300 rounded shadow-sm bg-white mb-6">
+                <div id="question-number" class="bg-emerald-50 px-4 py-3 border-b border-gray-300 text-gray-800 font-bold fs-base">
+                    <!-- 問題番号 -->
+                </div>
+                <div class="p-6">
+                    <!-- 問題文と、文ごとの解答欄が展開されるエリア -->
+                    <div id="question-content" class="mb-4"></div>
+
+                    <!-- 問題文の下にまとめて解答欄を置くエリア -->
+                    <div class="bg-gray-50 p-4 border rounded hidden" id="answer-container"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-t pt-4">
+                <button id="prev-btn" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded transition disabled:opacity-50 disabled:cursor-not-allowed fs-base">前へ</button>
+                <div class="flex items-center">
+                    <span id="progress-text" class="mr-6 text-gray-600 font-bold fs-base">1 / 5</span>
+                    <button id="next-btn" class="theme-bg theme-bg-hover text-white font-bold py-2 px-6 rounded transition fs-base">次へ</button>
+                    <button id="finish-btn" class="hidden bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-6 rounded shadow transition fs-base">テスト提出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 採点結果画面 -->
+    <div id="result-screen" class="hidden max-w-5xl mx-auto p-4 w-full">
+        <h2 class="font-bold mb-6 text-gray-800 border-b-2 theme-border pb-2 fs-2xl">採点結果</h2>
+        
+        <div class="bg-white border border-gray-300 rounded shadow-sm p-6 mb-8 text-center">
+            <p class="text-gray-600 mb-2 fs-lg">あなたの得点</p>
+            <p id="total-score" class="font-bold theme-text mb-2 fs-5xl">0点 / 17点</p>
+        </div>
+
+        <div id="result-list" class="space-y-8">
+            <!-- JSで結果を生成 -->
+        </div>
+
+        <div class="text-center mt-12 mb-8">
+            <button id="retry-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-12 rounded shadow transition duration-200 fs-base">テスト一覧へ戻る</button>
+        </div>
+    </div>
+
+    <!-- 確認モーダル -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-auto">
+            <p class="mb-6 text-center font-bold text-gray-800 fs-lg">テストを提出して採点しますか？</p>
+            <div class="flex justify-center gap-4">
+                <button id="modal-cancel-btn" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition font-bold fs-base">いいえ</button>
+                <button id="modal-ok-btn" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 transition font-bold fs-base">はい</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 第14回の問題データ（生徒指導・関連法規）
+        const originalQuestions = [
+            { 
+                id: 1, 
+                point: 5,
+                pointPerItem: 1,
+                inputCount: 5,
+                ordered: true,
+                labels: ["①", "②", "③", "④", "⑤"],
+                text: `次の文は、青少年が安全に安心してインターネットを利用できる環境の整備等に関する法律の条文の一部である。空欄に当てはまる語句を選べ。\n\n青少年が安全に安心してインターネットを利用できるようにするための施策は、青少年自らが、主体的に( ① )を使い、インターネットにおいて流通する情報を適切に( ② )して利用するとともに、適切にインターネットによる( ③ )を行う能力(以下「インターネットを適切に活用する能力」という。)を習得することを旨として行われなければならない。\n青少年が安全に安心してインターネットを利用できる環境の整備に関する施策の推進は、青少年有害情報( ④ )の性能の向上及び利用の普及、青少年のインターネットの利用に関係する事業を行う者による青少年が青少年有害情報の( ⑤ )をすることを防止するための措置等により、青少年がインターネットを利用して青少年有害情報の( ⑤ )をする機会をできるだけ少なくすることを旨として行われなければならない。`, 
+                options: [
+                    ["ア. 双方向型通信", "イ. 取捨選択", "ウ. 情報開示", "エ. 視聴覚機器", "オ. フィルタリングソフトウェア", "カ. 選択・加工", "キ. 情報通信機器", "ク. モニタリングソフトウェア", "ケ. 閲覧", "コ. 情報発信"],
+                    ["ア. 双方向型通信", "イ. 取捨選択", "ウ. 情報開示", "エ. 視聴覚機器", "オ. フィルタリングソフトウェア", "カ. 選択・加工", "キ. 情報通信機器", "ク. モニタリングソフトウェア", "ケ. 閲覧", "コ. 情報発信"],
+                    ["ア. 双方向型通信", "イ. 取捨選択", "ウ. 情報開示", "エ. 視聴覚機器", "オ. フィルタリングソフトウェア", "カ. 選択・加工", "キ. 情報通信機器", "ク. モニタリングソフトウェア", "ケ. 閲覧", "コ. 情報発信"],
+                    ["ア. 双方向型通信", "イ. 取捨選択", "ウ. 情報開示", "エ. 視聴覚機器", "オ. フィルタリングソフトウェア", "カ. 選択・加工", "キ. 情報通信機器", "ク. モニタリングソフトウェア", "ケ. 閲覧", "コ. 情報発信"],
+                    ["ア. 双方向型通信", "イ. 取捨選択", "ウ. 情報開示", "エ. 視聴覚機器", "オ. フィルタリングソフトウェア", "カ. 選択・加工", "キ. 情報通信機器", "ク. モニタリングソフトウェア", "ケ. 閲覧", "コ. 情報発信"]
+                ],
+                answer: ["キ. 情報通信機器", "イ. 取捨選択", "コ. 情報発信", "オ. フィルタリングソフトウェア", "ケ. 閲覧"],
+                displayAnswer: "① キ. 情報通信機器\n② イ. 取捨選択\n③ コ. 情報発信\n④ オ. フィルタリングソフトウェア\n⑤ ケ. 閲覧",
+                explanation: "青少年が安全に安心してインターネットを利用できる環境の整備等に関する法律第3条第1項・第2項参照。"
+            },
+            {
+                id: 2,
+                point: 2,
+                pointPerItem: 1,
+                inputCount: 2,
+                ordered: false,
+                labels: ["解答1", "解答2"],
+                text: `不登校問題に関する次の文のうち、適切なものを2つ選べ。（順不同）\n\n① 不登校は「何らかの心理的、情緒的、身体的、あるいは社会的要因・背景により、病気や経済的な理由による者を含めて登校しない、あるいはしたくともできない状況にあるため年間30日以上欠席した者」と定義されている。\n② 「なぜ行けなくなったのか」と原因を重点的に追求することによって、不登校児童生徒への問題解決の糸口が見つかると考えられる。\n③ 不登校児童生徒への支援の目標は、将来、児童生徒が精神的にも経済的にも自立し、豊かな人生を送れるような、社会的自立を果たすことである。\n④ 不登校の数が増え続けると同時に、不登校の原因や状態像も多様化しているなかで、どのような状況においても登校を刺激しないで、「待つこと」が最も大切である。\n⑤ 不登校児童生徒に対して前籍校で行われてきた支援が、卒業とともに途切れて、また一から始めるのではなく、支援ニーズや支援内容についての情報を異なる校種間で丁寧に共有し、必要なことは引き継ぐ実効的なシステムを築くことが必要である。`,
+                options: [
+                    ["①", "②", "③", "④", "⑤"],
+                    ["①", "②", "③", "④", "⑤"]
+                ],
+                answer: ["③", "⑤"],
+                displayAnswer: "③\n⑤",
+                explanation: "① 「病気や経済的な理由によるものを含めて」ではなく、「病気や経済的な理由によるものを除いたもの」である。\n② 本人が持っている強みや興味・関心も含め、不登校児童生徒の気持ちを理解し、思いに寄り添いつつ、アセスメントに基づく個に応じた具体的な支援を行うことが重要である。\n④ ただ「待つ」のみではなく、個々の状況に応じた適切な働きかけや関わりを持つことの重要性が指摘されている。「待っていてはいけないケース」として、例えばいじめから不登校になったケースや、不登校の背景に虐待が隠れているケースなどが挙げられる。\n※『生徒指導提要』(2022(令和4)年12月)の第10章「不登校」関連部分参照。"
+            },
+            {
+                id: 3,
+                point: 5,
+                pointPerItem: 1,
+                inputCount: 5,
+                ordered: true,
+                labels: ["(1)-①", "(1)-②", "(1)-③", "(1)-④", "(1)-⑤"],
+                text: `いじめ防止対策推進法について、次の各問いに答えよ。\n\n(1) 次の各文は、いじめ防止対策推進法の条文の抜粋である。空欄に当てはまる語句を選べ。\n・この法律において「いじめ」とは、児童等に対して、当該児童等が在籍する学校に在籍している等当該児童等と一定の( ① )にある他の児童等が行う心理的又は( ② )な影響を与える行為(( ③ )を通じて行われるものを含む。)であって、当該行為の対象となった児童等が心身の苦痛を感じているものをいう。\n・学校の設置者及びその設置する学校は、児童等の豊かな情操と道徳心を培い、心の通う対人交流の能力の素地を養うことがいじめの防止に資することを踏まえ、全ての教育活動を通じた( ④ )及び( ⑤ )等の充実を図らなければならない。`,
+                subQuestions: [
+                    { text: "", inputIndices: [0, 1, 2, 3, 4] }
+                ],
+                options: [
+                    ["ア. 物理的", "イ. ソーシャルネットワーキングサービス", "ウ. 奉仕活動", "エ. 人間関係", "オ. 人権教育", "カ. 人的関係", "キ. インターネット", "ク. 道徳教育", "ケ. 体験活動", "コ. 身体的"],
+                    ["ア. 物理的", "イ. ソーシャルネットワーキングサービス", "ウ. 奉仕活動", "エ. 人間関係", "オ. 人権教育", "カ. 人的関係", "キ. インターネット", "ク. 道徳教育", "ケ. 体験活動", "コ. 身体的"],
+                    ["ア. 物理的", "イ. ソーシャルネットワーキングサービス", "ウ. 奉仕活動", "エ. 人間関係", "オ. 人権教育", "カ. 人的関係", "キ. インターネット", "ク. 道徳教育", "ケ. 体験活動", "コ. 身体的"],
+                    ["ア. 物理的", "イ. ソーシャルネットワーキングサービス", "ウ. 奉仕活動", "エ. 人間関係", "オ. 人権教育", "カ. 人的関係", "キ. インターネット", "ク. 道徳教育", "ケ. 体験活動", "コ. 身体的"],
+                    ["ア. 物理的", "イ. ソーシャルネットワーキングサービス", "ウ. 奉仕活動", "エ. 人間関係", "オ. 人権教育", "カ. 人的関係", "キ. インターネット", "ク. 道徳教育", "ケ. 体験活動", "コ. 身体的"]
+                ],
+                answer: ["カ. 人的関係", "ア. 物理的", "キ. インターネット", "ク. 道徳教育", "ケ. 体験活動"],
+                displayAnswer: "(1)-① カ. 人的関係\n(1)-② ア. 物理的\n(1)-③ キ. インターネット\n(1)-④ ク. 道徳教育\n(1)-⑤ ケ. 体験活動",
+                explanation: "・いじめ防止対策推進法第2条第1項参照。\n・いじめ防止対策推進法第15条第1項参照。"
+            },
+            {
+                id: 4,
+                point: 2,
+                pointPerItem: 1,
+                inputCount: 2,
+                ordered: true,
+                labels: ["(2)-①", "(2)-②"],
+                text: `いじめ防止対策推進法について、次の各問いに答えよ。\n\n(2) いじめ防止対策推進法においては、いじめの重大事態として2つの場合を示している。空欄に当てはまる語句を選べ。\n・いじめにより当該学校に在籍する児童等の生命、心身又は( ① )に重大な被害が生じた疑いがあると認めるとき。\n・いじめにより当該学校に在籍する児童等が相当の期間学校を( ② )することを余儀なくされている疑いがあると認めるとき。`,
+                subQuestions: [
+                    { text: "", inputIndices: [0, 1] }
+                ],
+                options: [
+                    ["ア. 学業成績", "イ. 休学", "ウ. 財産", "エ. 物品", "オ. 欠席"],
+                    ["ア. 学業成績", "イ. 休学", "ウ. 財産", "エ. 物品", "オ. 欠席"]
+                ],
+                answer: ["ウ. 財産", "オ. 欠席"],
+                displayAnswer: "(2)-① ウ. 財産\n(2)-② オ. 欠席",
+                explanation: "いじめ防止対策推進法第28条第1項参照。なお、このような重大事態が生じた場合、学校の設置者又は学校は、組織を設け質問票の使用その他の適切な方法によって事実関係を明確にするための調査を行うものとする、ということが定められている。"
+            },
+            {
+                id: 5,
+                point: 3,
+                pointPerItem: 1,
+                inputCount: 3,
+                ordered: true,
+                labels: ["①", "②", "③"],
+                text: `次の文は、生徒指導提要の一部である。空欄に当てはまる語句を選べ。\n\n体罰による指導では、児童生徒に正常な( ① )を養うことはできず、むしろ力による解決への志向を助長することになりかねません。体罰によることなく、児童生徒の( ② )や社会性の育成を図るよう、適切に( ③ )を行い、粘り強く指導することが重要です。`,
+                options: [
+                    ["ア. 判断力", "イ. 規範意識", "ウ. 倫理観", "エ. 教育観", "オ. 懲戒", "カ. 罰則"],
+                    ["ア. 判断力", "イ. 規範意識", "ウ. 倫理観", "エ. 教育観", "オ. 懲戒", "カ. 罰則"],
+                    ["ア. 判断力", "イ. 規範意識", "ウ. 倫理観", "エ. 教育観", "オ. 懲戒", "カ. 罰則"]
+                ],
+                answer: ["ウ. 倫理観", "イ. 規範意識", "オ. 懲戒"],
+                displayAnswer: "① ウ. 倫理観\n② イ. 規範意識\n③ オ. 懲戒",
+                explanation: "『生徒指導提要』(2022(令和4)年12月)の第3章「3.6.2 懲戒と体罰、不適切な指導」「(1)体罰等の禁止及び懲戒について」参照。"
+            }
+        ];
+
+        // 状態変数
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; 
+
+        // フォントサイズ切り替え用の設定
+        const fontSizes = ['normal', 'small', 'xsmall', 'large'];
+        let currentFontSizeIndex = 1;
+
+        // DOMContentLoaded イベントで初期化とイベントリスナーの登録を確実に行う
+        document.addEventListener('DOMContentLoaded', () => {
+            const startScreen = document.getElementById('start-screen');
+            const testScreen = document.getElementById('test-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const questionContent = document.getElementById('question-content');
+            const answerContainer = document.getElementById('answer-container');
+            const questionNavList = document.getElementById('question-nav-list');
+            const confirmModal = document.getElementById('confirm-modal');
+            const drawerOverlay = document.getElementById('drawer-overlay');
+            const drawerMenu = document.getElementById('drawer-menu');
+            const drawerList = document.getElementById('drawer-list');
+
+            // モバイル用メニューの開閉イベント
+            function openDrawer() {
+                drawerMenu.classList.remove('-translate-x-full');
+                drawerOverlay.classList.remove('hidden');
+            }
+
+            function closeDrawer() {
+                drawerMenu.classList.add('-translate-x-full');
+                drawerOverlay.classList.add('hidden');
+            }
+
+            // テスト開始処理
+            function startTest() {
+                questions = [...originalQuestions];
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                
+                startScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                testScreen.classList.remove('hidden');
+                testScreen.classList.add('flex');
+
+                renderNavList();
+                renderQuestion();
+            }
+
+            // 左側の問題ナビゲーションとドロワーメニューの生成
+            function renderNavList() {
+                questionNavList.innerHTML = '';
+                drawerList.innerHTML = '';
+
+                questions.forEach((_, index) => {
+                    // PC用
+                    const navItem = document.createElement('div');
+                    navItem.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                    navItem.innerText = `【問題${index + 1}】`;
+                    
+                    navItem.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                    });
+                    questionNavList.appendChild(navItem);
+
+                    // モバイル用（ドロワーメニュー内）
+                    const li = document.createElement('li');
+                    li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${index === currentQuestionIndex ? 'bg-emerald-100 font-bold theme-text border border-emerald-400' : 'bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700'}`;
+                    li.innerHTML = `<div class="text-center">【問題${index + 1}】</div>`;
+                    
+                    li.addEventListener('click', () => {
+                        if (currentQuestionIndex !== index) {
+                            saveAnswer();
+                            currentQuestionIndex = index;
+                            renderQuestion();
+                        }
+                        closeDrawer(); // 選択後に閉じる
+                    });
+                    drawerList.appendChild(li);
+                });
+            }
+
+            // セレクトボックス生成
+            function createSelectElement(q, i) {
+                const select = document.createElement('select');
+                select.className = 'answer-input multi-input shadow-sm appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring bg-white cursor-pointer fs-base';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                if (q.inputCount === 1 || !q.ordered) {
+                    defaultOption.text = "選択してください";
+                } else {
+                    let prefix = q.labels ? q.labels[i] : '①②③④⑤⑥⑦⑧⑨⑩'[i];
+                    defaultOption.text = `（${prefix}）を選択してください`;
+                }
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
+
+                q.options[i].forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.text = opt;
+                    if (userAnswers[q.id] && userAnswers[q.id][i] === opt) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                return select;
+            }
+
+            // 問題の表示
+            function renderQuestion() {
+                const q = questions[currentQuestionIndex];
+                document.getElementById('question-number').innerText = `【問題${currentQuestionIndex + 1}】（${q.point}点）`;
+                document.getElementById('progress-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
+
+                questionContent.innerHTML = '';
+                answerContainer.innerHTML = '';
+
+                // 問題文を一括で表示
+                if (q.text) {
+                    const p = document.createElement('div');
+                    p.className = 'mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap';
+                    p.innerHTML = q.text;
+                    questionContent.appendChild(p);
+                }
+
+                // 問題文の下部にまとめて解答欄を配置する
+                if (q.inputCount > 0) {
+                    answerContainer.classList.remove('hidden');
+                    const label = document.createElement('label');
+                    label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
+                    label.innerText = '解答を選択してください：';
+                    answerContainer.appendChild(label);
+
+                    for(let i = 0; i < q.inputCount; i++) {
+                        const selectWrap = document.createElement('div');
+                        selectWrap.className = 'mb-3';
+                        const select = createSelectElement(q, i);
+                        selectWrap.appendChild(select);
+                        answerContainer.appendChild(selectWrap);
+                    }
+                } else {
+                    answerContainer.classList.add('hidden');
+                }
+
+                // ナビゲーションの色更新
+                Array.from(questionNavList.children).forEach((el, idx) => {
+                    el.className = `p-2 border rounded font-bold text-center cursor-pointer transition-colors fs-base ${idx === currentQuestionIndex ? 'bg-emerald-100 border-emerald-400 theme-text' : 'bg-gray-200 border-gray-300 hover:bg-gray-300'}`;
+                });
+                Array.from(drawerList.children).forEach((li, idx) => {
+                    li.className = `p-3 mb-1 rounded cursor-pointer transition fs-base ${idx === currentQuestionIndex ? 'bg-emerald-100 font-bold theme-text border border-emerald-400' : 'bg-gray-200 border border-gray-300 hover:bg-gray-300 text-gray-700'}`;
+                });
+
+                // ボタン制御
+                document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+                if (currentQuestionIndex === questions.length - 1) {
+                    document.getElementById('next-btn').classList.add('hidden');
+                    document.getElementById('finish-btn').classList.remove('hidden');
+                } else {
+                    document.getElementById('next-btn').classList.remove('hidden');
+                    document.getElementById('finish-btn').classList.add('hidden');
+                }
+
+                // スクロールリセット（アニメーションなし）
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0; 
+                    document.documentElement.scrollTop = 0;
+                }, 10);
+            }
+
+            function saveAnswer() {
+                const q = questions[currentQuestionIndex];
+                if (q.inputCount) {
+                    const inputs = testScreen.querySelectorAll('.multi-input');
+                    userAnswers[q.id] = Array.from(inputs).map(input => input.value);
+                }
+            }
+
+            function executeScoring() {
+                testScreen.classList.add('hidden');
+                testScreen.classList.remove('flex');
+                resultScreen.classList.remove('hidden');
+                confirmModal.classList.add('hidden');
+
+                let score = 0;
+                let totalPoints = 0;
+                const resultContainer = document.getElementById('result-list');
+                resultContainer.innerHTML = '';
+
+                questions.forEach((q, index) => {
+                    totalPoints += q.point;
+                    let earnedPoint = 0;
+                    const userAnsArray = userAnswers[q.id] || Array(q.inputCount).fill("");
+                    
+                    q.answer.forEach((correctWord, i) => {
+                        if (userAnsArray[i] === correctWord) earnedPoint += q.pointPerItem;
+                    });
+                    
+                    score += earnedPoint;
+                    let markHtml = earnedPoint === q.point ? '<span class="text-red-600 font-bold mr-2 fs-xl">○</span>' : earnedPoint > 0 ? '<span class="text-yellow-600 font-bold mr-2 fs-xl">△</span>' : '<span class="text-blue-600 font-bold mr-2 fs-xl">×</span>';
+
+                    const itemHtml = `
+                        <div class="border border-gray-300 rounded shadow-sm bg-white overflow-hidden">
+                            <div class="bg-emerald-50 px-4 py-2 border-b border-gray-300 text-gray-800 font-bold flex items-center fs-base">
+                                ${markHtml} 【問題${index + 1}】（${q.point}点）
+                            </div>
+                            <div class="p-4 md:p-6">
+                                <div class="mb-6 leading-relaxed fs-lg text-gray-800 whitespace-pre-wrap">${q.text}</div>
+                                <table class="w-full border-collapse">
+                                    <tbody>
+                                        <tr><th class="w-1/3 md:w-1/4 theme-bg text-white p-2 border border-gray-300 text-left fs-sm">正解</th><td class="p-2 border border-gray-300 font-bold whitespace-pre-wrap fs-sm">${q.displayAnswer}</td></tr>
+                                        <tr><th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">学習者解答</th><td class="p-2 border border-gray-300 whitespace-pre-wrap fs-sm ${earnedPoint === q.point ? '' : 'text-red-600 font-bold'}">${userAnsArray.map((ans, idx) => (q.inputCount > 1 ? `(${q.labels ? q.labels[idx] : (idx+1)}) ` : '') + (ans || '未選択')).join('\n')}</td></tr>
+                                        ${q.explanation ? `<tr><th class="theme-bg text-white p-2 border border-gray-300 text-left fs-sm">解説</th><td class="p-2 border border-gray-300 text-gray-700 whitespace-pre-wrap fs-sm">${q.explanation}</td></tr>` : ''}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    resultContainer.insertAdjacentHTML('beforeend', itemHtml);
+                });
+
+                document.getElementById('total-score').innerText = `${score}点 / ${totalPoints}点`;
+                setTimeout(() => { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; }, 10);
+            }
+
+            // フォントサイズ変更
+            document.getElementById('font-size-btn').addEventListener('click', () => {
+                currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+                const scaleMap = {'normal': 1, 'small': 0.85, 'xsmall': 0.7, 'large': 1.15};
+                document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+            });
+
+            // イベントリスナーの登録
+            document.getElementById('mobile-menu-btn').addEventListener('click', openDrawer);
+            document.getElementById('close-menu-btn').addEventListener('click', closeDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
+            document.getElementById('start-btn').addEventListener('click', startTest);
+            document.getElementById('next-btn').addEventListener('click', () => { saveAnswer(); currentQuestionIndex++; renderQuestion(); });
+            document.getElementById('prev-btn').addEventListener('click', () => { saveAnswer(); currentQuestionIndex--; renderQuestion(); });
+            document.getElementById('finish-btn').addEventListener('click', () => { saveAnswer(); confirmModal.classList.remove('hidden'); });
+            document.getElementById('modal-cancel-btn').addEventListener('click', () => confirmModal.classList.add('hidden'));
+            document.getElementById('modal-ok-btn').addEventListener('click', executeScoring);
+            document.getElementById('retry-btn').addEventListener('click', () => { window.location.href = "https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/index.html"; });
+        });
+    </script>
+</body>
+</html>
