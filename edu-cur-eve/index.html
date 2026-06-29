@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教員採用試験 2次面接・教育時事対策ナビ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-active {
+            border-bottom: 3px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 700;
+        }
+        /* スクロールバー非表示（タブやリスト用） */
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <div class="inline-block bg-blue-500 text-xs px-2.5 py-1 rounded-full font-bold mb-2 tracking-wide uppercase">2次試験・面接突破ナビ</div>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">教育時事＆面接受け答え完全攻略</h1>
+                <p class="text-blue-100 text-sm mt-1">最新時事に基づく「30秒で伝わる」実践トレーニング</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2 w-full md:w-auto">
+                <button onclick="switchTab('jiji')" class="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2.5 rounded-lg transition text-sm flex items-center justify-center gap-2 flex-1 md:flex-none">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> 時事まとめ
+                </button>
+                <button onclick="switchTab('interview')" class="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-4 py-2.5 rounded-lg transition text-sm flex items-center justify-center gap-2 shadow-lg shadow-yellow-500/20 flex-1 md:flex-none whitespace-nowrap">
+                    <i data-lucide="mic" class="w-4 h-4"></i> 面接練習へ
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 md:py-8">
+
+        <!-- ナビゲーションタブ -->
+        <div class="flex border-b border-slate-200 mb-6 md:mb-8 overflow-x-auto whitespace-nowrap hide-scrollbar">
+            <button id="tab-btn-jiji" onclick="switchTab('jiji')" class="tab-active py-3 px-4 md:py-4 md:px-6 font-semibold text-sm md:text-base flex items-center gap-2 transition duration-200 flex-shrink-0">
+                <i data-lucide="award" class="w-5 h-5"></i>
+                ① 教育時事まとめ
+            </button>
+            <button id="tab-btn-interview" onclick="switchTab('interview')" class="py-3 px-4 md:py-4 md:px-6 font-medium text-sm md:text-base text-slate-500 hover:text-slate-800 flex items-center gap-2 transition duration-200 flex-shrink-0">
+                <i data-lucide="play-circle" class="w-5 h-5"></i>
+                ② 30秒受け答え訓練
+            </button>
+            <button id="tab-btn-checklist" onclick="switchTab('checklist')" class="py-3 px-4 md:py-4 md:px-6 font-medium text-sm md:text-base text-slate-500 hover:text-slate-800 flex items-center gap-2 transition duration-200 flex-shrink-0">
+                <i data-lucide="check-square" class="w-5 h-5"></i>
+                ③ 知識確認クイズ
+            </button>
+        </div>
+
+        <!-- ================= タブ1: 教育時事 ================= -->
+        <section id="tab-content-jiji" class="space-y-6">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                <p class="text-sm text-blue-800 font-medium">
+                    💡 <strong class="font-bold">面接・論文対策の極意:</strong> 
+                    単に時事用語を覚えるだけでなく、「自治体の具体的施策」や「自分が初任者として教室内でどう実践するか」に結びつけて語れるように準備しましょう。
+                </p>
+            </div>
+
+            <!-- 時事カードグリッド -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="jiji-list">
+                <!-- 動的にJavaScriptで展開します -->
+            </div>
+        </section>
+
+        <!-- ================= タブ2: 面接訓練 ================= -->
+        <section id="tab-content-interview" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                
+                <!-- 左サイド：質問リスト -->
+                <div class="lg:col-span-1 bg-white p-4 rounded-xl shadow-sm border border-slate-200 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] flex flex-col">
+                    <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2 shrink-0">
+                        <i data-lucide="list-video" class="text-blue-500 w-5 h-5"></i> 質問カードを選択
+                    </h3>
+                    <div class="space-y-2 overflow-y-auto hide-scrollbar flex-grow pb-2" id="question-selector">
+                        <!-- 動的に注入 -->
+                    </div>
+                </div>
+
+                <!-- 右サイド：実践パネル -->
+                <div id="practice-panel" class="lg:col-span-2 bg-white p-5 md:p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between scroll-mt-4">
+                    <div>
+                        <!-- 質問見出し -->
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <div>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded" id="active-category">カテゴリ</span>
+                                <h2 class="text-xl font-bold text-slate-900 mt-2" id="active-question">質問文がここに表示されます</h2>
+                            </div>
+                            <!-- 音声ボタン -->
+                            <button onclick="speakActiveQuestion()" class="p-3 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-full transition shadow-sm" title="質問を読み上げる">
+                                <i data-lucide="volume-2" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+
+                        <!-- 30秒タイマーセクション -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div class="flex items-center gap-4">
+                                <div class="relative w-16 h-16 flex items-center justify-center">
+                                    <svg class="absolute w-full h-full transform -rotate-90">
+                                        <circle cx="32" cy="32" r="28" stroke="#e2e8f0" stroke-width="4" fill="transparent" />
+                                        <circle id="timer-circle" cx="32" cy="32" r="28" stroke="#ef4444" stroke-width="4" fill="transparent" stroke-dasharray="176" stroke-dashoffset="0" transition="all 0.1s linear" />
+                                    </svg>
+                                    <span class="text-xl font-extrabold text-slate-800" id="timer-text">30</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800">30秒回答トレーニング</h4>
+                                    <p class="text-xs text-slate-500">面接官に響く長さ(約150〜200文字)の目安です</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button id="btn-timer-start" onclick="toggleTimer()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2">
+                                    <i data-lucide="play" class="w-4 h-4"></i> スタート
+                                </button>
+                                <button onclick="resetTimer()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-lg text-sm transition">
+                                    リセット
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- お手本回答・構成ポイント -->
+                        <div class="border-t border-slate-100 pt-4 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-emerald-600 flex items-center gap-1">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i> お手本解答例 (約30秒)
+                                </h4>
+                                <div class="bg-emerald-50 text-slate-800 p-4 rounded-lg text-sm mt-1 leading-relaxed whitespace-pre-wrap font-medium" id="active-answer">
+                                    解答例がここに表示されます。
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold text-blue-600 flex items-center gap-1">
+                                    <i data-lucide="git-commit" class="w-4 h-4"></i> 自分用カスタマイズ・構成のヒント
+                                </h4>
+                                <div class="bg-blue-50 text-slate-800 p-4 rounded-lg text-sm mt-1 leading-relaxed" id="active-hint">
+                                    ヒントが表示されます。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 自分の回答メモ書き -->
+                    <div class="mt-6 pt-4 border-t border-slate-200">
+                        <label class="block text-sm font-bold text-slate-700 mb-2 flex justify-between items-center">
+                            <span>✍️ マイ回答メモ（ブラウザに自動保存されます）</span>
+                            <span class="text-xs font-normal text-slate-500" id="memo-char-count">0 文字 (目標: 150文字程度)</span>
+                        </label>
+                        <textarea id="my-answer-memo" oninput="saveMemo()" rows="4" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="お手本を参考に、あなたならではの具体的な体験や自治体の施策を盛り込んだオリジナルの回答を作ってみましょう。"></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= タブ3: 一問一答クイズ ================= -->
+        <section id="tab-content-checklist" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="text-indigo-600 w-6 h-6"></i>
+                    教育時事 重要数値・用語一問一答クイズ
+                </h2>
+                <p class="text-sm text-slate-500 mb-6">面接や論文で間違えると致命的な必須知識をカードゲーム感覚でチェック！</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="quiz-container">
+                    <!-- JavaScriptで注入 -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-sm mt-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="mb-2">© 2026 教員採用2次試験 合格応援プロジェクト</p>
+            <p class="text-xs text-slate-600">本アプリのデータは、提供された教員採用二次試験対策メールの時事要点を体系化したものです。</p>
+        </div>
+    </footer>
+
+    <!-- 音声再生用の音声合成警告（任意） -->
+    <div id="audio-toast" class="fixed bottom-4 right-4 bg-slate-800 text-white text-xs px-3 py-2 rounded shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="text-emerald-400 w-4 h-4"></i>
+        <span>読み上げを開始します</span>
+    </div>
+
+    <script>
+        // --- データ定義 ---
+        const jijiData = [
+            {
+                id: 1,
+                title: "不登校対策（COCOLOプラン）",
+                desc: "不登校児童生徒数は過去最多（約30万人）で最重要課題。2023年策定の『COCOLOプラン』に基づく支援方向性は必須。",
+                points: ["学びの保障（オンライン活用、不登校特例校）", "校内外の居場所（支援ルーム、フリースクール）", "誰一人取り残さないためのアウトリーチ（個別アクセス）", "保護者支援、90日以上未支援の解消"],
+                badge: "最重要"
+            },
+            {
+                id: 2,
+                title: "次期学習指導要領（改訂議論）",
+                desc: "2026年以降の試験で出題増予測。現行三本柱（主体的・対話的で深い学び、個別最適な学び、協働的な学び）の深化がカギ。",
+                points: ["知識の構造化と探究的プロセスの重視", "『個別最適な学び』と『協働的な学び』の一体的一体改革", "教科横断的な学び・STEAM教育の推進"],
+                badge: "出題増予測"
+            },
+            {
+                id: 3,
+                title: "情報教育・ICT・生成AI（GIGA2.0）",
+                desc: "1人1台端末の更新期（GIGA2.0）を迎え、日常的な利活用、デジタル教科書の導入、生成AIの適切指導が急務。",
+                points: ["文科省のAIガイドラインの理解", "情報モラル教育（ファクトチェック、著作権）", "校務におけるICT活用による業務削減"],
+                badge: "頻出"
+            },
+            {
+                id: 4,
+                title: "いじめ・自殺予防・生徒指導提要",
+                desc: "児童生徒の自殺者が高止まり、いじめ認知件数も過去最多。12年ぶりに改訂された『生徒指導提要』をベースに答えること。",
+                points: ["『未然防止』『初期対応』『再発防止』の3フェーズ", "組織的な対応（担任一人で抱え込まない）", "SOSの出し方に関する教育の推進"],
+                badge: "危機管理"
+            },
+            {
+                id: 5,
+                title: "教員の働き方改革（給特法改正）",
+                desc: "質の高い教育は教員の心身のゆとりから。給特法改正の方向性や、上限時間制限などの客観的数字の理解が必要。",
+                points: ["残業上限：原則『年間360時間・月平均30時間』", "校務分掌のスリム化・部活動の地域移行", "初任者として『時間意識を持った授業準備』を心掛ける姿勢"],
+                badge: "数値暗記"
+            },
+            {
+                id: 6,
+                title: "日本版DBSとわいせつ行為防止",
+                desc: "2025年以降の超ホットトピック。性犯罪歴の確認制度『日本版DBS』。教員としての圧倒的な服務規律と自覚をアピールする。",
+                points: ["児童生徒性暴力防止法の厳格な遵守", "SNS等を用いた私的なやり取りの完全禁止", "『教育公務員』としての高い職業倫理観"],
+                badge: "倫理・必須"
+            },
+            {
+                id: 7,
+                title: "地域特有の教育課題（自治体ビジョン）",
+                desc: "受験先が最優先している独自施策をインプット。HPの『教育ビジョン』『教育基本計画』のキーワードを引用できるようにする。",
+                points: ["自治体ごとの教育スローガンの確認", "地域・学校・家庭をつなぐ連携施策（コミュニティ・スクールなど）", "特色ある独自の教育課程やデジタル連携"],
+                badge: "自治体別"
+            },
+            {
+                id: 8,
+                title: "危機管理（災害・SNSトラブル）",
+                desc: "大地震等の防災対応、不審者対策、ネットトラブル等。すべてに共通するのは『担任として生徒の生命安全を第一に初期対応する』こと。",
+                points: ["迅速な情報収集と速やかな報告（報連相）", "マニュアルの把握と普段の避難訓練の真剣度向上", "SNSトラブルにおける中立的かつ迅速な事実確認"],
+                badge: "担任の初動"
+            },
+            {
+                id: 9,
+                title: "全国学力調査結果と学習課題",
+                desc: "国算・理科などの得点率変化や、学習・生活習慣質問紙の結果分析。家庭学習の習慣化、生活習慣（睡眠・朝食）の課題改善が必要。",
+                points: ["家庭学習を促す『めあて』と『振り返り』のある授業", "1人1台端末を活用した宿題や自学の工夫", "家庭・PTAとの連携による『生活リズム』の改善要望"],
+                badge: "学力向上"
+            },
+            {
+                id: 10,
+                title: "多文化共生・インクルーシブ教育",
+                desc: "日本語指導が必要な外国人児童の激増、特別支援学級在籍者の増加に伴い、多様性を認め合う教育が強く求められている。",
+                points: ["ユニバーサルデザインを取り入れた全員にわかりやすい授業", "違いを認め合う、温かい学級集団づくり（人権教育）", "関係機関（通級、支援員、日本語指導助手）との積極的連携"],
+                badge: "多様性推進"
+            }
+        ];
+
+        const interviewQuestions = [
+            {
+                id: "q1",
+                category: "不登校（COCOLOプラン）",
+                q: "不登校の児童生徒にはどのように対応しますか？",
+                a: "不登校は「問題行動」ではなく、背景に必ず理由があると捉えます。まずは担任として、安心して本音を話せる関係づくりを最優先にします。\nそのうえで、COCOLOプランの考え方を踏まえ、校内支援チームやスクールカウンセラーと連携し、本人のペースに合わせた学びの保障を行います。登校だけをゴールにせず、オンライン学習や別室登校など多様な選択肢を提示し、自己肯定感を取り戻せるよう支援します。",
+                hint: "【構成の極意】\n1. 不登校を『問題行動とみなさない』寄り添いの姿勢を宣言\n2. 信頼関係づくりを「最優先」と示す\n3. 学校組織(SCやSSWなど)と連携した『COCOLOプラン』の具体化\n4. 多様な学び（オンライン・別室等）による自己肯定感の回復への着地"
+            },
+            {
+                id: "q2",
+                category: "ICT・生成AI",
+                q: "生成AIを教育現場でどのように活用できると考えますか？",
+                a: "生成AIは、子どもの『学びを広げる道具』として効果的に活用できると考えています。例えば、調べ学習の下調べや、文章の改善点を提案させるなど、思考を深める補助として使います。\n一方で、AIの情報は誤りを含むこともあるため、文科省のガイドラインに沿って、情報の真偽を自分で確かめる力を育てる指導を重視します。「AIに任せる部分」と「自分で深く考える部分」のメリハリをつけさせ、確かな情報活用能力を育てます。",
+                hint: "【構成の極意】\n1. AIを「排除」せず「道具・パートナー」として前向きに捉える\n2. 具体的な活用場面（壁打ち、アイデア出し）を提示\n3. 課題（情報の誤り・依存）と文科省ガイドラインの存在に言及\n4. 『最終的には人間がファクトチェックを行う』という情報モラルの育成に繋げる"
+            },
+            {
+                id: "q3",
+                category: "いじめ対応・生徒指導提要",
+                q: "担任する学級でいじめを発見、または疑いを持った場合、どう対応しますか？",
+                a: "生徒指導提要に基づき、まずは『迅速・組織的・継続的』に動きます。担任一人の判断で隠さず、発見後ただちに管理職や生徒指導主任に報告します。\n被害児童の安全確保を最優先に丁寧なヒアリングを行い、事実確認を行います。そのうえで、保護者や関係機関と連携し、多角的な支援チームを結成します。加害・被害双方に寄り添いつつ、クラス全体で相手を思いやる学級経営を再構築します。",
+                hint: "【構成の極意】\n1. 生徒指導提要のキーワード（『迅速』『組織的』『継続的』）を使う\n2. 『一人で抱え込まずすぐに組織に報告』を強調（教頭・校長への速やかな報連相）\n3. 被害者第一主義（安全確保）\n4. 学級全体（観衆・傍観者）の変容にも働きかける学級経営的視点を入れる"
+            },
+            {
+                id: "q4",
+                category: "働き方改革",
+                q: "学校現場の働き方改革について、あなたの考えを聞かせてください。",
+                a: "教員が心身ともに健康で充実していることは、目の前の子どもたちへの『学びの質の向上』に直結すると考えています。業務の優先順位を明確にし、ICTを活用して教材準備や校務を効率化します。\nまた、学年団や校務分掌の中で互いに声を掛け合い、負担を分散させるチーム力も大切にします。働き方改革は『子どものための改革』であるという視点を常に忘れず、時間を意識したプロとしての働き方を徹底します。",
+                hint: "【構成の極意】\n1. 『教員の笑顔が子どもの笑顔に直結する』という正の関連性を示す\n2. 初任者として受動的ではなく、自分で効率化（ICT活用等）する当事者意識を示す\n3. 『チーム学校』『同僚性』への言及（周囲との協働）\n4. 自治体の上限目安「月平均30時間」などの数値への高い意識を見せる"
+            },
+            {
+                id: "q5",
+                category: "学級経営",
+                q: "新採用として、どのような学級づくり（学級経営）をしたいですか？",
+                a: "私は、子どもたちが『安心して挑戦し、たくさん失敗できる学級』を作りたいです。間違いをからかわず、誰もが自分の考えを自信を持って発言できる雰囲気を第一にします。\nそのために毎日の何気ない対話を大切にし、一人ひとりの良さを認めることで自己肯定感を高めます。また、学習規律や学級ルールは子どもたち自身で話し合って決めさせ、主体的に守り、支え合える温かい集団を目指します。",
+                hint: "【構成の極意】\n1. 目指す学級像の「明確なキャッチコピー（例: 安心して失敗できる等）」から始める\n2. 安心・安全な場を作るための具体的な工夫（日常の肯定、対話）を述べる\n3. 規律・ルール（主体性）とのバランスへの言及\n4. 一人ひとりを置いてきぼりにしないという情熱を表す"
+            },
+            {
+                id: "q6",
+                category: "学習指導・改訂議論",
+                q: "これからの学習指導において、どのようなことを大切に授業を行いますか？",
+                a: "これからの学習では、単なる知識の暗記を超え、その知識を『社会や生活で活用して課題を解決する力』が大切になると考えています。そのために探究的な学習や協働学習を取り入れます。\nタブレット端末等の個別最適な学びで基礎知識を固めつつ、グループワークなどの協働的な学びを通じ、多様な他者と関わり合いながら学びを深める授業を展開します。自分で問いを立て、追究する楽しさを味わわせたいです。",
+                hint: "【構成の極意】\n1. 『次期学習指導要領』のキーワード（知識の活用、社会とのつながり）を意識\n2. 『個別最適な学び』と『協働的な学び』の2つの掛け合わせを宣言する\n3. 子ども主体の授業設計（主体的・対話的で深い学び）の実践\n4. 終着点としての『自立した学習者』の育成"
+            }
+        ];
+
+        const quizData = [
+            {
+                q: "COCOLOプランが対象としている不登校児童生徒数は、現在国が発表している数値でおおよそ何万人？",
+                options: ["約10万人", "約20万人", "約30万人", "約50万人"],
+                correctIdx: 2,
+                explanation: "現在、文部科学省発表の不登校児童生徒数は過去最多の「約30万人」となっており、国の最重要課題の一つに位置付けられています。"
+            },
+            {
+                q: "教員の働き方改革における「給特法改正」議論などで示されている、1ヶ月あたりの残業時間の原則上限目安は？",
+                options: ["月平均15時間", "月平均30時間", "月平均45時間", "月平均80時間"],
+                correctIdx: 1,
+                explanation: "働き方改革のガイドラインにおいて、時間外勤務の上限は「年間360時間・月平均30時間」が設定されており、面接でもこの時間意識を問われます。"
+            },
+            {
+                q: "生徒指導の基本方針が記載され、いじめ対応において『未然防止・初期対応・再発防止』を組織的に行うことが示されている、教員のバイブルとなる資料は？",
+                options: ["教育基本法", "学習指導要領解説", "生徒指導提要", "学校保健安全法"],
+                correctIdx: 2,
+                explanation: "2022年12月に12年ぶりの大改訂が行われた『生徒指導提要』です。いじめ、不登校、自殺予防を含む、あらゆる生徒指導の土台となる極めて重要な文書です。"
+            },
+            {
+                q: "2025年以降に本格化する、教職員の採用時に性犯罪歴の有無を確認し、子どもたちをわいせつ行為から守るための日本版新制度の名称は？",
+                options: ["日本版DBS", "児童虐待防止法", "教育公務員特例", "日本版GPS"],
+                correctIdx: 0,
+                explanation: "英国の制度をモデルにした『日本版DBS（DBS：Disclosure and Barring Service）』。子どもを性暴力から守るためのスクリーニング制度であり、教員の倫理観や自覚が強く問われる要因になっています。"
+            },
+            {
+                q: "現行の学習指導要領で謳われている「個別最適な学び」ともう一つの柱は何？",
+                options: ["画一的な学び", "協働的な学び", "ICT依存の学び", "競争的な学び"],
+                correctIdx: 1,
+                explanation: "学習指導要領が目指すのは『個別最適な学び』と『協働的な学び』の一体的な充実です。個々のペースと、他者との協働の両方が求められています。"
+            },
+            {
+                q: "COCOLOプランに基づき、誰一人取り残さない学びの場を提供する一環として設置が推進されている、不登校傾向の生徒に対応した特別措置を行う学校種は？",
+                options: ["フリースクール", "不登校特例校（学びの多様化学校）", "夜間中学校", "通信制小学校"],
+                correctIdx: 1,
+                explanation: "文部科学省は『不登校特例校（呼称：学びの多様化学校）』の設置を全都道府県・政令市に展開する方針を掲げています。面接でも「特例校や別室支援の重要性」を織り交ぜると高評価です。"
+            }
+        ];
+
+        // --- 状態管理 ---
+        let activeQuestionId = "q1";
+        let timerSeconds = 30;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // --- 初期化 ---
+        window.onload = function() {
+            lucide.createIcons();
+            renderJijiCards();
+            renderQuestionSelector();
+            renderQuiz();
+            selectQuestion(activeQuestionId);
+        };
+
+        // --- タブ切り替え ---
+        function switchTab(tab) {
+            const tabs = ['jiji', 'interview', 'checklist'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).classList.remove('tab-active');
+                document.getElementById(`tab-btn-${t}`).classList.add('text-slate-500', 'font-medium');
+            });
+
+            document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).classList.add('tab-active');
+            document.getElementById(`tab-btn-${tab}`).classList.remove('text-slate-500', 'font-medium');
+
+            // タイマー走っている場合は停止
+            if (isTimerRunning) {
+                toggleTimer();
+            }
+        }
+
+        // --- 時事カードレンダリング ---
+        function renderJijiCards() {
+            const container = document.getElementById('jiji-list');
+            container.innerHTML = jijiData.map(item => `
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition duration-300">
+                    <div class="flex justify-between items-start gap-2 mb-3">
+                        <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                            <span class="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">${item.id}</span>
+                            ${item.title}
+                        </h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full font-bold whitespace-nowrap">${item.badge}</span>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">${item.desc}</p>
+                    <div class="space-y-1.5 border-t border-slate-100 pt-3">
+                        <span class="text-xs font-bold text-slate-400 tracking-wider block mb-1">💡 面接・論文で語るポイント:</span>
+                        ${item.points.map(pt => `
+                            <div class="flex items-start gap-2 text-xs text-slate-700">
+                                <span class="text-blue-500 mt-0.5">✔</span>
+                                <span>${pt}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 質問セレクタレンダリング ---
+        function renderQuestionSelector() {
+            const container = document.getElementById('question-selector');
+            container.innerHTML = interviewQuestions.map(item => `
+                <button id="q-btn-${item.id}" onclick="selectQuestion('${item.id}')" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition text-sm flex justify-between items-center group">
+                    <div class="pr-2">
+                        <span class="text-[10px] uppercase tracking-wider font-extrabold text-indigo-600 block mb-0.5">${item.category}</span>
+                        <span class="font-semibold text-slate-800 group-hover:text-blue-600 transition" id="q-title-${item.id}">${item.q}</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                </button>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // --- 質問の選択と内容反映 ---
+        function selectQuestion(id) {
+            activeQuestionId = id;
+            const qObj = interviewQuestions.find(q => q.id === id);
+            
+            // 選択表示のトグル
+            interviewQuestions.forEach(item => {
+                const btn = document.getElementById(`q-btn-${item.id}`);
+                const titleSpan = document.getElementById(`q-title-${item.id}`);
+                if (item.id === id) {
+                    btn.classList.add('bg-blue-50/50', 'border-blue-300', 'ring-2', 'ring-blue-100');
+                    titleSpan.classList.add('text-blue-700');
+                } else {
+                    btn.classList.remove('bg-blue-50/50', 'border-blue-300', 'ring-2', 'ring-blue-100');
+                    titleSpan.classList.remove('text-blue-700');
+                }
+            });
+
+            // コンテンツの反映
+            document.getElementById('active-category').textContent = qObj.category;
+            document.getElementById('active-question').textContent = qObj.q;
+            document.getElementById('active-answer').textContent = qObj.a;
+            document.getElementById('active-hint').innerHTML = qObj.hint.replace(/\n/g, '<br>');
+
+            // ローカルストレージからメモの呼び出し
+            const savedMemo = localStorage.getItem(`memo_${id}`) || "";
+            document.getElementById('my-answer-memo').value = savedMemo;
+            updateCharCount(savedMemo.length);
+
+            // タイマーリセット
+            resetTimer();
+
+            // モバイルなど画面幅が狭い場合、実践パネルへスムーズスクロール（UX向上）
+            if (window.innerWidth < 1024) {
+                const practicePanel = document.getElementById('practice-panel');
+                if(practicePanel) {
+                    practicePanel.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+
+        // --- メモのリアルタイム保存 ---
+        function saveMemo() {
+            const memoVal = document.getElementById('my-answer-memo').value;
+            localStorage.setItem(`memo_${activeQuestionId}`, memoVal);
+            updateCharCount(memoVal.length);
+        }
+
+        function updateCharCount(len) {
+            const el = document.getElementById('memo-char-count');
+            el.textContent = `${len} 文字 (目標: 150〜200文字程度/30秒目安)`;
+            if (len >= 130 && len <= 220) {
+                el.className = "text-xs font-bold text-emerald-600";
+            } else {
+                el.className = "text-xs font-normal text-slate-500";
+            }
+        }
+
+        // --- 30秒タイマー制御 ---
+        function toggleTimer() {
+            const btn = document.getElementById('btn-timer-start');
+            if (isTimerRunning) {
+                // ストップ
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> スタート`;
+                btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2";
+            } else {
+                // スタート
+                if (timerSeconds === 0) resetTimer();
+                isTimerRunning = true;
+                btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i> 一時停止`;
+                btn.className = "bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2";
+                
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    document.getElementById('timer-text').textContent = timerSeconds;
+                    
+                    // 円の進捗アニメーション
+                    const offset = (30 - timerSeconds) * (176 / 30);
+                    document.getElementById('timer-circle').style.strokeDashoffset = offset;
+
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> スタート`;
+                        btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2";
+                        
+                        // アラーム音（ブラウザビープ）
+                        playBeep();
+                    }
+                }, 1000);
+            }
+            lucide.createIcons();
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerSeconds = 30;
+            document.getElementById('timer-text').textContent = "30";
+            document.getElementById('timer-circle').style.strokeDashoffset = 0;
+            
+            const btn = document.getElementById('btn-timer-start');
+            btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> スタート`;
+            btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2";
+            lucide.createIcons();
+        }
+
+        // ビープ音再生
+        function playBeep() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // 880Hz (ラ)
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.stop();
+                }, 500); // 0.5秒間
+            } catch (e) {
+                console.log("Audio API not supported or interaction first is required.");
+            }
+        }
+
+        // --- 質問の音声読み上げ (Web Speech API) ---
+        function speakActiveQuestion() {
+            const questionText = document.getElementById('active-question').textContent;
+            if ('speechSynthesis' in window) {
+                // 既存の読み上げを停止
+                window.speechSynthesis.cancel();
+
+                const u = new SpeechSynthesisUtterance();
+                u.text = "質問します。" + questionText;
+                u.lang = 'ja-JP';
+                u.rate = 1.0; // 少し聞き取りやすく
+                u.pitch = 1.1; // はっきり
+
+                // トーストでお知らせ
+                showToast("面接官の声を再生しています...");
+                window.speechSynthesis.speak(u);
+
+                // 2秒後に自動的にタイマーを始動（実践感アップ）
+                u.onend = () => {
+                    showToast("回答スタート！タイマーを開始します。");
+                    if (!isTimerRunning) {
+                        toggleTimer();
+                    }
+                }
+            } else {
+                showToast("お使いのブラウザは音声読み上げ非対応です。");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('audio-toast');
+            toast.querySelector('span').textContent = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // --- クイズレンダリング＆ロジック ---
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizData.map((item, idx) => `
+                <div class="border border-slate-200 rounded-xl p-5 bg-slate-50/50 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-indigo-600 text-white text-[11px] font-extrabold px-2 py-0.5 rounded">Q.${idx + 1}</span>
+                            <span class="text-xs text-slate-500 font-bold">教育データクイズ</span>
+                        </div>
+                        <p class="font-bold text-slate-800 text-sm mb-4 leading-relaxed">${item.q}</p>
+                        
+                        <div class="space-y-2 mb-4">
+                            ${item.options.map((opt, optIdx) => `
+                                <button onclick="checkAnswer(${idx}, ${optIdx})" id="quiz-btn-${idx}-${optIdx}" class="w-full text-left p-3 rounded-lg bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-200 text-xs font-medium transition flex justify-between items-center">
+                                    <span>${opt}</span>
+                                    <span id="quiz-icon-${idx}-${optIdx}" class="hidden"></span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div id="quiz-explanation-${idx}" class="hidden bg-emerald-50 border border-emerald-100 rounded-lg p-3 text-xs text-emerald-800 mt-2">
+                        <strong class="font-bold text-emerald-900 block mb-1">💡 解説:</strong>
+                        ${item.explanation}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkAnswer(quizIdx, selectedIdx) {
+            const correct = quizData[quizIdx].correctIdx;
+            
+            // 全ての選択肢をロック
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`quiz-btn-${quizIdx}-${i}`);
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-blue-50', 'hover:border-blue-200');
+                
+                const icon = document.getElementById(`quiz-icon-${quizIdx}-${i}`);
+                icon.classList.remove('hidden');
+
+                if (i === correct) {
+                    btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900');
+                    icon.innerHTML = '<span class="text-emerald-600 font-extrabold">⭕ 正解</span>';
+                } else if (i === selectedIdx) {
+                    btn.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-950');
+                    icon.innerHTML = '<span class="text-rose-500 font-extrabold">❌ 誤り</span>';
+                }
+            }
+
+            // 解説を表示
+            document.getElementById(`quiz-explanation-${quizIdx}`).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
