@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>教職・ゼミ シフトボード (GAS連携版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Noto Sans JP', 'sans-serif'], },
+                    fontSize: { 'xxs': '10px', 'xs': '11px', 'sm': '13px', 'base': '14px', }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
+        .mobile-container { max-width: 412px; min-height: 100vh; margin: 0 auto; background-color: #f8fafc; box-shadow: 0 0 20px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; overflow-x: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .nav-active { color: #3b82f6; }
+        .confirmed-event { box-shadow: 0 0 0 2px #fbbf24; background-image: linear-gradient(to right, rgba(251,191,36,0.1), transparent); }
+    </style>
+</head>
+<body class="bg-slate-100 flex justify-center items-stretch min-h-screen">
+
+    <div class="mobile-container w-full flex flex-col justify-between shadow-2xl border-x border-slate-200 relative">
+        
+        <!-- ヘッダー -->
+        <header class="bg-gradient-to-r from-teal-600 to-indigo-700 text-white px-3 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-md">
+            <div class="flex items-center gap-1.5">
+                <div class="bg-white/20 p-1 rounded-lg relative">
+                    <i class="fa-solid fa-calendar-check text-xs"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-wide leading-none">共有シフトボード</h1>
+                    <p class="text-[9px] text-teal-100 mt-0.5">スプレッドシート連動中</p>
+                </div>
+            </div>
+            <button id="btn-quick-add" class="bg-white/20 hover:bg-white/30 text-white py-1 px-2.5 rounded-full text-xxs font-medium flex items-center gap-1 transition-all shadow-sm">
+                <i class="fa-solid fa-plus text-[9px]"></i> 予定追加
+            </button>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="flex-1 overflow-y-auto px-2.5 py-3 no-scrollbar pb-24 relative">
+            
+            <!-- 1. カレンダータブ -->
+            <section id="tab-calendar" class="tab-content flex flex-col gap-3">
+                <!-- フィルターボタン -->
+                <div class="flex gap-1 overflow-x-auto pb-1 no-scrollbar text-xxs">
+                    <button data-filter="all" class="filter-btn active-filter bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full font-medium whitespace-nowrap border border-indigo-100">すべて</button>
+                    <button data-filter="volunteer" class="filter-btn bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium whitespace-nowrap border border-transparent"><i class="fa-solid fa-hands-helping text-emerald-600 mr-0.5"></i> ボランティア</button>
+                    <button data-filter="seminar" class="filter-btn bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium whitespace-nowrap border border-transparent"><i class="fa-solid fa-book-open text-blue-600 mr-0.5"></i> ゼミ</button>
+                    <button data-filter="school" class="filter-btn bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium whitespace-nowrap border border-transparent"><i class="fa-solid fa-school text-purple-600 mr-0.5"></i> 学校・テスト</button>
+                    <button data-filter="personal" class="filter-btn bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium whitespace-nowrap border border-transparent"><i class="fa-solid fa-user text-amber-600 mr-0.5"></i> 個人</button>
+                </div>
+
+                <!-- カレンダー -->
+                <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 relative">
+                    <div id="calendar-loading" class="absolute inset-0 bg-white/80 z-10 flex items-center justify-center hidden rounded-xl">
+                        <i class="fa-solid fa-spinner fa-spin text-indigo-500 text-xl"></i>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <button id="btn-prev-month" class="text-slate-500 hover:bg-slate-100 p-1.5 rounded-full text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+                        <h2 id="calendar-month-year" class="font-bold text-xs text-slate-700">2026年7月</h2>
+                        <button id="btn-next-month" class="text-slate-500 hover:bg-slate-100 p-1.5 rounded-full text-xs"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="grid grid-cols-7 text-center text-xxs font-bold text-slate-400 mb-1 border-b pb-1 border-slate-100">
+                        <div class="text-rose-500">日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div class="text-sky-500">土</div>
+                    </div>
+                    <div id="calendar-days" class="grid grid-cols-7 gap-y-1 text-center"></div>
+                </div>
+
+                <!-- 選択日の予定 -->
+                <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 min-h-[150px]">
+                    <div class="flex items-center justify-between mb-2 border-b pb-1.5 border-slate-100">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-3 bg-indigo-500 rounded-full"></span>
+                            <h3 id="selected-date-label" class="font-bold text-xs text-slate-700">選択日の予定</h3>
+                        </div>
+                        <span id="selected-date-count" class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-full text-[10px] font-bold">0件</span>
+                    </div>
+                    <div id="day-events-list" class="flex flex-col gap-2"></div>
+                </div>
+            </section>
+
+            <!-- 2. リストタブ -->
+            <section id="tab-timeline" class="tab-content hidden flex flex-col gap-3">
+                <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100">
+                    <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
+                        <h3 class="font-bold text-xs text-slate-700"><i class="fa-solid fa-list-ul text-teal-600 mr-1"></i>今後の全日程一覧</h3>
+                        <span id="total-events-count" class="text-xxs text-slate-500 font-semibold bg-slate-100 px-1.5 py-0.5 rounded">0件</span>
+                    </div>
+                    <div id="timeline-events-list" class="flex flex-col gap-2 max-h-[70vh] overflow-y-auto pr-1 no-scrollbar pb-4"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 予定追加・編集モーダル -->
+        <div id="event-modal" class="fixed inset-0 bg-black/50 z-50 flex items-end justify-center hidden opacity-0 transition-opacity duration-300">
+            <div id="event-modal-content" class="bg-white w-full max-w-[412px] rounded-t-2xl p-4 shadow-xl transform translate-y-full transition-transform duration-300 max-h-[90vh] overflow-y-auto no-scrollbar">
+                <div class="flex items-center justify-between border-b pb-2.5 mb-3 sticky top-0 bg-white z-10">
+                    <h3 id="modal-title" class="font-bold text-xs text-slate-800">予定の追加</h3>
+                    <button id="btn-close-modal" class="text-slate-400 hover:text-slate-600 p-1 bg-slate-100 rounded-full w-6 h-6 flex items-center justify-center"><i class="fa-solid fa-xmark text-xs"></i></button>
+                </div>
+
+                <form id="event-form" class="flex flex-col gap-3 text-xs">
+                    <input type="hidden" id="event-id">
+                    
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-[10px]">予定名 *</label>
+                        <input type="text" id="event-title" required placeholder="例：算数ボランティア、ゼミ、テスト" class="w-full border border-slate-200 rounded p-1.5 text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-slate-50">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-[10px]">区分 *</label>
+                        <div class="flex gap-1">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="event-type" value="volunteer" class="peer hidden" checked>
+                                <div class="text-center py-1 border border-slate-200 rounded peer-checked:bg-emerald-50 peer-checked:border-emerald-500 peer-checked:text-emerald-700 text-slate-500 font-semibold text-[9px] flex flex-col items-center justify-center h-full">
+                                    <i class="fa-solid fa-hands-helping mb-0.5"></i>ボランティア
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="event-type" value="seminar" class="peer hidden">
+                                <div class="text-center py-1 border border-slate-200 rounded peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-700 text-slate-500 font-semibold text-[9px] flex flex-col items-center justify-center h-full">
+                                    <i class="fa-solid fa-book-open mb-0.5"></i>ゼミ
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="event-type" value="school" class="peer hidden">
+                                <div class="text-center py-1 border border-slate-200 rounded peer-checked:bg-purple-50 peer-checked:border-purple-500 peer-checked:text-purple-700 text-slate-500 font-semibold text-[9px] flex flex-col items-center justify-center h-full">
+                                    <i class="fa-solid fa-school mb-0.5"></i>学校
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="event-type" value="personal" class="peer hidden">
+                                <div class="text-center py-1 border border-slate-200 rounded peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-slate-500 font-semibold text-[9px] flex flex-col items-center justify-center h-full">
+                                    <i class="fa-solid fa-user mb-0.5"></i>個人
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <div class="col-span-1">
+                            <label class="block text-slate-500 font-bold mb-1 text-[10px]">日付 *</label>
+                            <input type="date" id="event-date" required class="w-full border border-slate-200 rounded p-1.5 text-xs focus:outline-none bg-slate-50">
+                        </div>
+                        <div>
+                            <label class="block text-slate-500 font-bold mb-1 text-[10px]">開始 *</label>
+                            <input type="time" id="event-start" required class="w-full border border-slate-200 rounded p-1.5 text-xs focus:outline-none bg-slate-50">
+                        </div>
+                        <div>
+                            <label class="block text-slate-500 font-bold mb-1 text-[10px]">終了 *</label>
+                            <input type="time" id="event-end" required class="w-full border border-slate-200 rounded p-1.5 text-xs focus:outline-none bg-slate-50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-[10px]">参加者・担当者名</label>
+                        <input type="text" id="event-members" placeholder="例：佐藤、高橋" class="w-full border border-slate-200 rounded p-1.5 text-xs focus:outline-none bg-slate-50">
+                        <p class="text-[8px] text-slate-400 mt-0.5">※複数いる場合はカンマで区切るか、自由に記入してください</p>
+                    </div>
+
+                    <div class="bg-slate-50 p-2 rounded border border-slate-200 flex flex-col gap-2 mt-1">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="event-confirmed" class="rounded text-indigo-600 focus:ring-indigo-500 h-3 w-3">
+                            <span class="text-[10px] font-bold text-slate-700"><i class="fa-solid fa-star text-amber-400 mr-1"></i>この予定を「確定」にする (強調表示)</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-500 font-bold mb-1 text-[10px]">メモ・場所 (任意)</label>
+                        <input type="text" id="event-memo" placeholder="例：302教室、持ち物など" class="w-full border border-slate-200 rounded p-1.5 text-xs focus:outline-none bg-slate-50">
+                    </div>
+
+                    <div class="flex gap-2 mt-2 pt-3 border-t border-slate-100">
+                        <button type="button" id="btn-delete-event" class="hidden bg-rose-50 text-rose-600 hover:bg-rose-100 font-medium py-1.5 px-3 rounded transition-colors text-xxs flex items-center gap-1 border border-rose-100">
+                            <i class="fa-regular fa-trash-can"></i> 削除
+                        </button>
+                        <button type="submit" id="btn-submit-event" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition-all text-xs text-center shadow flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> シートへ保存・同期
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- トースト通知 -->
+        <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-slate-800/90 text-white text-[10px] font-semibold px-4 py-2 rounded-full shadow-lg z-50 pointer-events-none opacity-0 transition-opacity duration-300 flex items-center gap-1.5 whitespace-nowrap">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+            <span id="toast-message">同期しました</span>
+        </div>
+
+        <!-- ボトムナビゲーション -->
+        <nav class="bg-white border-t border-slate-200 flex justify-around items-center py-1 px-1.5 sticky bottom-0 z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] text-slate-400">
+            <button data-tab="calendar" class="nav-btn nav-active flex flex-col items-center gap-0.5 py-1 flex-1">
+                <i class="fa-regular fa-calendar-days text-sm"></i><span class="text-[9px] font-bold">カレンダー</span>
+            </button>
+            <button data-tab="timeline" class="nav-btn flex flex-col items-center gap-0.5 py-1 flex-1">
+                <i class="fa-solid fa-list-ul text-sm"></i><span class="text-[9px] font-bold">一覧</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        // 固定のGAS Webhook URL (ユーザー提供)
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx74arduTcqAtInI80tfXG2vgNQMzBAF9UzQJ9vk-kaG6c-QaqYmioJNMqGNYWQkI0i/exec";
+
+        // 初期データ (PDFから抽出した2026年夏のボランティア日程等)
+        let events = [
+            { id: 'init_1', date: "2026-07-20", startTime: "09:00", endTime: "17:00", title: "SUMMER FES IN CAN!P DAY1", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_2', date: "2026-07-23", startTime: "09:00", endTime: "17:00", title: "ノボルトで登りまくれ！", type: "volunteer", status: "tentative", members: "", memo: "ノボルト" },
+            { id: 'init_3', date: "2026-07-24", startTime: "09:00", endTime: "17:00", title: "スポッチャへGO！", type: "volunteer", status: "tentative", members: "", memo: "ラウンドワン博多" },
+            { id: 'init_4', date: "2026-07-29", startTime: "09:00", endTime: "17:00", title: "夏こそひんやり！氷の上でスケート", type: "volunteer", status: "tentative", members: "", memo: "オービジョンアイスアリーナ" },
+            { id: 'init_5', date: "2026-08-03", startTime: "09:00", endTime: "15:00", title: "竹で作ろう！流しそうめん＆ランタン", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_6', date: "2026-08-04", startTime: "09:00", endTime: "15:00", title: "ピクニカ共和国で動物とふれあおう！", type: "volunteer", status: "tentative", members: "", memo: "ピクニカ共和国" },
+            { id: 'init_7', date: "2026-08-05", startTime: "09:00", endTime: "15:00", title: "オリジナル風鈴を作ろう！", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_8', date: "2026-08-05", startTime: "07:30", endTime: "23:59", title: "【泊まり】壱岐シーカヤック(Day1)", type: "volunteer", status: "tentative", members: "", memo: "長崎" },
+            { id: 'init_9', date: "2026-08-06", startTime: "00:00", endTime: "18:00", title: "【泊まり】壱岐シーカヤック(Day2)", type: "volunteer", status: "tentative", members: "", memo: "長崎" },
+            { id: 'init_10', date: "2026-08-06", startTime: "10:00", endTime: "15:00", title: "キミが科学者☆サイエンスショー", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_11', date: "2026-08-07", startTime: "09:00", endTime: "17:00", title: "マリンワールドへ行こう！", type: "volunteer", status: "tentative", members: "", memo: "マリンワールド" },
+            { id: 'init_12', date: "2026-08-10", startTime: "09:00", endTime: "15:00", title: "はじめてのソーセージ作り", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_13', date: "2026-08-17", startTime: "12:00", endTime: "17:00", title: "城南市民プール", type: "volunteer", status: "tentative", members: "", memo: "水泳帽必須" },
+            { id: 'init_14', date: "2026-08-18", startTime: "09:00", endTime: "15:00", title: "生地から作る！ピザパーティー", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_15', date: "2026-08-19", startTime: "09:00", endTime: "15:00", title: "クッキー＆肉まんづくり！", type: "volunteer", status: "tentative", members: "", memo: "KCC" },
+            { id: 'init_16', date: "2026-08-20", startTime: "09:00", endTime: "15:00", title: "わくわくスイカ割り大会！", type: "volunteer", status: "tentative", members: "", memo: "KCC" }
+        ];
+
+        // 日付管理
+        const now = new Date();
+        // 初期表示を2026年7月にする
+        let currentYear = 2026;
+        let currentMonth = 6; // 0-indexed (July)
+        const formatDate = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        let selectedDateStr = "2026-07-20"; // デフォルト選択日
+        let activeFilter = "all";
+
+        const els = {
+            calDays: document.getElementById('calendar-days'),
+            monthYear: document.getElementById('calendar-month-year'),
+            dayEventsList: document.getElementById('day-events-list'),
+            dateLabel: document.getElementById('selected-date-label'),
+            dateCount: document.getElementById('selected-date-count'),
+            timelineList: document.getElementById('timeline-events-list'),
+            totalCount: document.getElementById('total-events-count'),
+            toast: document.getElementById('toast'),
+            toastMsg: document.getElementById('toast-message'),
+            toastIcon: document.getElementById('toast-icon'),
+            modal: document.getElementById('event-modal'),
+            modalContent: document.getElementById('event-modal-content'),
+            calLoading: document.getElementById('calendar-loading')
+        };
+
+        // アプリ起動時のデータ取得と描画
+        async function initApp() {
+            renderAll(); // まず初期データでUIを描画する（カレンダー非表示対策）
+            
+            try {
+                els.calLoading.classList.remove('hidden');
+                // GASからデータ取得を試みる (CORSの制限がある場合エラーになるが、ローカルデータがあるのでOK)
+                const response = await fetch(GAS_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        // 簡単なパース（GAS側の出力形式に依存）
+                        const gasEvents = data.map((row, i) => ({
+                            id: 'gas_' + i,
+                            date: row.date || row['日付'],
+                            startTime: row.startTime || row['開始'] || "00:00",
+                            endTime: row.endTime || row['終了'] || "23:59",
+                            title: row.title || row['予定名'] || "名称未設定",
+                            type: convertTypeStr(row.type || row['区分']),
+                            status: (row.status === '確定' || row['ステータス'] === '確定') ? 'confirmed' : 'tentative',
+                            members: row.members || row['参加メンバー'] || "",
+                            memo: row.memo || row['メモ'] || ""
+                        })).filter(e => e.date);
+                        
+                        if(gasEvents.length > 0) {
+                            events = gasEvents; // GASデータで上書き
+                            showToast("クラウドから最新データを取得しました");
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log("GASからの取得エラー(CORS等)。ローカルデータを使用します。", error);
+                // showToast("スプレッドシートへの接続制限によりローカルデータを表示します", false);
+            } finally {
+                els.calLoading.classList.add('hidden');
+                renderAll(); // 取得結果を反映
+            }
+        }
+
+        function convertTypeStr(str) {
+            if(str === 'ボランティア') return 'volunteer';
+            if(str === 'ゼミ') return 'seminar';
+            if(str === '学校') return 'school';
+            if(str === '個人') return 'personal';
+            return 'volunteer';
+        }
+
+        function renderAll() {
+            try {
+                renderCalendar();
+                renderSelectedDayEvents();
+                renderTimeline();
+            } catch(e) {
+                console.error("描画エラー:", e); // カレンダーが消える原因のデバッグ用
+            }
+        }
+
+        function renderCalendar() {
+            els.monthYear.textContent = `${currentYear}年${currentMonth + 1}月`;
+            const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+            const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
+
+            els.calDays.innerHTML = "";
+            
+            // 前月の余白
+            for (let i = firstDayIndex; i > 0; i--) { 
+                els.calDays.innerHTML += `<div class="text-slate-300 text-xxs py-1 opacity-40">${prevLastDay - i + 1}</div>`; 
+            }
+
+            // 当月の日付
+            for (let i = 1; i <= lastDay; i++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const isSelected = dateStr === selectedDateStr;
+                const isToday = dateStr === formatDate(new Date());
+                
+                let dayEvents = events.filter(e => e.date === dateStr);
+                if(activeFilter !== 'all') dayEvents = dayEvents.filter(e => e.type === activeFilter);
+
+                const hasConfirmed = dayEvents.some(e => e.status === 'confirmed');
+
+                const btn = document.createElement("button");
+                let dayClass = "relative flex flex-col items-center justify-between py-1 rounded-lg text-xxs font-bold transition-all h-9 w-full ";
+                if (isSelected) dayClass += "bg-indigo-600 text-white shadow-md ";
+                else if (isToday) dayClass += "bg-indigo-50 text-indigo-700 border border-indigo-200 ";
+                else dayClass += "hover:bg-slate-100 text-slate-700 ";
+                
+                if (hasConfirmed && !isSelected) dayClass += " ring-1 ring-amber-400 bg-amber-50/30 ";
+
+                btn.className = dayClass;
+                btn.onclick = () => { selectedDateStr = dateStr; renderCalendar(); renderSelectedDayEvents(); };
+
+                const dateSpan = document.createElement("span");
+                dateSpan.textContent = i;
+                if (!isSelected && !isToday) {
+                    const dow = new Date(currentYear, currentMonth, i).getDay();
+                    if (dow === 0) dateSpan.className = "text-rose-500";
+                    if (dow === 6) dateSpan.className = "text-sky-500";
+                }
+                btn.appendChild(dateSpan);
+
+                const dots = document.createElement("div");
+                dots.className = "flex gap-[2px] mt-0.5 h-1 justify-center w-full px-1 overflow-hidden";
+                dayEvents.slice(0, 4).forEach(ev => {
+                    const dot = document.createElement("span");
+                    let dotCol = "bg-slate-400";
+                    if (ev.type === "volunteer") dotCol = "bg-emerald-500";
+                    else if (ev.type === "seminar") dotCol = "bg-blue-500";
+                    else if (ev.type === "school") dotCol = "bg-purple-500";
+                    else if (ev.type === "personal") dotCol = "bg-amber-500";
+                    
+                    dot.className = `w-1 h-1 rounded-full ${isSelected ? 'bg-white' : dotCol} shrink-0`;
+                    dots.appendChild(dot);
+                });
+                btn.appendChild(dots);
+                els.calDays.appendChild(btn);
+            }
+        }
+
+        function renderSelectedDayEvents() {
+            const parts = selectedDateStr.split("-");
+            if(parts.length !== 3) return;
+            const [y, m, d] = parts.map(Number);
+            const daysJP = ["日", "月", "火", "水", "木", "金", "土"];
+            els.dateLabel.textContent = `${m}月${d}日(${daysJP[new Date(y, m - 1, d).getDay()]})`;
+
+            let dayEvents = events.filter(e => e.date === selectedDateStr);
+            if(activeFilter !== 'all') dayEvents = dayEvents.filter(e => e.type === activeFilter);
+            els.dateCount.textContent = `${dayEvents.length}件`;
+
+            if (dayEvents.length === 0) {
+                els.dayEventsList.innerHTML = `<div class="text-center py-6 text-slate-400 text-xxs bg-slate-50 rounded-lg border border-dashed border-slate-200">予定はありません</div>`;
+                return;
+            }
+
+            dayEvents.sort((a, b) => a.startTime.localeCompare(b.startTime));
+            els.dayEventsList.innerHTML = "";
+
+            dayEvents.forEach(ev => {
+                const card = document.createElement("div");
+                card.onclick = () => window.openEditEventModal(ev);
+                
+                let bTheme = "border-l-4 border-slate-300", badge = "bg-slate-100 text-slate-600", icon = "";
+                if (ev.type === "volunteer") { bTheme = "border-l-4 border-emerald-400 bg-emerald-50/30"; badge = "bg-emerald-100 text-emerald-700"; icon = "fa-hands-helping"; }
+                else if (ev.type === "seminar") { bTheme = "border-l-4 border-blue-400 bg-blue-50/30"; badge = "bg-blue-100 text-blue-700"; icon = "fa-book-open"; }
+                else if (ev.type === "school") { bTheme = "border-l-4 border-purple-400 bg-purple-50/30"; badge = "bg-purple-100 text-purple-700"; icon = "fa-school"; }
+                else if (ev.type === "personal") { bTheme = "border-l-4 border-amber-400 bg-amber-50/30"; badge = "bg-amber-100 text-amber-700"; icon = "fa-user"; }
+
+                let extraClass = ev.status === 'confirmed' ? 'confirmed-event' : '';
+                card.className = `flex flex-col gap-1 p-2 rounded-lg border border-slate-100 cursor-pointer hover:shadow-sm transition-all ${bTheme} ${extraClass}`;
+                
+                let confirmedBadge = ev.status === 'confirmed' ? `<span class="text-amber-500 text-[10px] ml-1"><i class="fa-solid fa-star"></i> 確定</span>` : '';
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-1">
+                        <span class="font-bold text-slate-800 text-[11px] leading-tight flex-1">${ev.title} ${confirmedBadge}</span>
+                        <span class="px-1 py-0.5 rounded text-[8px] font-bold shrink-0 ${badge}"><i class="fa-solid ${icon} mr-0.5"></i>${ev.type==='volunteer'?'ボランティア':ev.type==='seminar'?'ゼミ':ev.type==='school'?'学校':'個人'}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 mt-0.5">
+                        <div class="flex items-center gap-1 font-mono"><i class="fa-regular fa-clock text-slate-400"></i>${ev.startTime}-${ev.endTime}</div>
+                        ${ev.members ? `<div class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600 truncate max-w-[50%]"><i class="fa-solid fa-user-check mr-1 text-slate-400"></i>${ev.members}</div>` : (ev.type==='volunteer' ? `<div class="text-[8px] border border-slate-300 text-slate-400 px-1 rounded">未定(募集中)</div>` : '')}
+                    </div>
+                    ${ev.memo ? `<div class="text-[9px] text-slate-500 bg-white p-1 rounded border border-slate-100 mt-1 truncate"><i class="fa-solid fa-location-dot text-slate-400 mr-0.5"></i>${ev.memo}</div>` : ''}
+                `;
+                els.dayEventsList.appendChild(card);
+            });
+        }
+
+        function renderTimeline() {
+            let allEvents = events;
+            if(activeFilter !== 'all') allEvents = allEvents.filter(e => e.type === activeFilter);
+            
+            if (allEvents.length === 0) {
+                els.timelineList.innerHTML = `<div class="text-center py-10 text-slate-400 text-xxs">予定はありません</div>`;
+                els.totalCount.textContent = "0件";
+                return;
+            }
+            els.totalCount.textContent = `${allEvents.length}件`;
+            // 日付順、時間順にソート
+            allEvents.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.startTime.localeCompare(b.startTime));
+
+            let lastDate = "";
+            els.timelineList.innerHTML = "";
+            allEvents.forEach(ev => {
+                if (ev.date !== lastDate) {
+                    lastDate = ev.date;
+                    const parts = ev.date.split("-");
+                    if(parts.length===3) {
+                        const [y, m, d] = parts.map(Number);
+                        const daysJP = ["日", "月", "火", "水", "木", "金", "土"];
+                        const dateHeader = document.createElement("div");
+                        dateHeader.className = "text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded mt-2 first:mt-0 sticky top-0 z-10 shadow-sm";
+                        dateHeader.textContent = `${m}月${d}日(${daysJP[new Date(y,m-1,d).getDay()]})`;
+                        els.timelineList.appendChild(dateHeader);
+                    }
+                }
+
+                let bCol = "border-slate-300";
+                if (ev.type === "volunteer") bCol = "border-emerald-400";
+                else if (ev.type === "seminar") bCol = "border-blue-400";
+                else if (ev.type === "school") bCol = "border-purple-400";
+                else if (ev.type === "personal") bCol = "border-amber-400";
+
+                let extraClass = ev.status === 'confirmed' ? 'confirmed-event' : '';
+                const card = document.createElement("div");
+                card.onclick = () => window.openEditEventModal(ev);
+                card.className = `flex bg-white p-2 rounded-lg border border-slate-100 cursor-pointer hover:bg-slate-50 border-l-2 ${bCol} items-center gap-2 ${extraClass}`;
+                
+                card.innerHTML = `
+                    <div class="font-mono text-[9px] text-slate-500 flex flex-col items-center w-8 shrink-0">
+                        <span>${ev.startTime}</span><span class="text-[7px] text-slate-300">|</span><span>${ev.endTime}</span>
+                    </div>
+                    <div class="flex-1 min-w-0 border-l border-slate-100 pl-2 py-0.5">
+                        <h4 class="font-bold text-slate-700 text-[11px] truncate flex items-center">
+                            ${ev.status==='confirmed'?'<i class="fa-solid fa-star text-amber-400 mr-1 text-[9px]"></i>':''}
+                            ${ev.title}
+                        </h4>
+                        <div class="text-[9px] text-slate-400 truncate mt-0.5">${ev.members ? `<i class="fa-solid fa-user-check mr-0.5"></i>${ev.members}` : ''}</div>
+                    </div>
+                `;
+                els.timelineList.appendChild(card);
+            });
+        }
+
+
+        // --- モーダル・保存関連 ---
+        window.openNewEventModal = (dateStr = selectedDateStr) => {
+            document.getElementById("modal-title").textContent = "新規予定";
+            document.getElementById("event-id").value = "";
+            document.getElementById("event-title").value = "";
+            document.querySelector(`input[name="event-type"][value="volunteer"]`).checked = true;
+            document.getElementById("event-date").value = dateStr;
+            document.getElementById("event-start").value = "09:00";
+            document.getElementById("event-end").value = "15:00";
+            document.getElementById("event-members").value = "";
+            document.getElementById("event-memo").value = "";
+            document.getElementById("event-confirmed").checked = false;
+            
+            document.getElementById("btn-delete-event").classList.add("hidden");
+            showModal();
+        };
+
+        window.openEditEventModal = (ev) => {
+            document.getElementById("modal-title").textContent = "予定の編集";
+            document.getElementById("event-id").value = ev.id;
+            document.getElementById("event-title").value = ev.title;
+            document.querySelector(`input[name="event-type"][value="${ev.type}"]`).checked = true;
+            document.getElementById("event-date").value = ev.date;
+            document.getElementById("event-start").value = ev.startTime;
+            document.getElementById("event-end").value = ev.endTime;
+            document.getElementById("event-members").value = ev.members || "";
+            document.getElementById("event-memo").value = ev.memo || "";
+            document.getElementById("event-confirmed").checked = ev.status === 'confirmed';
+            
+            document.getElementById("btn-delete-event").classList.remove("hidden");
+            showModal();
+        };
+
+        // スプレッドシート(GAS)へデータ送信
+        async function syncToSpreadsheet(eventData) {
+            const submitBtn = document.getElementById("btn-submit-event");
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 送信中...';
+            submitBtn.disabled = true;
+
+            try {
+                // GASはPOSTリクエストを要求する仕様（no-corsを使用してCORSブロックを回避）
+                // ただしno-corsはレスポンスの中身を読めないため、送信成功とみなしてUIを更新する
+                await fetch(GAS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify([eventData])
+                });
+                
+                showToast("スプレッドシートへ保存しました！", true);
+            } catch (err) {
+                console.error("GAS同期エラー:", err);
+                showToast("シート送信エラー。ローカルにのみ保存されました。", false);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                closeModal();
+            }
+        }
+
+        document.getElementById("event-form").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const id = document.getElementById("event-id").value || "ev_" + Date.now();
+            const evData = {
+                id,
+                title: document.getElementById("event-title").value.trim(),
+                type: document.querySelector('input[name="event-type"]:checked').value,
+                date: document.getElementById("event-date").value,
+                startTime: document.getElementById("event-start").value,
+                endTime: document.getElementById("event-end").value,
+                members: document.getElementById("event-members").value.trim(),
+                memo: document.getElementById("event-memo").value.trim(),
+                status: document.getElementById("event-confirmed").checked ? 'confirmed' : 'tentative'
+            };
+
+            // ローカルデータを更新
+            const index = events.findIndex(e => e.id === id);
+            if (index > -1) {
+                events[index] = evData;
+            } else {
+                events.push(evData);
+            }
+
+            const parts = evData.date.split("-");
+            if(parts.length === 3) {
+                currentYear = parseInt(parts[0]);
+                currentMonth = parseInt(parts[1]) - 1;
+                selectedDateStr = evData.date;
+            }
+
+            renderAll();
+            syncToSpreadsheet(evData); // GASへ非同期で送信
+        });
+
+        document.getElementById("btn-delete-event").addEventListener("click", () => {
+            const id = document.getElementById("event-id").value;
+            if(!id) return;
+            if(confirm("この予定を削除しますか？")) {
+                events = events.filter(e => e.id !== id);
+                renderAll();
+                closeModal();
+                showToast("予定を削除しました", true);
+                // 削除機能もGASに送る場合は、ステータスを'deleted'にしてPOSTするなどの工夫が必要ですが、今回はローカルからの削除を優先
+            }
+        });
+
+        function showModal() { els.modal.classList.remove("hidden"); setTimeout(() => { els.modal.classList.remove("opacity-0"); els.modalContent.classList.remove("translate-y-full"); }, 10); }
+        function closeModal() { els.modal.classList.add("opacity-0"); els.modalContent.classList.add("translate-y-full"); setTimeout(() => els.modal.classList.add("hidden"), 300); }
+        document.getElementById("btn-close-modal").onclick = closeModal;
+        document.getElementById("btn-quick-add").onclick = () => window.openNewEventModal();
+
+        function showToast(msg, isSuccess = true) { 
+            els.toastMsg.textContent = msg; 
+            if(isSuccess) {
+                els.toastIcon.className = "fa-solid fa-circle-check text-emerald-400";
+            } else {
+                els.toastIcon.className = "fa-solid fa-triangle-exclamation text-amber-400";
+            }
+            els.toast.classList.remove("opacity-0"); 
+            setTimeout(() => els.toast.classList.add("opacity-0"), 3000); 
+        }
+
+        // タブ切替
+        document.querySelectorAll(".nav-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("nav-active"));
+                e.currentTarget.classList.add("nav-active");
+                document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+                document.getElementById(`tab-${e.currentTarget.dataset.tab}`).classList.remove("hidden");
+            });
+        });
+
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll(".filter-btn").forEach(b => { b.classList.remove("active-filter", "bg-indigo-50", "text-indigo-700", "border-indigo-100"); b.classList.add("bg-slate-100", "text-slate-600", "border-transparent"); });
+                const t = e.currentTarget;
+                t.classList.remove("bg-slate-100", "text-slate-600", "border-transparent"); t.classList.add("active-filter", "bg-indigo-50", "text-indigo-700", "border-indigo-100");
+                activeFilter = t.dataset.filter; renderAll();
+            });
+        });
+
+        document.getElementById("btn-prev-month").onclick = () => { currentMonth--; if(currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); };
+        document.getElementById("btn-next-month").onclick = () => { currentMonth++; if(currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); };
+
+        // 起動
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
