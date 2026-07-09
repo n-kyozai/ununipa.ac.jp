@@ -364,6 +364,12 @@
                 white-space: normal; /* 解説文だけは折り返す */
                 min-width: 250px;
             }
+
+            /* チュートリアル（Intro.js）のスマホはみ出し対策 */
+            .introjs-tooltip {
+                max-width: calc(100vw - 20px) !important;
+                min-width: 260px !important;
+            }
         }
     </style>
 </head>
@@ -561,6 +567,7 @@
 
     // 初期チュートリアル (IDの参照先を新しいDOMに合わせて修正)
     function startTutorial() {
+        const isMobile = window.innerWidth <= 768;
         const intro = introJs();
         intro.setOptions({
             steps: [
@@ -571,19 +578,19 @@
                     element: document.getElementById('step1-panel'),
                     title: "STEP 1: 作物の選択",
                     intro: "まずは、栽培する作物を選びます。<br>「夏」や「冬」といった<b>季節（気候）</b>に注目しましょう。",
-                    position: 'right'
+                    position: isMobile ? 'bottom' : 'right'
                 },
                 {
                     element: document.getElementById('step2-map-panel'),
                     title: "STEP 2: 栽培地の選択",
                     intro: "次に、地図上の赤いピンをクリックして栽培地を選びます。<br>ズームインして、周りが<b>山か平野か</b>をよく観察しましょう！",
-                    position: 'left'
+                    position: isMobile ? 'bottom' : 'left'
                 },
                 {
                     element: document.getElementById('step3-panel'),
                     title: "STEP 3: 輸送方法の選択",
                     intro: "最後に、東京までの輸送手段を選びます。<br>作物の重さや新鮮さを考えて、<b>一番点数が高くなる組み合わせ</b>を見つけてください！",
-                    position: 'right'
+                    position: isMobile ? 'top' : 'right'
                 }
             ],
             nextLabel: '次へ',
@@ -615,6 +622,7 @@
 
     // 結果表示後の追加チュートリアル
     function startResultTutorial() {
+        const isMobile = window.innerWidth <= 768;
         const intro = introJs();
         intro.setOptions({
             steps: [
@@ -628,7 +636,7 @@
                     element: document.getElementById('reset-btn-guide'),
                     title: "別のパターンを試す",
                     intro: "他の組み合わせを試したい時は、この「はじめからやり直す」ボタンで画面をリセットできます。",
-                    position: 'left'
+                    position: isMobile ? 'bottom' : 'left'
                 }
             ],
             nextLabel: '次へ',
