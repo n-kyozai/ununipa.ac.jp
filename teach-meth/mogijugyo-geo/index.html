@@ -22,7 +22,6 @@
             color: #1e293b;
             line-height: 1.5;
             height: 100vh;
-            height: 100dvh; /* スマホのアドレスバー分を考慮 */
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -49,7 +48,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            overflow-y: hidden; /* デスクトップはスクロールさせない */
+            overflow-y: hidden;
         }
         
         .panel {
@@ -86,24 +85,26 @@
             gap: 8px;
         }
 
+        /* ==== 新しいCSS Gridレイアウト ==== */
         .main-layout {
-            display: flex;
+            display: grid;
+            grid-template-columns: 40% 1fr;
+            grid-template-rows: auto auto auto 1fr;
             gap: 20px;
-            flex-direction: row;
             flex-grow: 1;
             min-height: 0;
         }
-        .column-left {
-            width: 40%;
+        
+        #step1-area { grid-column: 1; grid-row: 1; }
+        #step2-area-text { grid-column: 1; grid-row: 2; }
+        #step3-area { grid-column: 1; grid-row: 3; }
+        
+        #step2-area {
+            grid-column: 2;
+            grid-row: 1 / span 4;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            overflow-y: auto;
-        }
-        .column-right {
-            width: 60%;
-            display: flex;
-            flex-direction: column;
+            padding: 8px;
         }
 
         .btn-group {
@@ -150,12 +151,6 @@
             font-size: 0.95rem;
         }
 
-        .map-panel {
-            padding: 8px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
         .map-container {
             position: relative;
             background: #cbd5e1;
@@ -168,7 +163,6 @@
             align-items: center;
             justify-content: center;
         }
-        /* 読み込み中テキスト */
         .loading-text {
             position: absolute;
             color: #64748b;
@@ -246,10 +240,7 @@
             transition: background-color 0.2s;
         }
         .clear-btn:hover { background-color: #334155; }
-        
-        .guide-btn {
-            background-color: #3b82f6;
-        }
+        .guide-btn { background-color: #3b82f6; }
         .guide-btn:hover { background-color: #2563eb; }
 
         .teacher-btn {
@@ -292,7 +283,6 @@
             color: #64748b;
         }
         
-        /* パスコード入力用スタイル */
         .passcode-input {
             width: 100%;
             padding: 12px;
@@ -303,15 +293,9 @@
             text-align: center;
             letter-spacing: 0.1em;
         }
-        .passcode-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
+        .passcode-input:focus { outline: none; border-color: #3b82f6; }
         
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-        }
+        .table-responsive { width: 100%; overflow-x: auto; }
         .modal-table {
             width: 100%;
             border-collapse: collapse;
@@ -339,55 +323,69 @@
             white-space: nowrap;
         }
 
-        /* ======== モバイル（レスポンシブ）対応 ======== */
+        /* ======== 強化されたスマホ対応レイアウト ======== */
         @media screen and (max-width: 768px) {
             body {
-                overflow: hidden; /* 親のスクロールは止める */
+                height: auto;
+                overflow-y: auto; /* 全体の縦スクロールを許可 */
             }
             .container {
+                height: auto;
+                overflow: visible;
                 padding: 10px;
-                overflow-y: auto; /* モバイル時はコンテナ内をスクロール可能に */
-                -webkit-overflow-scrolling: touch;
             }
             header h1 {
                 font-size: 1.1rem;
             }
             .top-control-panel {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 gap: 12px;
+            }
+            .info-text {
+                justify-content: center;
             }
             .action-buttons {
                 width: 100%;
-                justify-content: flex-end;
             }
-            .main-layout {
-                flex-direction: column;
-                height: auto; /* 縦並びのため高さ制限解除 */
-                gap: 12px;
+            .action-buttons button {
+                flex: 1;
+                padding: 12px 8px;
             }
-            /* display: contents を使って、子要素の order（並び順）を個別に制御 */
-            .column-left {
-                display: contents; 
-            }
-            .column-right {
-                width: 100%;
-                order: 3; /* 地図をSTEP2とSTEP3の間に配置 */
-                height: 45vh; /* 地図の高さを確保 */
-                min-height: 280px;
-                flex: none;
-            }
-            #step1-area > .panel:nth-child(1) { order: 1; } /* STEP 1 */
-            #step2-area-text { order: 2; }                  /* STEP 2 テキスト */
-            #step3-area { order: 4; }                       /* STEP 3 */
 
+            /* CSS Gridで縦一列に強制並び替え */
+            .main-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                gap: 12px;
+                height: auto;
+            }
+            #step1-area { grid-column: 1; grid-row: 1; }
+            #step2-area-text { grid-column: 1; grid-row: 2; }
+            #step2-area { 
+                grid-column: 1; 
+                grid-row: 3; 
+                height: 50vh; /* 地図の表示高さを確保 */
+                min-height: 350px; 
+            }
+            #step3-area { grid-column: 1; grid-row: 4; }
+
+            /* ボタンが画面幅に収まるよう2列にする工夫 */
+            .btn-group {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
             .btn {
-                min-width: calc(50% - 4px); /* 2列表示 */
-                padding: 12px 10px; /* タップしやすく */
+                min-width: 0; /* 固定幅を解除 */
+                padding: 10px 4px;
+                font-size: 0.9rem;
             }
-            .panel {
-                padding: 12px 16px;
+            /* 3つのボタンがある場合、最後の1つは横幅いっぱいに広げる */
+            .btn-group > :last-child:nth-child(odd) {
+                grid-column: 1 / -1;
             }
+
             /* 結果ポップアップのサイズ調整 */
             .result-overlay {
                 bottom: 10px;
@@ -402,12 +400,7 @@
             }
             .result-text {
                 font-size: 0.85rem;
-                line-height: 1.4;
             }
-            .result-text strong {
-                font-size: 1rem;
-            }
-            /* 解答モーダルのテーブル調整 */
             .modal-content {
                 padding: 16px;
                 width: 95%;
@@ -437,55 +430,51 @@
         </div>
     </div>
 
+    <!-- ここからフラットな構造に変更（CSS Gridで制御） -->
     <div class="main-layout">
-        <!-- 左カラム（モバイル時は内容が展開されて個別に順番が割り当てられます） -->
-        <div class="column-left" id="step1-area">
-            <div class="panel">
-                <h2>STEP 1: 栽培する作物と時期を選ぶ</h2>
-                <div class="btn-group">
-                    <button class="btn" id="crop-nasu" onclick="selectCrop('nasu')">冬のナス</button>
-                    <button class="btn" id="crop-cabbage" onclick="selectCrop('cabbage')">夏のキャベツ</button>
-                    <button class="btn" id="crop-potato" onclick="selectCrop('potato')">秋のじゃがいも</button>
-                </div>
+        
+        <div class="panel" id="step1-area">
+            <h2>STEP 1: 栽培する作物と時期を選ぶ</h2>
+            <div class="btn-group">
+                <button class="btn" id="crop-nasu" onclick="selectCrop('nasu')">冬のナス</button>
+                <button class="btn" id="crop-cabbage" onclick="selectCrop('cabbage')">夏のキャベツ</button>
+                <button class="btn" id="crop-potato" onclick="selectCrop('potato')">秋のじゃがいも</button>
             </div>
+        </div>
 
-            <div class="panel" id="step2-area-text">
-                <h2>STEP 2: 栽培する場所を選ぶ（地図上をクリック）</h2>
-                <div class="selection-status" id="selected-location-text">
-                    📍 地図上の赤ピンを選択してください
-                </div>
+        <div class="panel" id="step2-area-text">
+            <h2>STEP 2: 栽培する場所を選ぶ</h2>
+            <div class="selection-status" id="selected-location-text">
+                📍 地図上の赤ピンを選択してください
             </div>
+        </div>
 
-            <div class="panel" id="step3-area">
-                <h2>STEP 3: 東京（大消費地）への輸送方法</h2>
-                <div class="btn-group">
-                    <button class="btn" id="trans-truck" onclick="selectTransport('truck')">🚚 トラック</button>
-                    <button class="btn" id="trans-ship" onclick="selectTransport('ship')">🚢 フェリー</button>
-                    <button class="btn" id="trans-plane" onclick="selectTransport('plane')">✈️ 飛行機</button>
+        <div class="panel map-panel" id="step2-area">
+            <div class="map-container">
+                <div class="loading-text">地図データを読み込んでいます...</div>
+                <div id="map"></div>
+                
+                <div id="result-panel" class="result-overlay" style="display:none;">
+                    <div id="result-content" class="result-box"></div>
                 </div>
             </div>
         </div>
 
-        <!-- 右カラム（地図エリア） -->
-        <div class="column-right" id="step2-area">
-            <div class="panel map-panel">
-                <div class="map-container">
-                    <div class="loading-text">地図データを読み込んでいます...</div>
-                    <div id="map"></div>
-                    
-                    <div id="result-panel" class="result-overlay" style="display:none;">
-                        <div id="result-content" class="result-box"></div>
-                    </div>
-                </div>
+        <div class="panel" id="step3-area">
+            <h2>STEP 3: 東京（大消費地）への輸送方法</h2>
+            <div class="btn-group">
+                <button class="btn" id="trans-truck" onclick="selectTransport('truck')">🚚 トラック</button>
+                <button class="btn" id="trans-ship" onclick="selectTransport('ship')">🚢 フェリー</button>
+                <button class="btn" id="trans-plane" onclick="selectTransport('plane')">✈️ 飛行機</button>
             </div>
         </div>
+        
     </div>
 </div>
 
-<!-- パスコード入力モーダル (自作) -->
+<!-- パスコード入力モーダル -->
 <div id="passcode-modal" class="modal-overlay" style="display:none;" onclick="closePasscodeModal()">
     <div class="modal-content" style="max-width: 300px; background: transparent; box-shadow: none; padding: 0;" onclick="event.stopPropagation()">
-        <!-- inputmode="numeric" を追加して数字入力に最適化 -->
         <input type="password" inputmode="numeric" id="secret-code-input" class="passcode-input" placeholder="" autocomplete="off" style="margin: 0; background-color: rgba(255, 255, 255, 0.95); border: none; outline: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
     </div>
 </div>
@@ -497,7 +486,6 @@
         <h2 style="margin-top:0; color:#0f172a; border-left: 5px solid #10b981; padding-left:10px;">【全パターン解答・詳細解説シート】</h2>
         <p style="font-size:0.9rem; color:#64748b;">大学生・教員向け：作物の特性（重量単価や鮮度）と地理的条件から導き出される経済合理性の解説です。</p>
         
-        <!-- スマホ用横スクロールコンテナ -->
         <div class="table-responsive">
             <table class="modal-table">
                 <thead>
@@ -624,7 +612,7 @@
                     intro: "<b>地理シミュレーターへようこそ！</b><br>このアプリの使い方を簡単に説明します。"
                 },
                 {
-                    element: document.getElementById('step1-area').children[0],
+                    element: document.getElementById('step1-area'),
                     title: "STEP 1: 作物の選択",
                     intro: "まずは、栽培する作物を選びます。<br>「夏」や「冬」といった<b>季節（気候）</b>に注目しましょう。",
                     position: 'right'
@@ -673,7 +661,7 @@
         map = L.map('map', {
             center: [38.0, 137.0],
             zoom: 5,
-            minZoom: 4, // スマホで少し引きたい場合を考慮しminZoomを緩和
+            minZoom: 4, 
             maxZoom: 12,
             zoomControl: true
         });
@@ -709,7 +697,6 @@
         setupMarkerHover(markers.kochi);
         setupMarkerHover(markers.hokkaido);
 
-        // 初期化直後にサイズを再計算
         setTimeout(() => map.invalidateSize(), 500);
     }
 
@@ -789,7 +776,6 @@
 
         activeRouteLine = L.polyline(pathCoords, lineStyle).addTo(map);
         
-        // モバイルではポップアップが表示されるため、下部の余白を多めに取る
         const paddingBottom = window.innerWidth < 768 ? 140 : 180;
         map.fitBounds(activeRouteLine.getBounds(), { 
             paddingTopLeft: [50, 50], 
@@ -867,11 +853,9 @@
         document.getElementById('result-content').className = 'result-box';
     }
 
-    // 自作パスコードモーダル関連の処理
     function openPasscodeModal() {
         document.getElementById('secret-code-input').value = '';
         document.getElementById('passcode-modal').style.display = 'flex';
-        // 開いた時に自動で入力欄にフォーカス
         setTimeout(() => { document.getElementById('secret-code-input').focus(); }, 100);
     }
 
@@ -881,18 +865,14 @@
 
     function verifyCode() {
         const input = document.getElementById('secret-code-input').value;
-        // パスコードを数字のみに変更
         if (input === "158159") {
-            // 正解ならパスコード画面を閉じて、解答画面を開く
             closePasscodeModal();
             document.getElementById('answer-modal').style.display = 'flex';
         } else {
-            // 不正解なら入力欄を空にして何事もなかったかのようにする
             document.getElementById('secret-code-input').value = '';
         }
     }
 
-    // Enterキーでも判定できるようにする
     document.getElementById('secret-code-input').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             verifyCode();
