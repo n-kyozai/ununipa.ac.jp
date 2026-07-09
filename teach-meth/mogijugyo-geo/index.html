@@ -367,8 +367,19 @@
 
             /* チュートリアル（Intro.js）のスマホはみ出し対策 */
             .introjs-tooltip {
-                max-width: calc(100vw - 20px) !important;
-                min-width: 260px !important;
+                position: fixed !important;
+                top: auto !important;
+                bottom: 25px !important; /* 画面下部にポップアップとして固定 */
+                left: 50% !important;
+                transform: translateX(-50%) !important; /* 横方向の中央揃えを強制 */
+                width: 92vw !important;
+                max-width: 380px !important;
+                margin: 0 !important;
+                z-index: 9999999 !important;
+            }
+            /* 対象要素と離れるため矢印は隠す */
+            .introjs-arrow {
+                display: none !important;
             }
         }
     </style>
