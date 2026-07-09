@@ -331,6 +331,11 @@
             #step2-map-panel { grid-column: 1; grid-row: 3; }
             #step3-panel { grid-column: 1; grid-row: 4; }
 
+            /* スマホでは使い方ガイドボタンを非表示にする */
+            .guide-btn {
+                display: none !important;
+            }
+
             /* スマホ時のボタン：2列配置、余った1つは全幅 */
             .btn-group {
                 display: grid;
@@ -365,21 +370,23 @@
                 min-width: 250px;
             }
 
-            /* チュートリアル（Intro.js）のスマホはみ出し対策 */
-            .introjs-tooltip {
-                position: fixed !important;
-                top: auto !important;
-                bottom: 25px !important; /* 画面下部にポップアップとして固定 */
-                left: 50% !important;
-                transform: translateX(-50%) !important; /* 横方向の中央揃えを強制 */
-                width: 92vw !important;
-                max-width: 380px !important;
-                margin: 0 !important;
-                z-index: 9999999 !important;
+            /* スマホで結果パネル（点数）が上に突き抜けて見えなくなる問題の修正 */
+            .result-overlay {
+                top: 10px; /* 上部にはみ出さないようにストッパーをかける */
+                bottom: 10px;
+                height: calc(100% - 20px);
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end; /* 基本は今まで通り下に配置 */
+                width: 92%;
             }
-            /* 対象要素と離れるため矢印は隠す */
-            .introjs-arrow {
-                display: none !important;
+            .result-box {
+                max-height: 100%;
+                overflow-y: auto; /* 枠内に収まらない場合は内部でスクロールさせる */
+                padding: 16px 12px; /* スマホ向けに余白を少し調整 */
+            }
+            .score-badge {
+                font-size: 1.3rem; /* スコアの文字サイズもスマホ向けに少し調整 */
             }
         }
     </style>
@@ -403,7 +410,7 @@
         </div>
     </div>
 
-    <!-- 変更点：フラットなDOM構造にしてCSS Gridを適用しやすくしました -->
+    <!-- フラットなDOM構造にしてCSS Gridを適用しやすくしています -->
     <div class="main-layout">
         <!-- STEP 1 -->
         <div class="panel" id="step1-panel">
@@ -576,9 +583,10 @@
         });
     };
 
-    // 初期チュートリアル (IDの参照先を新しいDOMに合わせて修正)
+    // 初期チュートリアル (スマホの場合は起動しない)
     function startTutorial() {
-        const isMobile = window.innerWidth <= 768;
+        if (window.innerWidth <= 768) return; // モバイルでは無効化
+
         const intro = introJs();
         intro.setOptions({
             steps: [
@@ -589,19 +597,19 @@
                     element: document.getElementById('step1-panel'),
                     title: "STEP 1: 作物の選択",
                     intro: "まずは、栽培する作物を選びます。<br>「夏」や「冬」といった<b>季節（気候）</b>に注目しましょう。",
-                    position: isMobile ? 'bottom' : 'right'
+                    position: 'right'
                 },
                 {
                     element: document.getElementById('step2-map-panel'),
                     title: "STEP 2: 栽培地の選択",
                     intro: "次に、地図上の赤いピンをクリックして栽培地を選びます。<br>ズームインして、周りが<b>山か平野か</b>をよく観察しましょう！",
-                    position: isMobile ? 'bottom' : 'left'
+                    position: 'left'
                 },
                 {
                     element: document.getElementById('step3-panel'),
                     title: "STEP 3: 輸送方法の選択",
                     intro: "最後に、東京までの輸送手段を選びます。<br>作物の重さや新鮮さを考えて、<b>一番点数が高くなる組み合わせ</b>を見つけてください！",
-                    position: isMobile ? 'top' : 'right'
+                    position: 'right'
                 }
             ],
             nextLabel: '次へ',
@@ -631,9 +639,10 @@
         }).start();
     }
 
-    // 結果表示後の追加チュートリアル
+    // 結果表示後の追加チュートリアル (スマホの場合は起動しない)
     function startResultTutorial() {
-        const isMobile = window.innerWidth <= 768;
+        if (window.innerWidth <= 768) return; // モバイルでは無効化
+
         const intro = introJs();
         intro.setOptions({
             steps: [
@@ -647,7 +656,7 @@
                     element: document.getElementById('reset-btn-guide'),
                     title: "別のパターンを試す",
                     intro: "他の組み合わせを試したい時は、この「はじめからやり直す」ボタンで画面をリセットできます。",
-                    position: isMobile ? 'bottom' : 'left'
+                    position: 'left'
                 }
             ],
             nextLabel: '次へ',
