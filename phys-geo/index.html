@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>資料一覧メニュー - 自然地理学概論</title>
+    <title>自然地理学概論 - 資料一覧メニュー</title>
     <!-- Tailwind CSS の導入 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 提示コードから完全にパクったステータス用カラー */
+        /* テスト一覧メニューから引き継いだカラーパレット */
         .status-active { background-color: #a0c832; } /* 公開中：鮮やかな黄緑 */
         .status-prep { background-color: #4bc0c8; }   /* 準備中：さわやかな水色 */
         .status-out { background-color: #9ca3af; }    /* 範囲外：落ち着いたグレー */
@@ -16,7 +16,8 @@
         table, th, td {
             border: 1px solid #d1d5db; /* border-gray-300 */
         }
-        /* ロック表示用（範囲外の授業資料以外の網掛け） */
+
+        /* ロック表示用の網掛け背景（範囲外の授業資料以外のカラム用） */
         .bg-stripes {
             background-image: linear-gradient(135deg, #f3f4f6 25%, transparent 25%, transparent 50%, #f3f4f6 50%, #f3f4f6 75%, transparent 75%, transparent);
             background-size: 8px 8px;
@@ -27,9 +28,9 @@
 
     <div class="max-w-5xl mx-auto overflow-hidden">
         <div class="flex-grow pb-6">
-            <!-- 提示コードを模したシンプルなH1ヘッダー -->
+            <!-- シンプルなH1タイトル -->
             <h1 class="text-xl font-bold mb-4 pb-2 border-b border-gray-300 flex justify-between items-end">
-                <span>自然地理学概論 【篠倉 大樹】</span>
+                <span>自然地理学概論 7/23(木)テスト</span>
             </h1>
 
             <!-- 8列の横長データを綺麗にスクロール表示するためのコンテナ -->
@@ -37,14 +38,14 @@
                 <table class="w-full text-sm border-collapse border border-gray-300 text-center min-w-[900px]">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
-                            <!-- 左から：資料名、ステータス、授業資料、AI資料、論述対策、一問一答、ワーク、備考 -->
+                            <!-- 左から：資料名、ステータス、授業資料、論述対策、一問一答、ワーク、ワーク解答、備考 -->
                             <th class="border border-gray-300 p-3 font-bold w-[18%] text-left pl-4">資料名</th>
                             <th class="border border-gray-300 p-3 font-normal w-[10%]">ステータス</th>
                             <th class="border border-gray-300 p-3 font-normal w-[11%]">授業資料</th>
-                            <th class="border border-gray-300 p-3 font-normal w-[11%]">AI資料</th>
                             <th class="border border-gray-300 p-3 font-normal w-[11%]">論述対策</th>
                             <th class="border border-gray-300 p-3 font-normal w-[11%]">一問一答</th>
                             <th class="border border-gray-300 p-3 font-normal w-[11%]">ワーク</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[11%]">ワーク解答</th>
                             <th class="border border-gray-300 p-3 font-normal text-left pl-4 w-[17%]">備考</th>
                         </tr>
                     </thead>
@@ -54,7 +55,7 @@
                 </table>
             </div>
 
-            <!-- 提示コードのページネーションから矢印を省き、件数情報だけを表示するグレー帯 -->
+            <!-- 件数情報だけを表示するグレー帯 -->
             <div class="bg-gray-200 p-2.5 mt-2 flex justify-center items-center text-sm text-gray-600">
                 <span id="total-count-label">全 13 件</span>
             </div>
@@ -72,169 +73,173 @@
          *    - "prep"   : 準備中 (水色バッジ。コンテンツがactiveであればアクセス可能)
          *    - "out"    : 範囲外 (グレーバッジ。授業資料のみアクセス可能、その他は強制ロック)
          * 
-         * 2. 各コンテンツの準備状況 (docStatus, aiStatus, essayStatus, qaStatus, workStatus)
-         *    - "active" : 準備完了 (リンクが有効になり、クリック可能になります)
-         *    - "prep"   : 準備中 (グレーアウトし、クリック不可になります)
+         * 2. 各コンテンツの準備状況 (docStatus, essayStatus, qaStatus, workStatus, workAnsStatus)
+         *    - "active" : 準備完了 (リンクボタンが表示され、クリック可能になります)
+         *    - "prep"   : 準備中 (セル内が完全に「空白」になり、無駄な表示をなくします)
          * 
-         * 3. 各リンク先 (docLink, aiLink, essayLink, qaLink, workLink)
+         * 3. 各リンク先 (docLink, essayLink, qaLink, workLink, workAnsLink)
          *    - 有効なURLまたはパスを入力します。無い場合は "#" にします。
+         * 
+         * 4. 備考のリンク設定 (noteLink)
+         *    - 備考欄のテキストをリンクにしたい場合は、遷移先URLを入力します。
+         *    - 不要な場合は "" (空文字) にします。自動で通常のテキスト表示になります。
+         *    - ★ 全体ステータスが "out"（範囲外）に設定された場合でも、備考欄のリンクは常に有効のまま、アクセス可能に維持されます。
          */
         const courseData = [
             { 
                 id: 2, 
                 name: "第2回講義資料", 
                 status: "active",                    // 全体ステータス ("active" | "prep" | "out")
-                docStatus: "active", docLink: "#",    // 授業資料ステータス & リンク
-                aiStatus: "prep", aiLink: "#",       // AI資料ステータス & リンク
-                essayStatus: "prep", essayLink: "#", // 論述対策ステータス & リンク
-                qaStatus: "prep", qaLink: "#",       // 一問一答ステータス & リンク
-                workStatus: "prep", workLink: "#",   // ワークステータス & リンク
-                note: "地球の形成と地質年代"          // 備考（講義テーマ）
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1Aa9DnChSsQOHgXYlfLIQzNBN_C17hOhX/view?usp=sharing",    // 授業資料ステータス & リンク
+                essayStatus: "active", essayLink: "#", // 論述対策ステータス & リンク
+                qaStatus: "active", qaLink: "#",       // 一問一答ステータス & リンク
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1L9JefjDBQeLYMQJSVXKUPykcek0l3jsf/view?usp=sharing",   // ワークステータス & リンク
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1qiOw0LYNBqCx3zxm6gkeSqyukZavnU99/view?usp=sharing", // ワーク解答ステータス & リンク
+                note: "地球の形成と地質年代", noteLink: "" // 備考 & 備考リンク（空の場合は通常テキスト）
             },
             { 
                 id: 3, 
                 name: "第3回講義資料", 
                 status: "active", 
-                docStatus: "active", docLink: "#", 
-                aiStatus: "active", aiLink: "https://n-kyozai.github.io/ununipa.ac.jp/phys-geo/Global_Atmospheric_Dynamics_compressed.pdf", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "大気のはたらき" 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1C3st8NqXkPaGJdViERW6lboxLGfymvkQ/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1n0sp9ipfbxOyvBfX-shWm3ngYsHwsgRI/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xbB6-hpLa05z83VCx8VuLfCz55Z-R1ox/view?usp=sharing", 
+                note: "大気のはたらき", noteLink: "" 
             },
             { 
                 id: 4, 
                 name: "第4回講義資料", 
                 status: "active", 
-                docStatus: "active", docLink: "#", 
-                aiStatus: "active", aiLink: "https://n-kyozai.github.io/ununipa.ac.jp/phys-geo/Global_Atmospheric_Dynamics_compressed.pdf", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "海洋のはたらき" 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1bLeLiHCtNqo16IlVL19MhiLv_qWpixPK/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1bE_JF9_-lW8Z_vHtWDuITGANItZNXfow/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1vUAkWGDAfKOCa3DDlGcCO2z4o9TuXO9Z/view?usp=sharing", 
+                note: "海洋のはたらき", noteLink: "https://n-kyozai.github.io/ununipa.ac.jp/phys-geo/Global_Atmospheric_Dynamics_compressed.pdf" 
             },
             { 
                 id: 5, 
                 name: "第5回講義資料", 
-                status: "prep", 
-                docStatus: "active", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "世界の気候" 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1s0UIX8dDVtB7IHjn5p2MKIO8a180stk2/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1DvBPde9FEJHn1JZS2ASB2MC5Q70TNhlq/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/165LTRMZ-_VvxBpsKF3xdYJisV102Z_2s/view?usp=sharing", 
+                note: "世界の気候", noteLink: "" 
             },
             { 
                 id: 6, 
                 name: "第6回講義資料", 
-                status: "prep", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "日本の気候" 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1ce8F1w3NYdowrzwBqzqo8lszyartG6an/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/15eUO0jm1Ac9t5F-62GvcUcEYLgRYEFS_/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xOx4dloyJhD6Vyv0pq-pla1fdvlgxQ7G/view?usp=sharing", 
+                note: "日本の気候", noteLink: "" 
             },
             { 
                 id: 7, 
                 name: "第7回講義資料", 
-                status: "prep", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "世界の主な大地形" 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1KTuCfcoZeuR3AAhCnfPnDWgWT08NTS7F/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1-geibuvUocERK8xNKmLaggJtEZgxggCr/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xoxtKt0RGvIFZIVl9u3iBqpCO4KPaAP4/view?usp=sharing", 
+                note: "世界の主な大地形", noteLink: "" 
             },
             { 
                 id: 8, 
                 name: "第8回講義資料", 
-                status: "out", 
-                docStatus: "active", docLink: "#", 
-                aiStatus: "active", aiLink: "#", 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1Tnk8ASPYRH8c_SH4Mko_K8ZuMmgiKNFY/view?usp=sharing", 
                 essayStatus: "active", essayLink: "#", 
                 qaStatus: "active", qaLink: "#", 
-                workStatus: "active", workLink: "#", 
-                note: "プレートテクトニクス" 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1L0pgP6h8IwfCfEKjjlJP1pndtBE-LlVQ/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/17D1720_OSYDCh7Fnkh-asnsHKWeiP9az/view?usp=sharing", 
+                note: "プレートテクトニクス", noteLink: "" 
             },
             { 
                 id: 9, 
                 name: "第9回講義資料", 
-                status: "out", 
-                docStatus: "active", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "河川と海岸の小地形" 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1dxd_b_HSsb-A7ZvAW_QrzneeIsy4wrP_/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/15lZWtBiOvYS1e546r55JDvfWLY8B6Jt5/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1YjaMWe4YQcSu6gszz20Hu3D3A2iOYAuT/view?usp=sharing", 
+                note: "河川と海岸の小地形", noteLink: "" 
             },
             { 
                 id: 10, 
                 name: "第10回講義資料", 
-                status: "out", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "扇状地と三角州" 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1ucu0KxXnmMKzw4ZfQZvz0jQpRwy6oSY0/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/10eu7noqUKTC-4a_piZ7zucHK5yp-KKyf/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1KbZzP_Ur4ONX2BYAIkhMT2HSYUkyrt3F/view?usp=sharing", 
+                note: "扇状地と三角州", noteLink: "" 
             },
             { 
                 id: 11, 
                 name: "第11回講義資料", 
-                status: "out", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "火山と火山地形" 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1DuX1rNvkyHA3zE8n7msISXPez2ss-OD2/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1Q1h0qr1DSw7pHFaRABJ42UuqhXm1-T2_/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1LOopE3ENKzrruM4rlHO_mbdmjLroyRHJ/view?usp=sharing", 
+                note: "火山と火山地形", noteLink: "" 
             },
             { 
                 id: 12, 
                 name: "第12回講義資料", 
-                status: "out", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "カルスト地形" 
+                status: "active", // ★ 動作確認のため「範囲外」に変更しました。
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1Khb45rTh9LqN3NYAHQk4LNqY_zVFtSyB/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1TvklAhWiG6XBcpjYstxIJlpRA8x2m1T8/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/139NXjxpPR2YdarhOSeAl6aqDE9SqJ6R8/view?usp=sharing", 
+                note: "カルスト地形", noteLink: "https://drive.google.com/file/d/13U7L3wvyppKxv82pJvHT3UivEZjmBuBM/view?usp=sharing" 
             },
             { 
                 id: 13, 
                 name: "第13回講義資料", 
-                status: "out", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "地震と災害" 
+                status: "prep", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1zPm0WmXrYDqMcIZ68J-xcKkPQznFN3HF/view?usp=sharing", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/17FRx8dUi_KXLZwOnIjxBrMN4gndsfoIj/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/15eCEb3AJ7CNxj8FZ2zHBP5ETh7zOusy1/view?usp=sharing", 
+                note: "地震と災害", noteLink: "" 
             },
             { 
                 id: 14, 
                 name: "第14回講義資料", 
-                status: "out", 
-                docStatus: "prep", docLink: "#", 
-                aiStatus: "prep", aiLink: "#", 
-                essayStatus: "prep", essayLink: "#", 
-                qaStatus: "prep", qaLink: "#", 
-                workStatus: "prep", workLink: "#", 
-                note: "土壌と植生" 
+                status: "prep", 
+                docStatus: "active", docLink: "#", 
+                essayStatus: "active", essayLink: "#", 
+                qaStatus: "active", qaLink: "#", 
+                workStatus: "active", workLink: "#", 
+                workAnsStatus: "active", workAnsLink: "#", 
+                note: "土壌と植生", noteLink: "" 
             }
         ];
 
         /**
          * 各マテリアルに対応するボタン/リンクのフラットなHTML要素を生成
-         * @param {string} type 教材区分 ('doc' | 'ai' | 'essay' | 'qa' | 'work')
+         * @param {string} type 教材区分 ('doc' | 'essay' | 'qa' | 'work' | 'workAns')
          * @param {string} parentStatus 親の全体ステータス ('active' | 'prep' | 'out')
          * @param {string} contentStatus 個別の準備状態 ('active' | 'prep')
          * @param {string} url リンク先
          */
         function generateBtn(type, parentStatus, contentStatus, url) {
-            // ボタン表示用のテキスト設定
-            const labels = { doc: '閲覧', ai: '資料', essay: '対策', qa: 'テスト', work: 'ワーク' };
+            const labels = { doc: '閲覧', essay: '対策', qa: '開始', work: 'ワーク', workAns: '解答' };
             const label = labels[type];
 
             // 1. 範囲外（out）の制御：授業資料（doc）以外のすべてのアクセス権をロックする
@@ -248,18 +253,13 @@
 
             // 2. コンテンツが「準備中（prep）」の場合の制御
             if (contentStatus === 'prep') {
-                return `
-                    <button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-3 py-1 rounded text-xs cursor-not-allowed w-[72px]">
-                        未登録
-                    </button>
-                `;
+                return '';
             }
 
-            // 3. コンテンツがアクティブな場合 (提示コードに寄せたお固めの枠付きボタンスタイル)
+            // 3. コンテンツがアクティブな場合
             const isDummy = url === '#' || url.startsWith('#');
             const targetAttr = isDummy ? '' : 'target="_blank" rel="noopener noreferrer"';
             
-            // 提示コードの「テスト実施」青ボタンと「資料」グレーボタンのパターンを継承
             const buttonStyleClass = (type === 'qa') 
                 ? 'border border-blue-400 bg-blue-50 hover:bg-blue-100 text-blue-700' 
                 : 'border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700';
@@ -271,6 +271,9 @@
             `;
         }
 
+        /**
+         * 設定データに基づいてテーブル行を生成・レンダリングする
+         */
         function renderTable() {
             const tbody = document.getElementById('pdf-list-body');
             tbody.innerHTML = '';
@@ -291,8 +294,15 @@
                     statusClass = "status-out";    // 灰色 #9ca3af
                 }
 
-                // 資料名セルのテキスト表示 (提示コードのデザインに準じて青文字は使用せず、太字のシンプルな見た目)
+                // 資料名セルのテキスト表示
                 const docNameHtml = `<span class="text-gray-800 font-medium">${item.name}</span>`;
+
+                // 備考欄リンク挿入機能の判定 (全体ステータス statusに関係なく、リンクがあれば常にアクティブにする)
+                let noteHtml = `<span class="text-gray-600 text-xs">${item.note}</span>`;
+                if (item.noteLink && item.noteLink.trim() !== "" && item.noteLink !== "#") {
+                    // ★ item.status === 'out' の場合であっても、影響を受けずに常にaタグを生成し、active状態と同じアクセス権・見た目を提供します。
+                    noteHtml = `<a href="${item.noteLink}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline font-bold text-xs">${item.note}</a>`;
+                }
 
                 // 8列のカラム構成
                 tr.innerHTML = `
@@ -310,25 +320,25 @@
                     <td class="border border-gray-300 p-2 whitespace-nowrap">
                         ${generateBtn('doc', item.status, item.docStatus, item.docLink)}
                     </td>
-                    <!-- ④ AI資料 -->
-                    <td class="border border-gray-300 p-2 whitespace-nowrap">
-                        ${generateBtn('ai', item.status, item.aiStatus, item.aiLink)}
-                    </td>
-                    <!-- ⑤ 論述対策 -->
+                    <!-- ④ 論述対策 -->
                     <td class="border border-gray-300 p-2 whitespace-nowrap">
                         ${generateBtn('essay', item.status, item.essayStatus, item.essayLink)}
                     </td>
-                    <!-- ⑥ 一問一答 -->
+                    <!-- ⑤ 一問一答 -->
                     <td class="border border-gray-300 p-2 whitespace-nowrap">
                         ${generateBtn('qa', item.status, item.qaStatus, item.qaLink)}
                     </td>
-                    <!-- ⑦ ワーク -->
+                    <!-- ⑥ ワーク -->
                     <td class="border border-gray-300 p-2 whitespace-nowrap">
                         ${generateBtn('work', item.status, item.workStatus, item.workLink)}
                     </td>
+                    <!-- ⑦ ワーク解答 -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${generateBtn('workAns', item.status, item.workAnsStatus, item.workAnsLink)}
+                    </td>
                     <!-- ⑧ 備考 -->
-                    <td class="border border-gray-300 p-3 text-left pl-4 text-gray-600 text-xs whitespace-nowrap">
-                        ${item.note}
+                    <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap">
+                        ${noteHtml}
                     </td>
                 `;
 
@@ -346,4 +356,3 @@
     </script>
 </body>
 </html>
-```
