@@ -11,6 +11,7 @@
         .tab-bg { background-color: #e5f1f4; }
         .status-active { background-color: #a0c832; } /* テスト受付中（黄緑） */
         .status-prep { background-color: #4bc0c8; } /* テスト準備中（水色） */
+        .status-untested { background-color: #9ca3af; } /* テスト未実施（目立たないグレー） */
     </style>
 </head>
 <body class="bg-white text-gray-800 font-sans min-h-screen p-4 md:p-8">
@@ -31,7 +32,7 @@
                 </button>
             </div>
 
-            <!-- 総合テスト用の説明書き（初期状態は表示） -->
+            <!-- 総合テスト用の説明書き -->
             <div id="comprehensive-desc" class="bg-blue-50 border border-blue-200 text-blue-800 p-3 rounded mb-4 text-sm">
                 💡 <strong>総合テストについて</strong><br>
                 レベルが上がるほど、出題される範囲や問題数が増えて、難易度が上がっていきます。
@@ -93,11 +94,10 @@
                 { id: 9, name: "第9回課題", status: "active", link: "./test09/index.html", passScore: "10点" },
                 { id: 10, name: "第10回課題", status: "active", link: "./test10/index.html", passScore: "10点" },
                 { id: 11, name: "第11回課題", status: "active", link: "./test11/index.html", passScore: "20点" },
-                { id: 12, name: "第12回課題", status: "prep", link: "./test12/index.html", passScore: "-" },
-                { id: 13, name: "第13回課題", status: "prep", link: "./test13/index.html", passScore: "-" },
+                { id: 12, name: "第12回課題", status: "prep", link: "./test12/index.html", passScore: "20点" },
+                { id: 13, name: "第13回課題", status: "prep", link: "./test13/index.html", passScore: "?点" },
             ],
             // 総合テストタブのデータ
-            // 公開する際は status を "active" に変更し、link にパスを設定してください。
             comprehensive: [
                 { id: "comp_1", name: "レベル1", status: "active", link: "./comp01/index.html", passScore: "5" },
                 { id: "comp_2", name: "レベル2", status: "active", link: "./comp02/index.html", passScore: "16" },
@@ -106,7 +106,8 @@
                 { id: "comp_5", name: "レベル5", status: "active", link: "./comp05/index.html", passScore: "41" },
                 { id: "comp_6", name: "レベル6", status: "active", link: "./comp06/index.html", passScore: "48" },
                 { id: "comp_7", name: "レベル7", status: "active", link: "./comp07/index.html", passScore: "52" },
-                { id: "comp_8", name: "レベル8", status: "prep", link: "./comp08/index.html", passScore: "-" },
+                // レベル8のステータスを "untested" に変更
+                { id: "comp_8", name: "レベル8", status: "untested", link: "./comp08/index.html", passScore: "-" },
                 { id: "comp_9", name: "レベル9", status: "active", link: "./comp09/index.html", passScore: "61" },
                 { id: "comp_10", name: "レベル10", status: "active", link: "./comp10/index.html", passScore: "68" },
                 { id: "comp_11", name: "レベル11", status: "active", link: "./comp11/index.html", passScore: "76" },
@@ -128,19 +129,31 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition-colors";
 
-                // ステータスに応じた処理の分岐
-                const isActive = test.status === "active";
-                const statusLabel = isActive ? "テスト受付中" : "テスト準備中";
-                const statusClass = isActive ? "status-active" : "status-prep";
+                // ステータスに応じたラベルとクラスの切り分け
+                let statusLabel = "テスト準備中";
+                let statusClass = "status-prep";
                 
-                // 準備中の場合はリンクを無効化するクラスを付与
-                const linkTagOpen = isActive 
+                // 受付中、または未実施の判定
+                const isActive = test.status === "active";
+                const isUntested = test.status === "untested";
+                const isAvailable = isActive || isUntested; // 実施可能なステータス
+
+                if (isActive) {
+                    statusLabel = "テスト受付中";
+                    statusClass = "status-active";
+                } else if (isUntested) {
+                    statusLabel = "テスト未実施";
+                    statusClass = "status-untested";
+                }
+                
+                // 実施不可（準備中）の場合はリンクを無効化するクラスを付与
+                const linkTagOpen = isAvailable 
                     ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold">` 
                     : `<span class="text-gray-400 underline cursor-not-allowed">`;
-                const linkTagClose = isActive ? `</a>` : `</span>`;
+                const linkTagClose = isAvailable ? `</a>` : `</span>`;
 
-                // 実施ボタンのHTML生成
-                const btnHtml = isActive
+                // 実施ボタンのHTML生成（実施可能な場合は有効、それ以外は無効化）
+                const btnHtml = isAvailable
                     ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-xs font-bold transition">テスト実施</a>`
                     : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-4 py-1 rounded text-xs cursor-not-allowed">テスト実施</button>`;
 
