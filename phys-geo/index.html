@@ -210,7 +210,7 @@
             { 
                 id: 13, 
                 name: "第13回講義資料", 
-                status: "prep", 
+                status: "active", 
                 docStatus: "active", docLink: "https://drive.google.com/file/d/1zPm0WmXrYDqMcIZ68J-xcKkPQznFN3HF/view?usp=sharing", 
                 essayStatus: "active", essayLink: "#", 
                 qaStatus: "active", qaLink: "#", 
@@ -232,6 +232,7 @@
         ];
 
         /**
+         * STREAMING_CHUNK:Defining internal JavaScript logic...
          * 各マテリアルに対応するボタン/リンクのフラットなHTML要素を生成
          * @param {string} type 教材区分 ('doc' | 'essay' | 'qa' | 'work' | 'workAns')
          * @param {string} parentStatus 親の全体ステータス ('active' | 'prep' | 'out')
@@ -260,9 +261,8 @@
             const isDummy = url === '#' || url.startsWith('#');
             const targetAttr = isDummy ? '' : 'target="_blank" rel="noopener noreferrer"';
             
-            const buttonStyleClass = (type === 'qa') 
-                ? 'border border-blue-400 bg-blue-50 hover:bg-blue-100 text-blue-700' 
-                : 'border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700';
+            // 一問一答（qa）の色分けを廃止し、すべてのボタンを同じグレー系統のデザインに統一しました。
+            const buttonStyleClass = 'border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700';
 
             return `
                 <a href="${url}" ${targetAttr} class="inline-block px-3 py-1 rounded text-xs font-bold transition whitespace-nowrap w-[72px] ${buttonStyleClass}">
@@ -272,6 +272,7 @@
         }
 
         /**
+         * STREAMING_CHUNK:Rendering the final HTML table rows...
          * 設定データに基づいてテーブル行を生成・レンダリングする
          */
         function renderTable() {
