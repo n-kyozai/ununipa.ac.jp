@@ -38,8 +38,9 @@
                 <table class="w-full text-sm border-collapse border border-gray-300 text-center min-w-[900px]">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
-                            <!-- 左から：資料名、ステータス、授業資料、論述対策、一問一答、ワーク、ワーク解答、備考 -->
-                            <th class="border border-gray-300 p-3 font-bold w-[18%] text-left pl-4">資料名</th>
+                            <!-- 左から：資料名（固定列）、ステータス、授業資料、論述対策、一問一答、ワーク、ワーク解答、備考 -->
+                            <!-- sticky, left-0, bg-gray-100, z-20 を付与してスクロール時に左端固定 -->
+                            <th class="border border-gray-300 p-3 font-bold w-[18%] text-left pl-4 sticky left-0 bg-gray-100 z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]">資料名</th>
                             <th class="border border-gray-300 p-3 font-normal w-[10%]">ステータス</th>
                             <th class="border border-gray-300 p-3 font-normal w-[11%]">授業資料</th>
                             <th class="border border-gray-300 p-3 font-normal w-[11%]">論述対策</th>
@@ -65,25 +66,6 @@
     <script>
         /**
          * 【講義データ設定 (GitHub管理用)】
-         * 管理者はこの配列を直接書き換えることで表示・リンクを制御します。
-         * 
-         * ■ 設定ルール:
-         * 1. 全体ステータス (status)
-         *    - "active" : 公開中 (黄緑バッジ。コンテンツがactiveであればアクセス可能)
-         *    - "prep"   : 準備中 (水色バッジ。コンテンツがactiveであればアクセス可能)
-         *    - "out"    : 範囲外 (グレーバッジ。授業資料のみアクセス可能、その他は強制ロック)
-         * 
-         * 2. 各コンテンツの準備状況 (docStatus, essayStatus, qaStatus, workStatus, workAnsStatus)
-         *    - "active" : 準備完了 (リンクボタンが表示され、クリック可能になります)
-         *    - "prep"   : 準備中 (セル内が完全に「空白」になり、無駄な表示をなくします)
-         * 
-         * 3. 各リンク先 (docLink, essayLink, qaLink, workLink, workAnsLink)
-         *    - 有効なURLまたはパスを入力します。無い場合は "#" にします。
-         * 
-         * 4. 備考のリンク設定 (noteLink)
-         *    - 備考欄のテキストをリンクにしたい場合は、遷移先URLを入力します。
-         *    - 不要な場合は "" (空文字) にします。自動で通常のテキスト表示になります。
-         *    - ★ 全体ステータスが "out"（範囲外）に設定された場合でも、備考欄のリンクは常に有効のまま、アクセス可能に維持されます。
          */
         const courseData = [
             { 
@@ -199,7 +181,7 @@
             { 
                 id: 12, 
                 name: "第12回講義資料", 
-                status: "active", // ★ 動作確認のため「範囲外」に変更しました。
+                status: "active", 
                 docStatus: "active", docLink: "https://drive.google.com/file/d/1Khb45rTh9LqN3NYAHQk4LNqY_zVFtSyB/view?usp=sharing", 
                 essayStatus: "active", essayLink: "#", 
                 qaStatus: "active", qaLink: "#", 
@@ -261,7 +243,7 @@
             const isDummy = url === '#' || url.startsWith('#');
             const targetAttr = isDummy ? '' : 'target="_blank" rel="noopener noreferrer"';
             
-            // 一問一答（qa）の色分けを廃止し、すべてのボタンを同じグレー系統のデザインに統一しました。
+            // 全てのボタンを同じグレー系統のデザインに統一。
             const buttonStyleClass = 'border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700';
 
             return `
@@ -272,7 +254,7 @@
         }
 
         /**
-         * STREAMING_CHUNK:Rendering the final HTML table rows...
+         * STREAMING_CHUNK:Rendering the final HTML table rows with sticky features...
          * 設定データに基づいてテーブル行を生成・レンダリングする
          */
         function renderTable() {
@@ -281,7 +263,8 @@
 
             courseData.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition-colors";
+                // ホバー時の背景変化を固定列側（資料名）にも適用するため 'group' クラスを付与
+                tr.className = "hover:bg-gray-50 transition-colors group";
 
                 // 全体ステータスのバッジ切り替え
                 let statusLabel = "公開中";
@@ -301,14 +284,14 @@
                 // 備考欄リンク挿入機能の判定 (全体ステータス statusに関係なく、リンクがあれば常にアクティブにする)
                 let noteHtml = `<span class="text-gray-600 text-xs">${item.note}</span>`;
                 if (item.noteLink && item.noteLink.trim() !== "" && item.noteLink !== "#") {
-                    // ★ item.status === 'out' の場合であっても、影響を受けずに常にaタグを生成し、active状態と同じアクセス権・見た目を提供します。
                     noteHtml = `<a href="${item.noteLink}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline font-bold text-xs">${item.note}</a>`;
                 }
 
                 // 8列のカラム構成
+                // ①資料名セルに `sticky left-0 bg-white group-hover:bg-gray-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]` を適用
                 tr.innerHTML = `
-                    <!-- ① 資料名 -->
-                    <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap font-medium text-gray-800">
+                    <!-- ① 資料名（固定列） -->
+                    <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap font-medium text-gray-800 sticky left-0 bg-white group-hover:bg-gray-50 transition-colors z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]">
                         ${docNameHtml}
                     </td>
                     <!-- ② ステータス -->
