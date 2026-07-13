@@ -95,7 +95,7 @@
                 { id: 10, name: "第10回課題", status: "active", link: "./test10/index.html", passScore: "10点" },
                 { id: 11, name: "第11回課題", status: "active", link: "./test11/index.html", passScore: "20点" },
                 { id: 12, name: "第12回課題", status: "active", link: "./test12/index.html", passScore: "20点" },
-                { id: 13, name: "第13回課題", status: "prep", link: "./test13/index.html", passScore: "?点" },
+                { id: 13, name: "第13回課題", status: "prep", link: "./test13/index.html", passScore: "-" },
             ],
             // 総合テストタブのデータ
             comprehensive: [
@@ -107,7 +107,7 @@
                 { id: "comp_6", name: "レベル6", status: "active", link: "./comp06/index.html", passScore: "48" },
                 { id: "comp_7", name: "レベル7", status: "active", link: "./comp07/index.html", passScore: "52" },
                 // レベル8のステータスを "untested" に変更
-                { id: "comp_8", name: "レベル8", status: "untested", link: "./comp07/index.html", passScore: "-" },
+                { id: "comp_8", name: "レベル8", status: "untested", link: "./comp08/index.html", passScore: "-" },
                 { id: "comp_9", name: "レベル9", status: "active", link: "./comp09/index.html", passScore: "61" },
                 { id: "comp_10", name: "レベル10", status: "active", link: "./comp10/index.html", passScore: "68" },
                 { id: "comp_11", name: "レベル11", status: "active", link: "./comp11/index.html", passScore: "76" },
@@ -133,10 +133,12 @@
                 let statusLabel = "テスト準備中";
                 let statusClass = "status-prep";
                 
-                // 受付中、または未実施の判定
+                // 各ステータスの判定
                 const isActive = test.status === "active";
                 const isUntested = test.status === "untested";
-                const isAvailable = isActive || isUntested; // 実施可能なステータス
+                
+                // テスト実施可能（リンク有効）とするのは「受付中(active)」のみに制限
+                const isAvailable = isActive;
 
                 if (isActive) {
                     statusLabel = "テスト受付中";
@@ -146,7 +148,7 @@
                     statusClass = "status-untested";
                 }
                 
-                // 実施不可（準備中）の場合はリンクを無効化するクラスを付与
+                // 実施不可（準備中・未実施）の場合はリンクを無効化するクラスを付与
                 const linkTagOpen = isAvailable 
                     ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold">` 
                     : `<span class="text-gray-400 underline cursor-not-allowed">`;
