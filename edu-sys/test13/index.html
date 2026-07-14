@@ -307,6 +307,18 @@
         // スタート画面に合格満点を動的に割り当て
         document.getElementById('start-pass-score').innerText = `${originalQuestions.length}点`;
 
+        // フォントサイズ切り替えイベント
+        document.getElementById('font-size-btn').addEventListener('click', () => {
+            currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+            const scaleMap = {
+                'normal': 1,
+                'small': 0.85,
+                'xsmall': 0.7,
+                'large': 1.15
+            };
+            document.documentElement.style.setProperty('--font-scale', scaleMap[fontSizes[currentFontSizeIndex]]);
+        });
+
         // モバイル用メニューの開閉イベント
         function openMobileMenu() {
             mobileNavOverlay.classList.remove('hidden');
