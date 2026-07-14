@@ -84,6 +84,32 @@
         .fs-2xl { font-size: calc(1.5rem * var(--font-scale)) !important; line-height: calc(2rem * var(--font-scale)) !important; }
         .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
         .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
+
+        /* ご要望：答え合わせ（採点結果）画面用の少し小さめのフォントサイズ設定 */
+        .result-screen-font {
+            font-size: calc(0.875rem * var(--font-scale)) !important;
+            line-height: calc(1.35rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .res-title {
+            font-size: calc(1.25rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .res-score {
+            font-size: calc(2.5rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .res-lbl {
+            font-size: calc(1rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .fs-lg {
+            font-size: calc(0.95rem * var(--font-scale)) !important;
+            line-height: calc(1.4rem * var(--font-scale)) !important;
+        }
+        .result-screen-font .fs-sm {
+            font-size: calc(0.8rem * var(--font-scale)) !important;
+            line-height: calc(1.15rem * var(--font-scale)) !important;
+        }
+        .result-screen-font h4 {
+            font-size: calc(0.95rem * var(--font-scale)) !important;
+        }
     </style>
 </head>
 <body class="bg-[#e8ecef] text-gray-800 font-sans min-h-screen flex flex-col fs-base transition-none">
@@ -264,18 +290,19 @@
         </div>
 
         <!-- ================= 結果画面 ================= -->
-        <section id="result-screen" class="hidden">
-            <div class="bg-white rounded-lg shadow-md p-6 md:p-10 text-center mb-6 border border-gray-200">
-                <h2 class="font-bold text-gray-800 mb-2 border-b-2 border-[#005b82] pb-2 fs-2xl">採点結果</h2>
-                <p class="text-gray-600 mb-2 fs-lg mt-6">あなたの得点</p>
-                <div class="font-bold text-[#005b82] mb-4 fs-5xl" id="score-display">
+        <!-- result-screen-font クラスを付与し、全体の表示サイズを少し小さく調整 -->
+        <section id="result-screen" class="hidden result-screen-font">
+            <div class="bg-white rounded-lg shadow-md p-6 md:p-8 text-center mb-6 border border-gray-200">
+                <h2 class="font-bold text-gray-800 mb-2 border-b-2 border-[#005b82] pb-2 res-title">採点結果</h2>
+                <p class="text-gray-600 mb-1 mt-6 res-lbl">あなたの得点</p>
+                <div class="font-bold text-[#005b82] mb-3 res-score" id="score-display">
                     -- / --
                 </div>
-                <p id="time-taken" class="text-gray-600 mb-6 font-medium fs-lg">残り時間: --:--</p>
+                <p id="time-taken" class="text-gray-600 mb-4 font-medium res-lbl">残り時間: --:--</p>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-4 md:p-8 mb-8 border border-gray-200">
-                <h3 class="font-bold border-b border-gray-300 pb-2 mb-4 fs-lg">詳細</h3>
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-6 mb-8 border border-gray-200">
+                <h3 class="font-bold border-b border-gray-300 pb-2 mb-4 res-title">詳細</h3>
                 <div id="result-details" class="flex flex-col gap-4">
                     <!-- JSで結果詳細を生成 -->
                 </div>
@@ -302,7 +329,7 @@
             { title: "日本国憲法第26条 第1項", text: "すべて国民は、法律の定めるところにより、その能力に応じて、[HOLE]教育を受ける権利を有する。", correctAnswer: "ひとしく" },
             
             // 日本国憲法26条2項
-            { title: "日本国憲法第26条 第2項", text: "すべて国民は、法律の定めるところにより、その保護する[HOLE]に普通教育を受けさせる義務を負ふ。", correctAnswer: "子女" },
+            { title: "日本国憲法第26条 第2項", text: "すべて国民は、法律の定めるところにより、その保護する[HOLE]に普通教育受けさせる義務を負ふ。", correctAnswer: "子女" },
             { title: "日本国憲法第26条 第2項", text: "すべて国民は、法律の定めるところにより、その保護する子女に[HOLE]教育を受けさせる義務を負ふ。", correctAnswer: "普通" },
             { title: "日本国憲法第26条 第2項", text: "すべて国民は、法律の定めるところにより、その保護する子女に[HOLE]を受けさせる義務を負ふ。", correctAnswer: "普通教育" },
             { title: "日本国憲法第26条 第2項", text: "[HOLE]教育は、これを無償とする。", correctAnswer: "義務" },
@@ -369,7 +396,7 @@
             { title: "日本国憲法第15条 第2項", text: "すべて公務員は、全体の奉仕者であつて、[HOLE]の奉仕者ではない。", correctAnswer: "一部" },
 
             // 地方公務員法30条
-            { title: "地方公務員法第30条", text: "すべて職員は、[HOLE]の奉仕者として公共の利益のために勤務し、且つ、職務の遂行に当つては、全力を挙げてこれに専念しなければならない。", correctAnswer: "全体" },
+            { title: "地方公務員法第30条", text: "すべて職員は、[HOLE]の奉仕者として公共の利益のために勤務し、且つ、職務 of 遂行に当つては、全力を挙げてこれに専念しなければならない。", correctAnswer: "全体" },
             { title: "地方公務員法第30条", text: "すべて職員は、全体の奉仕者として[HOLE]のために勤務し、且つ、職務の遂行に当つては、全力を挙げてこれに専念しなければならない。", correctAnswer: "公共の利益" },
 
             // 子どもの貧困対策の推進に関する法律2条
@@ -477,7 +504,7 @@
         let currentQuestionIndex = 0; 
         let timerInterval = null;     
         let totalTimeLimit = 0;
-        let timeLeft = 0;           
+        let timeLeft = 0;            
 
         // フォントサイズ切り替え用の設定
         const fontSizes = ['normal', 'small', 'xsmall', 'large'];
