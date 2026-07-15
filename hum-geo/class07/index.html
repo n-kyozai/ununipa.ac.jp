@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>人文地理学概論 第7回 人口地理学 記述・論述演習アプリ</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュを基本背景に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-earth-asia text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">人文地理学 第7回 人口地理学</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        // Quiz Questions Database (8 core descriptive questions from Lecture 7 "人口地理学")
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "エクメーネの拡大と世界の人口急増の背景",
+                question: "人間が地球上で生活を営むにあたり、科学技術を用いて「アネクメーネ」を「エクメーネ」へと変換させてきたプロセスと、それが世界全体の人口支持力に与えた影響について説明せよ。",
+                answer: "極地や砂漠、熱帯雨林などの過酷な非居住地域である<span class='red-sheet-hide'>アネクメーネ</span>に対し、人類は科学技術、灌漑設備、防寒技術などの適応手段を用いて、居住可能地域である<span class='red-sheet-hide'>エクメーネ</span>を陸地の約9割まで拡大させてきた。この居住域の開拓によって農耕地や居住可能な地域が広がり、地球規模で人々を養う力である<span class='red-sheet-hide'>人口支持力（人口扶養力）</span>が飛躍的に高まったため、人口増加の基盤が築かれた。",
+                explanation: "「エクメーネ（居住地域）」と「アネクメーネ（非居住地域）」は人口地理学の基本概念です。人類が生存限界をテクノロジーで超えてきた歴史こそが、地球全体の人口支持力を押し上げ、歴史的な人口爆発を支える最大の土台となりました。"
+            },
+            {
+                qNum: 2,
+                title: "人口支持力・人口圧と移民流出の力学メカニズム",
+                question: "地域における「人口支持力」を決定する要因と、人口急増によって発生する「人口圧」が国内外への人口移動（移民）を引き起こす因果関係を説明せよ。",
+                answer: "人口支持力は、地域の食料や富を生み出す<span class='red-sheet-hide'>生産力に比例</span>し、1人あたりが必要とする消費量を示す<span class='red-sheet-hide'>生活水準に反比例</span>して決定される。人口が急増してその限界値に達すると、資源や雇用の不均衡が生じる<span class='red-sheet-hide'>人口圧</span>が発生し生活が圧迫される。人々はこの過密状態や貧困を解消するため、就業機会や高い生活水準を求めて他地域や国外へと<span class='red-sheet-hide'>移民（社会的流出）</span>する。",
+                explanation: "「人口支持力」は『生産力 / 生活水準』で表されます。このバランスが崩れ、地域の支持限界（キャリング・キャパシティ）を超えて飽和した状態を「人口圧」といい、これが人々を押し出す（プッシュ要因）ことで移民流出や都市集中が引き起こされます。"
+            },
+            {
+                qNum: 3,
+                title: "発展途上国の人口急増（人口転換の第2段階）の要因",
+                question: "発展途上国（主にサハラ以南のアフリカなど）において、医療支援等により死亡率が大幅に低下する中で高い出生率が維持され、「人口爆発」が生じる社会的な背景を説明せよ。",
+                answer: "国際的な医療支援や環境衛生の改善、食糧事情の良化により、抵抗力の弱い<span class='red-sheet-hide'>乳幼児死亡率が急激に低下</span>したため。一方で、農村部における農業等の貴重な<span class='red-sheet-hide'>労働力としての期待</span>や、宗教・伝統的価値観から依然として高い出生率が維持された。このように、出生率は高いまま死亡率のみが急落する<span class='red-sheet-hide'>多産少死型</span>の不均衡が生じたためである。",
+                explanation: "「多産少死型（人口転換の第2段階）」はサハラ以南アフリカや一部アジアなどの発展途上国を象徴する段階です。医療の発達により死ぬ人は一気に減りましたが、社会制度や労働形態、価値観の移行が遅れてたくさん生まれる状況が続くため、人口が爆発的に急増します。"
+            },
+            {
+                qNum: 4,
+                title: "先進国・日本における「少産少死型」への移行背景",
+                question: "日本をはじめとする先進国が「少産少死型（第3・第4段階）」に達し、さらに合計特殊出生率の低下（少子高齢化）が進むライフスタイルや社会的な背景を説明せよ。",
+                answer: "豊かな生活水準と高度医療により低い死亡率を維持する一方、女性の<span class='red-sheet-hide'>高学歴化や社会進出</span>が進んだこと、家族計画の普及により、非婚化や晩婚化が進行したため。しかし、制度や企業風土などの社会環境が旧来のままであるため<span class='red-sheet-hide'>仕事と子育ての両立が困難</span>であり、合計特殊出生率が人口置換水準（約2.1）を大幅に下回る少子高齢化・人口減少段階に突入した。",
+                explanation: "死亡率が最低レベルで静止する一方、女性のキャリア形成や晩婚化によって出生率が極端に下がるのが「少産少死型（人口転換の第3・第4段階）」です。社会制度と個人のライフスタイルとのギャップ、子育てへの負担感が極端な少子化の直接的な原因となっています。"
+            },
+            {
+                qNum: 5,
+                title: "高齢化のスピード（倍加年数）における国際的差異",
+                question: "老年人口割合が7%（高齢化社会）から14%（高齢社会）に達するまでの「倍加年数」について、フランスやアメリカに比べて日本や韓国で著しく短い理由を説明せよ。",
+                answer: "フランスは百数十年かけて緩やかに変化し、アメリカは<span class='red-sheet-hide'>若年移民の流入</span>により高齢化が抑制された。これに対し、日本や韓国などの東アジアは戦後に急速な経済発展を遂げ、<span class='red-sheet-hide'>女性の労働力化と社会進出が短期間で急激に進んだ</span>ため。これに雇用環境の悪化や子育て支援の立ち遅れが重なり、<span class='red-sheet-hide'>出生率が世界最低水準まで一気に急落</span>したため、極めて短い<span class='red-sheet-hide'>倍加年数</span>で超高齢社会を迎えることとなった。",
+                explanation: "「倍加年数」の対比は超頻出です。フランスの115年、アメリカの72年に比べ、日本は24年、中国は22年、韓国はなんと18年です。急激な経済成長の代償として少子化が短期間で垂直落下したことが、この凄まじい高齢化スピードを招きました。"
+            },
+            {
+                qNum: 6,
+                title: "経済発展に伴う「産業別人口構成割合」の高度化トレンド",
+                question: "経済発展（産業構造の高度化）に伴い、各国の「産業別人口構成割合」が第1次から第3次産業へどのように変化していくか、先進国特有の構造変化に触れて説明せよ。",
+                answer: "産業構造の高度化（ペティ＝クラークの法則）により、農業等の機械化で<span class='red-sheet-hide'>第1次産業比率が著しく低下</span>し、人口は製造業等の第2次、さらに商業・サービス業等の第3次産業へシフトする。第2次産業は一定割合で頭打ちとなり、先進国ではグローバル化による製造業の海外移転やサービス経済化が進行（<span class='red-sheet-hide'>脱工業化</span>）するため、イギリスやアメリカのように<span class='red-sheet-hide'>第3次産業の比率が約8割</span>に達する。",
+                explanation: "経済が発展すると「第1次 → 第2次 → 第3次」へと就業人口が移っていきます。先進国では「脱工業化（サービス経済化）」が進み、第3次産業の人口割合が突出します。一方、エチオピアなどの発展途上国では第1次産業の比率が依然として高い状態にあります。"
+            },
+            {
+                qNum: 7,
+                title: "国際的人口移動を促す要因と「特定の偏り」が生じる地理背景",
+                question: "国際的な人口移動（出稼ぎ・移民）を惹起する要因と、その移動先が旧宗主国関係、言語圏、あるいは特定の産業国に「偏る」地理的・歴史的背景を説明せよ。",
+                answer: "開発途上国と先進国との所得格差や就業機会を求める<span class='red-sheet-hide'>経済的理由</span>が主要因となる。移動先は、同一言語や旧宗主国・植民地のつながりといった<span class='red-sheet-hide'>歴史的結びつき</span>、および地理的近接性に依存する。また、1970年代以降の急激な建設・都市開発を理由とした中東産油国における<span class='red-sheet-hide'>南アジア（インドなど）からの若年男性労働者の大量流入</span>のように、受入国の産業需要にも強く左右される。",
+                explanation: "移民は単にランダムに発生するのではなく、言語圏（ヒスパニックの米国移動や、インド人の英国移動）、歴史的（旧宗主国・植民地関係）、さらには中東産油国の建設特需（インド人等の若年男性流入）といった産業構造に強く方向づけられて偏り（パターン）を描きます。"
+            },
+            {
+                qNum: 8,
+                title: "日本の戦後の三大都市圏人口移動と地方過疎化の重層問題",
+                question: "日本の戦後の高度経済成長期から現在にかけての国内人口移動の変遷（三大都市圏集中、ドーナツ化、都心回帰）と、それが地方に引き起こした社会問題を説明せよ。",
+                answer: "高度成長期に就職を目的として農村から<span class='red-sheet-hide'>三大都市圏への大移動</span>が生じ、バブル期には地価高騰で郊外化（ドーナツ化）が進んだが、バブル崩壊後は利便性や地価下落から<span class='red-sheet-hide'>都心回帰</span>が強まった。この若年層流出の結果、地方では人口減少と極端な高齢化により生活維持が危ぶまれる<span class='red-sheet-hide'>過疎化や限界集落</span>が発生し、商業撤退による食料入手困難な<span class='red-sheet-hide'>フードデザート（食の砂漠）</span>が深刻化した。",
+                explanation: "高度成長期の地方から都市への大移動（三大都市圏）、バブル期の地価高騰による郊外化（ドーナツ化）、そして1990年代後半以降の「都心回帰」の3期にわたる国内人口動態の流れを完全に頭に入れましょう。この結果、地方農村は過疎・限界集落、買い物ができないフードデザートという深刻な課題に直面しています。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default open states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">閉じる</span>
+                                <i class="fa-solid fa-chevron-up text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default open) -->
+                    <div id="answer-box-${quiz.qNum}" class="p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                const answerBox = document.getElementById(`answer-box-${q.qNum}`);
+                const btnText = document.getElementById(`text-toggle-${q.qNum}`);
+                const btnIcon = document.getElementById(`icon-toggle-${q.qNum}`);
+                
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            });
+        };
+    </script>
+</body>
+</html>
