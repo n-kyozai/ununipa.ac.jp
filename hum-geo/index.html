@@ -65,7 +65,6 @@
 
     <script>
         /**
-         * STREAMING_CHUNK:Configuring the human geography course data...
          * 【講義データ設定 (GitHub管理用)】
          * ※第8回と第10回は完全に除外しています。
          * 各リンク先（docLink, qaLinkなど）は初期設定として全てダミー「#」に設定しています。必要に応じて実際のURLに差し替えてください。
@@ -74,7 +73,7 @@
             { 
                 id: 2, 
                 name: "第2回講義資料", 
-                status: "out",                    
+                status: "out",                     
                 docStatus: "active", docLink: "https://drive.google.com/file/d/1l1gEVMsmL2PXVTYgcxDzDKLS2GV0QbPv/view?usp=sharing",    
                 essayStatus: "prep", essayLink: "#", 
                 qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1QaZV8bwDHSGqscApUUct8hDGqOi7l3-o3B1XCZMkIXw/edit?usp=sharing",       
@@ -186,7 +185,6 @@
         ];
 
         /**
-         * STREAMING_CHUNK:Defining internal JavaScript logic...
          * 各マテリアルに対応するボタン/リンクのフラットなHTML要素を生成
          * @param {string} type 教材区分 ('doc' | 'essay' | 'qa' | 'work' | 'workAns')
          * @param {string} parentStatus 親の全体ステータス ('active' | 'prep' | 'out')
@@ -226,14 +224,34 @@
         }
 
         /**
-         * STREAMING_CHUNK:Rendering the table rows for Human Geography...
-         * 設定データに基づいてテーブル行を生成・レンダリングする
+         * 設定データに基づいてテーブル行を自動配列（ソート）してレンダリングする
          */
         function renderTable() {
             const tbody = document.getElementById('pdf-list-body');
             tbody.innerHTML = '';
 
-            courseData.forEach(item => {
+            // 各ステータスの優先順位を定義 (1: 公開中, 2: 準備中, 3: 範囲外)
+            const statusPriority = {
+                'active': 1,
+                'prep': 2,
+                'out': 3
+            };
+
+            // 元データを破壊しないようにコピーを作成し、ステータス優先度 -> ID(回数)の順でソート
+            const sortedData = [...courseData].sort((a, b) => {
+                const priorityA = statusPriority[a.status] || 99;
+                const priorityB = statusPriority[b.status] || 99;
+
+                // 1. ステータス優先度が異なる場合はそれで並び替え
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB;
+                }
+                // 2. 同じステータスの場合は、講義回数(ID)の昇順で並び替え
+                return a.id - b.id;
+            });
+
+            // ソートされたデータに基づいて行を出力
+            sortedData.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition-colors group";
 
@@ -258,7 +276,7 @@
                     noteHtml = `<a href="${item.noteLink}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline font-bold text-xs">${item.note}</a>`;
                 }
 
-                // 8列のカラム構成 (資料名はw-[13%], 備考はw-[22%] で設定を反映)
+                // 8列のカラム構成
                 tr.innerHTML = `
                     <!-- ① 資料名（固定列） -->
                     <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap font-medium text-gray-800 sticky left-0 bg-white group-hover:bg-gray-50 transition-colors z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]">
