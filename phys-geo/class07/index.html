@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>自然地理学概論 第7回 論述試験演習ワークスペース</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-earth-asia text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第7回 世界の主な大地形</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        // Quiz Questions Database (8 core descriptive questions from Lecture 7 "世界の主な大地形")
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "内的営力と外的営力の違いと地形形成",
+                question: "地形を形成する作用である「内的営力」と「外的営力」のエネルギー源や作用の違いを明確にし、それぞれがどのような規模の地形を形成するか説明せよ。",
+                answer: "内的営力とは、<span class='red-sheet-hide'>地球の内部からの力（地殻変動や火山活動）</span>を源とし、地形の起伏を大きくして大規模な<span class='red-sheet-hide'>「大地形」</span>を形成する。一方、外的営力とは、<span class='red-sheet-hide'>太陽エネルギー等を源とする風雨（風化・侵食・堆積）</span>を源とし、地形を削りなだらかにして<span class='red-sheet-hide'>「小地形」</span>を形成する関係にある。",
+                explanation: "内的営力（起伏を作る巨大な力＝大地形）と外的営力（削って平坦化する外部の力＝小地形）の対比を明確に論理立てて記述します。地学的なエネルギー源の違い（地球内部vs太陽エネルギー）を意識すると加点されます。"
+            },
+            {
+                qNum: 2,
+                title: "新期造山帯と古期造山帯の地形的特徴の理由",
+                question: "新期造山帯の山脈は急峻で険しく、古期造山帯の山地は低くなだらかである。この決定的な地形的特徴の違いが生まれる理由を、内的営力と外的営力の関係から説明せよ。",
+                answer: "新期造山帯は中生代以降に造山運動が始まった新しい地帯で、現在も<span class='red-sheet-hide'>内的営力による隆起が活発</span>であり、侵食を上回る勢いで山が高くなるため険しい。一方、古期造山帯は古生代に形成された古い地帯で、内的営力が衰え、長年にわたり風雨などの<span class='red-sheet-hide'>外的営力（侵食作用）を受け続けた</span>ため。",
+                explanation: "「隆起する勢い（内的営力）＞削る力（外的営力）」である新期造山帯と、内的隆起が止まり「侵食（外的営力）」のみが数億年働き続けた古期造山帯の物理的プロセスのギャップを対比します。"
+            },
+            {
+                qNum: 3,
+                title: "地質年代と主要地下資源（鉄鉱石・石炭・原油）の分布",
+                question: "安定陸塊で「鉄鉱石」、古期造山帯で「石炭」、新期造山帯で「原油」が多く産出・埋蔵される傾向がある理由を、地形形成の地質年代や環境と関連付けて説明せよ。",
+                answer: "鉄鉱石は、地球最古の先カンブリア時代に<span class='red-sheet-hide'>海水中の鉄分が海底に堆積</span>して形成されたため安定陸塊（楯状地）に偏る。石炭は、巨大植物が繁茂した<span class='red-sheet-hide'>古生代の植物遺骸が熱と圧力を受け炭化</span>して古期造山帯に多く、原油は中生代以降の<span class='red-sheet-hide'>海洋プランクトン遺骸が褶曲地層に集積</span>して新期造山帯に多いため。",
+                explanation: "資源の成因とそれが発生した「地質年代（先カンブリア時代・古生代・中生代以降）」のセット暗記は共通テストおよび二次試験論述での最頻出問題の一つです。"
+            },
+            {
+                qNum: 4,
+                title: "ケスタ地形の形成プロセスと地質構造",
+                question: "卓状地などでみられる「ケスタ」と呼ばれる非対称な丘陵地形が形成されるプロセスを、地質構造と外的営力の作用に注目して説明せよ。",
+                answer: "<span class='red-sheet-hide'>硬い地層と柔らかい地層</span>が交互に重なって緩やかに傾斜している場所において、風雨などの外的営力がはたらいた際、柔らかい層が早く削られ硬い層が削り残される<span class='red-sheet-hide'>「差別侵食（差食）」</span>が生じることで、一方が急斜面、もう一方が緩斜面となる非対称な丘陵が形成されるため。",
+                explanation: "フランスのパリ盆地が代表例です。「硬軟の地層が緩やかに傾斜している構造」と「硬軟の侵食スピードの差（差別侵食）」という2つのキーワードが記述の核となります。"
+            },
+            {
+                qNum: 5,
+                title: "扇状地「扇央」の水無川化と伝統的土地利用",
+                question: "扇状地において、谷口に近い「扇央」において河川が地下に浸透して「水無川」になりやすい理由と、これが伝統的な土地利用（農業・集落）に与えた影響を説明せよ。",
+                answer: "山地から運ばれてきた粒径が大きく隙間の多い<span class='red-sheet-hide'>砂礫（礫や砂）</span>が扇央に厚く堆積しているため、水が容易に地下へ浸透（伏流）するため。この極めて良好な水はけにより水が得にくいため、伝統的には集落の立地を避けて<span class='red-sheet-hide'>果樹園や畑</span>として利用された。",
+                explanation: "堆積物の性質（砂礫＝水はけ良好＝水無川・伏流）と、それに伴う農業（水が不要な果樹園や畑）および集落立地の不在を直線的にリンクさせて記述する必要があります。"
+            },
+            {
+                qNum: 6,
+                title: "氾濫原における自然堤防と後背湿地の比較",
+                question: "河川の氾濫原に発達する微高地「自然堤防」と、低湿地である「後背湿地」について、形成される堆積物の違いとそれに伴う伝統的な土地利用の違いを対比して説明せよ。",
+                answer: "洪水時に流速が落ちて両岸に粗い<span class='red-sheet-hide'>砂質土壌が堆積した自然堤防</span>は、水害に強く水はけが良い微高地のため<span class='red-sheet-hide'>集落や畑</span>に利用された。一方、その背後に微細な<span class='red-sheet-hide'>泥（粘土）が沈殿した後背湿地</span>は、極めて水持ちが良い低湿地のため<span class='red-sheet-hide'>水田</span>に利用された。",
+                explanation: "砂質（水はけ〇）と泥・粘土質（水持ち〇＝水はけ×）という粒径の差が、それぞれの地形の乾燥・湿潤度を決定し、土地利用（集落/畑 vs 水田）を規定しているプロセスを明確にします。"
+            },
+            {
+                qNum: 7,
+                title: "「三角州（デルタ）」と「エスチュアリー（三角江）」の相違点",
+                question: "地形の名称や場所が類似している「三角州（デルタ）」と「エスチュアリー（三角江）」について、両者の「成因」と「地形自体の性質」の決定的な違いを説明せよ。",
+                answer: "三角州は、河川の河口部に運搬されてきた細粒の土砂が<span class='red-sheet-hide'>「堆積」して形成された「陸地」</span>である。一方、エスチュアリーは、大河川の河口部が地殻の沈降や海面上昇によって<span class='red-sheet-hide'>「沈水」して形成されたラッパ状の「入江（湾）」</span>であり、堆積による陸地か、沈水による湾かという違いがある。",
+                explanation: "三角州（代表例：ナイル川など）＝堆積（陸地）であり、エスチュアリー（代表例：セーヌ川、ラプラタ川など）＝沈水（入り江・湾）です。混同しやすい定義の差異を綺麗に整理する問題です。"
+            },
+            {
+                qNum: 8,
+                title: "「フィヨルド」と「リアス海岸」の地形的・成因的違い",
+                question: "沈水海岸の代表例である「フィヨルド」と「リアス海岸」について、侵食をもたらした「外的営力」と、沈水前の「谷の断面形状」の違いに注目して説明せよ。",
+                answer: "フィヨルドは、かつての<span class='red-sheet-hide'>氷河による強烈な侵食（氷食）</span>で削られた、谷底が平らで壁が絶壁をなす<span class='red-sheet-hide'>「U字谷」が沈水</span>したものである。一方、リアス海岸は<span class='red-sheet-hide'>河川の流水による侵食（河食）</span>で削られた険しい<span class='red-sheet-hide'>「V字谷」が沈水</span>したものである。",
+                explanation: "どちらも「谷が海に沈んだ」沈水海岸ですが、その谷を削った主役（氷河 vs 河川）と、その削り跡の形状（U字 vs V字）が異なります。対比表（講義資料Page 31）を基にした精緻な記述が求められます。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default closed states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">解答・解説</span>
+                                <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default folded: hidden) -->
+                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                toggleAnswer(q.qNum);
+            });
+        };
+    </script>
+</body>
+</html>
