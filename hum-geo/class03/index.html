@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>人文地理学概論 第3回 農業地理学 記述・論述演習アプリ</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-wheat-awn text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">人文地理学 第3回 農業地理学</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        // Quiz Questions Database (8 core descriptive questions from Lecture 3 "農業地理学")
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "二圃式・三圃式から自給的混合農業への発展プロセス",
+                question: "ヨーロッパにおける「二圃式農業」や「三圃式農業」から「自給的混合農業」へと発展するプロセスにおいて、休閑地の利用方法や家畜の飼育方法にどのような工夫や変化が生じたか説明せよ。",
+                answer: "かつて連作障害を防ぐために耕地を一定期間放置していた<span class='red-sheet-hide'>休閑地（耕作を休む土地）</span>に、家畜の飼料となる<span class='red-sheet-hide'>牧草や根菜類</span>を意図的に栽培し、作物の栽培と家畜の飼育を有機的に結びつけた。これにより休閑を廃止して土地の利用効率を極限まで高め、穀物生産と食肉・乳製品生産を同時に行う近代的な自給的混合農業へと発展した。",
+                explanation: "伝統的な「耕して休ませる」三圃式農業の段階から、休閑地に飼料用の作物（クローバーやカブなどの根菜）を植えて家畜を育てる近代的な混合農業へと進化し、土地利用が高度化（年中休まず稼働）したサイクルを解説します。"
+            },
+            {
+                qNum: 2,
+                title: "産業革命による「商業的混合農業」への変容背景",
+                question: "ヨーロッパで自給的混合農業が、特定の作物の生産に特化・合理化した「商業的混合農業」へと変容した歴史的・社会的な背景について、都市の状況と新大陸の影響から説明せよ。",
+                answer: "産業革命の進展により大都市への人口集中が加速して<span class='red-sheet-hide'>都市の農産物需要が急増</span>した一方、新大陸から<span class='red-sheet-hide'>安価な穀物が大量に流入</span>し、従来の穀物農業が衰退した。このため、競争力を失った農家は無駄を省き、大都市市場向けに高い利益を狙える「酪農製品、高級野菜、精肉」などの商業的生産へと合理的にシフトしたため。",
+                explanation: "都市部における膨大な人口（買い手）の出現という「需要の激変」と、アメリカなどの新大陸からの安い小麦の流入という「国際市場の変化」が重なったことで、自給用から「売るための」商業的混合農業へ変わらざるを得なかった背景を理解させます。"
+            },
+            {
+                qNum: 3,
+                title: "「酪農」が高緯度地域で発達した自然的・気候的理由",
+                question: "ヨーロッパの中でも、特に北西部の高緯度地域（イギリスやデンマーク、北ドイツなど）において、主食用の穀物栽培ではなく「酪農」が発達した自然的・気候的な要因を説明せよ。",
+                answer: "高緯度地域では年間を通じて気温が低く、偏西風や暖流の影響で湿潤であるものの曇天の日が多いため、植物の生育に必要な<span class='red-sheet-hide'>日照時間が著しく不足</span>する。そのため、小麦をはじめとする食用穀物の栽培が極めて困難であり、比較的冷涼な気候でも育ちやすい<span class='red-sheet-hide'>牧草の生育と乳牛の飼育</span>に土地利用を適応させたため。",
+                explanation: "高緯度北西ヨーロッパの自然的ハンディキャップ（曇りがちで夏も冷涼＝日照不足＝小麦などの食用穀物の栽培不適）を、冷涼に強い「牧草」の供給、そして乳牛を育てる「酪農」という、自然環境に最適化した選択に焦点をあてて整理します。"
+            },
+            {
+                qNum: 4,
+                title: "園芸農業における「近郊農業」と「輸送園芸」の差異",
+                question: "野菜や花卉などを大都市向けに生産する園芸農業において、都市近郊で行われる「近郊農業」と、遠隔地で行われる「輸送園芸（遠郊農業）」の違いが生じる仕組みと、それを支える技術的要因を説明せよ。",
+                answer: "近郊農業は、鮮度を保つために<span class='red-sheet-hide'>大都市（消費地）に隣接する高地価のエリア</span>で行われるが、輸送園芸は、都市から離れた温暖で適した環境（遠隔地）で生産される。これを可能にしたのが、保冷車や高速道路、航空機などの<span class='red-sheet-hide'>高速交通網の発達や冷蔵技術（コールドチェーン）の整備</span>であり、遠方からでも生鮮品を傷めず迅速に供給できるようになった。",
+                explanation: "「市場からの距離」によって地価や鮮度維持のリスクが変化する点、および遠隔地からの大量・高速輸送を可能にした「交通インフラ」と「温度管理技術」の進化による輸送園芸の台頭を比較対比して記述します。"
+            },
+            {
+                qNum: 5,
+                title: "地中海式農業における夏の気候特性と作物の適応工夫",
+                question: "南ヨーロッパで発達した「地中海式農業」について、この地域に特有な「夏の気候特性」を明確にし、そこで栽培される代表的な作物がどのようにその過酷な環境に適応しているか説明せよ。",
+                answer: "地中海性気候の夏は、中緯度高圧帯の影響下に入り<span class='red-sheet-hide'>著しく高温で乾燥する（ほとんど雨が降らない）</span>。そのため、水分蒸発を防ぐ分厚い葉や皮、地中から水を吸い上げる根を持つ、オリーブやレモン、ぶどう、コルクガシなどの<span class='red-sheet-hide'>耐乾性の強い樹木作物（硬葉樹）</span>を中心とした、環境に適応した栽培体系が確立された。",
+                explanation: "地中海の夏＝高温乾燥という気象現象、およびオリーブやコルクガシなどの樹木の身体的構造（分厚い葉、固い樹皮＝硬葉樹）が、いかにこの乾燥に適応して成立しているかを論述に盛り込みます。"
+            },
+            {
+                qNum: 6,
+                title: "アメリカの企業的農業を支える「適地適作」の思想",
+                question: "アメリカ合衆国などで見られる「企業的農業」の最大の特徴である「適地適作」とはどのような思想・システムか、市場経済（利益追求）および日本のような伝統的農業との対比に触れて説明せよ。",
+                answer: "適地適作とは、徹底した利潤追求を最優先とし、<span class='red-sheet-hide'>各地域の気候・土壌や市場への距離に最も適した特定作物</span>を広大な耕地に大型機械を用いて集中的に専門生産するシステム。日本のように多種類の小規模な田畑が隣接する非効率な景観とは異なり、無駄を排除した極めて合理的で大規模な農業構造を形成する。",
+                explanation: "適地適作（各自然条件・社会的条件に最高に適した農作物をモノカルチャー・企業的に作る）が、徹底的な「効率化とコスト削減（資本主義的合理性）」を背景にしている点と、日本型農業の多様・小規模な土地利用との差異を対比します。"
+            },
+            {
+                qNum: 7,
+                title: "「センターピボット方式」の仕組みと環境・水資源問題",
+                question: "アメリカ合衆国などの乾燥平原で行われている「センターピボット方式」による灌漑農業の仕組みと、長年にわたるその運用の結果として生じている深刻な地球環境問題（水資源問題）について説明せよ。",
+                answer: "センターピボット方式とは、円状に自動回転する巨大な散水パイプにより、地中から大量の地下水を汲み上げて<span class='red-sheet-hide'>広大な丸い耕地に効率的に散水</span>する技術。しかし、数万年かけて蓄積された地下水（オガララ帯水層など）を<span class='red-sheet-hide'>自然の涵養速度を大幅に超えて過剰に汲み上げ</span>た結果、各地で深刻な地下水の枯渇や塩害、地盤沈下を引き起こしている。",
+                explanation: "センターピボットが、極めて大規模な自動散水による「効率的な砂漠・乾燥地開発」を実現させた一方で、化石水とも呼ばれる回復の極めて遅い貴重な地下水を急激に消費して「枯渇（サステナビリティの喪失）」に直面させている環境課題の因果関係を示します。"
+            },
+            {
+                qNum: 8,
+                title: "プランテーション農業の生産体制と発展途上国の経済リスク",
+                question: "アフリカや中南米、東南アジアで見られる「プランテーション農業」について、欧米の企業的農業（機械化）との決定的な違い、および「モノカルチャー（単一耕作）」が現地経済にもたらす構造的リスクを説明せよ。",
+                answer: "プランテーション農業は、先進的な機械技術よりも<span class='red-sheet-hide'>大量の現地労働者を極めて安価な賃金で酷使する</span>ことで大規模生産を行う。売却用の特定の商品作物（バナナやカカオなど）に偏るモノカルチャー体制をとるため、<span class='red-sheet-hide'>国際相場（価格）の暴落や気候変動による凶作</span>が起きた際に国全体の財政が直撃を受ける極めて不安定な経済構造となる。",
+                explanation: "プランテーション＝「資本は欧米諸国＋安価な現地人労働力」という植民地主義的な労働集約・搾取構造であること、さらに「商品作物一種類だけに国家が依存（モノカルチャー）」するため、グローバルな世界市場の荒波や気候災害（一網打尽）に対して脆弱であるリスクを明確にします。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default closed states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">閉じる</span>
+                                <i class="fa-solid fa-chevron-up text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default folded: open as per design mandate, users can toggle) -->
+                    <div id="answer-box-${quiz.qNum}" class="p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                const answerBox = document.getElementById(`answer-box-${q.qNum}`);
+                const btnText = document.getElementById(`text-toggle-${q.qNum}`);
+                const btnIcon = document.getElementById(`icon-toggle-${q.qNum}`);
+                
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            });
+        };
+    </script>
+</body>
+</html>
