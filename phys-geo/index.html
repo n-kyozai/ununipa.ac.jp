@@ -59,20 +59,21 @@
 
             <!-- 件数情報だけを表示するグレー帯 -->
             <div class="bg-gray-200 p-2.5 mt-2 flex justify-center items-center text-sm text-gray-600">
-                <span id="total-count-label">全 13 件</span>
+                <span id="total-count-label">全 14 件</span>
             </div>
         </div>
     </div>
 
     <script>
         /**
+         * STREAMING_CHUNK:Configuring the physical geography course data...
          * 【講義データ設定 (GitHub管理用)】
          */
         const courseData = [
             { 
                 id: 2, 
                 name: "第2回講義資料", 
-                status: "out",                    // 全体ステータス ("active" | "prep" | "out")
+                status: "out",                     // 全体ステータス ("active" | "prep" | "out")
                 docStatus: "active", docLink: "https://drive.google.com/file/d/1Aa9DnChSsQOHgXYlfLIQzNBN_C17hOhX/view?usp=sharing",    // 授業資料ステータス & リンク
                 essayStatus: "prep", essayLink: "#", // 論述対策ステータス & リンク
                 qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1SVnD0iq8yaNLMP3WRv5ISgjS4V_HYkpeIR_Pzq3SzQY/edit?usp=sharing",       // 一問一答ステータス & リンク
@@ -255,14 +256,34 @@
         }
 
         /**
-         * STREAMING_CHUNK:Rendering the final HTML table rows...
+         * STREAMING_CHUNK:Sorting and rendering the HTML table rows...
          * 設定データに基づいてテーブル行を生成・レンダリングする
          */
         function renderTable() {
             const tbody = document.getElementById('pdf-list-body');
             tbody.innerHTML = '';
 
-            courseData.forEach(item => {
+            // 各ステータスの優先順位を定義 (1: 公開中, 2: 準備中, 3: 範囲外)
+            const statusPriority = {
+                'active': 1,
+                'prep': 2,
+                'out': 3
+            };
+
+            // 元データを破壊しないようにコピーを作成し、ステータス優先度 -> ID(回数)の順でソート
+            const sortedData = [...courseData].sort((a, b) => {
+                const priorityA = statusPriority[a.status] || 99;
+                const priorityB = statusPriority[b.status] || 99;
+
+                // 1. ステータス優先度が異なる場合はそれで並び替え
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB;
+                }
+                // 2. 同じステータスの場合は、講義回数(ID)の昇順で並び替え
+                return a.id - b.id;
+            });
+
+            sortedData.forEach(item => {
                 const tr = document.createElement('tr');
                 // ホバー時の背景変化を固定列側（資料名）にも適用するため 'group' クラスを付与
                 tr.className = "hover:bg-gray-50 transition-colors group";
