@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>人文地理学概論 第11回 宗教地理学 記述・論述演習アプリ</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュを基本背景に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-earth-asia text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">人文地理学 第11回 宗教地理学</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "世界宗教と民族宗教の定義・地理的対比",
+                question: "キリスト教やイスラム教のように、民族の境界を越えて世界中で広く信仰される「世界宗教」に対し、インドのヒンドゥー教やユダヤ人のユダヤ教などの「民族宗教」が持つ、文化的・地理的な特徴を説明せよ。",
+                answer: "世界宗教が国境や人種の枠組みを超えて普遍的に拡大するのに対し、民族宗教は<span class='red-sheet-hide'>特定の民族の言語、伝統、生活規律や文化</span>と深く結合して成立している。そのため、信者は原則としてその民族の血縁関係や特定地域に限定され、信仰人口がどれほど多くとも<span class='red-sheet-hide'>空間的な伝播範囲が狭い</span>。また、他民族への積極的な布教活動を伴わない特徴を持つ。",
+                explanation: "ヒンドゥー教は10億人を超える莫大な信仰人口を持ちますが、そのほとんどが南アジア（インド）やインド系移民に局在するため、地理学的には「民族宗教」として明確に区分されます。一方、世界宗教は民族的アイデンティティから乖離して伝播可能な普遍性を有します。"
+            },
+            {
+                qNum: 2,
+                title: "新大陸におけるキリスト教宗派の地理的分布要因",
+                question: "16世紀の大航海時代以降におけるキリスト教の伝播歴史をふまえ、アングロアメリカ（北米）で「プロテスタント」、ラテンアメリカ（中南米）で「カトリック」が多数派となった地理的背景を、旧宗主国の関係から説明せよ。",
+                answer: "キリスト教の新大陸への伝播はヨーロッパ諸国の植民地進出と直結している。南米や中米へは、カトリック国である<span class='red-sheet-hide'>スペインやポルトガル</span>が旧宗主国として進出し、軍事・政治支配を通じて改宗を強制・浸透させた。一方、北米へは、宗教改革を経た<span class='red-sheet-hide'>イギリスやオランダなど</span>のプロテスタント諸国からの移民が開拓を主導したため、宗派の地理的境界が画定した。",
+                explanation: "大航海時代以降のキリスト教の伝播パターンは「政治的支配と結びついた縦（南北）方向の空間的拡大」として分類されます。ヨーロッパにおけるカトリック（南欧）とプロテスタント（北西欧）の地理的コントラストが、そのまま新大陸の南北対比に投影されました。"
+            },
+            {
+                qNum: 3,
+                title: "イスラム教の東西への広域的な伝播と「乾燥帯」との親和性",
+                question: "アラビア半島のメッカで発祥したイスラム教が、なぜ「東西の横方向」へと帯状に急速に広がり、北アフリカから西アジア、中央アジアに共通して分布するようになったのか、その地理的な背景を説明せよ。",
+                answer: "イスラム教の拡大ルートが、発祥地と極めて類似した気候特性を持つ<span class='red-sheet-hide'>乾燥帯（砂漠・ステップ気候）</span>に沿っていたため。これらの過酷な乾燥地域では、古くから遊牧やオアシス農業、商業交易が共通の営みとして展開されており、砂漠での生存と秩序形成を目的として生まれた<span class='red-sheet-hide'>イスラム教の社会規律や商業重視の教え</span>が、地域の人々に非常に受け入れられやすかったためである。",
+                explanation: "イスラム教の伝播は「気候の同一性に連動した東西（横）方向の空間的拡大」として特徴づけられます。さらに陸路のみならず「海のシルクロード（インド洋交易網）」に沿って、ムスリム商人経由で東南アジア（インドネシア等）へ自発的に伝播した経済的側面も超重要です。"
+            },
+            {
+                qNum: 4,
+                title: "イスラム教における「飲酒」の厳格な禁止の環境合理性",
+                question: "イスラム教において「お酒（飲酒）」を飲むことが厳格に禁止されている理由について、発祥地の過酷な乾燥環境における「生存戦略」と「有限な資源保護」の２つの観点から説明せよ。",
+                answer: "極度の乾燥環境である砂漠気候下では、安全な生存のための水資源の確保が最優先される。アルコールが持つ利尿作用は、体内の急激な<span class='red-sheet-hide'>脱水症状</span>を引き起こして命の危険に直結するため禁止された。また、限られた水と主食である貴重な穀物を<span class='red-sheet-hide'>大量消費する酒造は資源の浪費</span>にあたり、飲酒後の水分渇望も招くため、集団の生存に不合理であるとして排除された。",
+                explanation: "「人文地理学概論_第11回_授業資料_宗教地理学（キリスト教・イスラム教・ヒンドゥー教）.pdf」に基づき、お酒を造ることに大切な「穀物」と「水」が多量に奪われ、さらにそれを消費することで乾燥地で最も致命的な「脱水」を招いてしまうという、生態学的・経済的合理性を記述する問題です。"
+            },
+            {
+                qNum: 5,
+                title: "イスラム教における「豚肉食・飼育」の禁止がもたらす生態・経済合理性",
+                question: "イスラム教において「豚肉」を食べることも飼育することも固く禁じられている背景について、豚の「食性・生理的特徴」と「砂漠気候の特性」の観点から説明せよ。",
+                answer: "豚は牛や羊といった草食の反芻動物とは異なり雑食性であり、飼育には人間と直接競合する<span class='red-sheet-hide'>多量の穀物と水資源を必要とする</span>ため、乾燥環境での飼育は極めて不経済である。また、高温多湿に弱い豚肉は砂漠の猛暑で<span class='red-sheet-hide'>急速に腐敗し、深刻な食中毒リスク</span>を伴うため、不浄の存在としてシステムから排除される生存上の必然性があった。",
+                explanation: "豚は「人間と同じ穀物を食べる雑食」「大量の水を消費する」という生態から、オアシス以外での生存限界を超えてしまいます。砂漠で豚を育てることは贅沢かつ生存資源の自滅行為にあたり、猛暑で腐りやすい不衛生さも合わさって、絶対的な禁忌（ハラーム）とされました。"
+            },
+            {
+                qNum: 6,
+                title: "断食（ラマダーン）が乾燥環境下で果たす「資源・行動管理」上の知恵",
+                question: "イスラム教の断食月（ラマダーン）について、信仰上の精神鍛錬や貧困者への共感という目的に加え、過酷な砂漠気候を生き抜く「エネルギー（資源）管理・労働調整」の観点からどのような合理性があるか説明せよ。",
+                answer: "日中の最も気温が高く過酷な時間帯にあえて一切の飲食を断つことで、体内熱を発生させる消化活動や、日中の非効率な<span class='red-sheet-hide'>労働活動を意図的に抑制（エネルギーの浪費防止）</span>するため。これにより、集団が熱中症や脱水に陥るリスクを最小限に防ぎ、日が沈んで涼しくなってから活動・飲食を行うという、過酷な砂漠を安全に生き抜くための<span class='red-sheet-hide'>生活調整システムとしての合理性</span>を持つ。",
+                explanation: "断食はただの我慢の行事ではなく、砂漠気候において最も熱い日中のパフォーマンスを抑制させ、生命資源と集団の水分代謝を守る「究極の省エネ・活動停止プログラム」でもあります。この生存戦略としての側面を解説することが加点ポイントになります。"
+            },
+            {
+                qNum: 7,
+                title: "仏教発祥のインドで「ヒンドゥー教」が圧倒的多数を占める変遷",
+                question: "仏教（ブッダ）発祥の地でありながら、なぜ現在のインドにおいては仏教が埋没し、独自の民族宗教である「ヒンドゥー教」が人口の約8割を占めて定着しているのか、その宗教的変遷を説明せよ。",
+                answer: "仏教はバラモン教の厳しい階級差別を否定して平等を説いたが、バラモン教側がこれに対抗して自己を柔軟に再編。仏教の教えやブッダの存在、さらにインド土着の信仰や神々を包括的に内包して<span class='red-sheet-hide'>「ヒンドゥー教」として大衆化</span>させた。このヒンドゥー教が日々の生活習慣や<span class='red-sheet-hide'>社会的役割分担と深く結合したカースト制</span>を伴う伝統システムとなり、日常生活そのものとなったため。",
+                explanation: "紀元前1500年頃に侵入したアーリヤ人が作った「バラモン教」は、のちにブッダの「仏教（平等）」によって批判・衰退しました。しかし、それをヒンドゥー神話に取り込んでインド固有の生活システムとして再統合した「ヒンドゥー教」が生活習慣そのものとなったことで、仏教は逆輸入・埋没する結果となりました。"
+            },
+            {
+                qNum: 8,
+                title: "カースト制の構造（ヴァルナとジャーティ）と憲法禁止下での残存理由",
+                question: "インドのカースト制において、身分の大枠を示す「ヴァルナ」と、人々の現実的な「職業・婚姻」の基準となる「ジャーティ」の違いを示した上で、憲法で差別が禁止されながらも現代社会に残存する理由を説明せよ。",
+                answer: "マクロな4大身分階級の「ヴァルナ」に対し、現実の血縁・居住・伝統的な<span class='red-sheet-hide'>職業分業の集団は数千にも及ぶ「ジャーティ」</span>が基礎となっている。近代憲法がカースト差別を禁止しても、村落や地域社会においてジャーティを前提とした互助や<span class='red-sheet-hide'>社会的・産業的分業構造が伝統システムとして強固に機能し続けている</span>ため、事実上社会の骨組みとして存続している。",
+                explanation: "カースト制は、机上の4段階区分（ヴァルナ）だけで動いているのではなく、実際の生計・結婚を排他的に司るミクロな血縁職業集団（ジャーティ）の存在が本体です。伝統的な社会・経済システムがこれをインフラとして回っているため、現代でも解体することが非常に困難です。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default open states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">閉じる</span>
+                                <i class="fa-solid fa-chevron-up text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default open) -->
+                    <div id="answer-box-${quiz.qNum}" class="p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                const answerBox = document.getElementById(`answer-box-${q.qNum}`);
+                const btnText = document.getElementById(`text-toggle-${q.qNum}`);
+                const btnIcon = document.getElementById(`icon-toggle-${q.qNum}`);
+                
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            });
+        };
+    </script>
+</body>
+</html>
