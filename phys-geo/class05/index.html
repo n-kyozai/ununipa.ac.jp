@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>自然地理学概論 第5回 論述試験演習ワークスペース</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-earth-asia text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第5回 世界の気候</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        // Quiz Questions Database (8 core descriptive questions from Lecture 5 "世界の気候")
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "気候要素と気候因子の関係性",
+                question: "大気の長期的な状態を示す「気候」について、「気候要素」と「気候因子」という2つの用語の違いを明確にし、両者の関係性を簡潔に説明せよ。",
+                answer: "気候要素とは気温・降水量・風など<span class='red-sheet-hide'>気候を構成する大気の状態</span>を指し、気候因子とは海抜高度・地形・海流・緯度など<span class='red-sheet-hide'>気候要素に影響を与えて地域差を生み出す要因</span>を指す。気候因子によって特定の気候要素が形成され、その長期的な状態が気候となる関係にある。",
+                explanation: "気候因子（原因・環境条件）が、気候要素（結果・観測可能な大気の状態）に作用して、特定の気候が形作られます。論述の際は原因と結果の関係を明確にすることが得点の鍵です。"
+            },
+            {
+                qNum: 2,
+                title: "大陸性と海洋性気候の気温年較差",
+                question: "大陸の内陸部（大陸性気候）と、海に近い沿岸部（海洋性気候）における、気温の「年較差」の大きさの違いとその物理的な理由を、土と水の性質に注目して説明せよ。",
+                answer: "陸（土）は海（水）に比べて<span class='red-sheet-hide'>比熱が小さく</span>温まりやすく冷めやすい性質があるため、内陸部では気温の<span class='red-sheet-hide'>年較差が大きく</span>なる。一方、海洋（水）は比熱が大きく温度変化しにくいため、温和な風に影響される沿岸部では気温の年較差が小さくなるため。",
+                explanation: "比熱とは、物質の温度を1度上げるのに必要な熱量のこと。比熱が小さい土（陸地）は季節や昼夜による温度変動が大きくなる一方、比熱の大きい水（海洋）は緩やかにしか変化しないため、海洋に近いほど穏やかな気候になります。"
+            },
+            {
+                qNum: 3,
+                title: "サバナ気候（Aw）における南北の雨季・乾季逆転現象",
+                question: "サバナ気候（Aw）において、同じ気候区でありながら、北半球と南半球とで「雨季」と「乾季」の時期が完全に逆転（約半年ずれる）するメカニズムを、太陽の動きと気圧帯の移動から説明せよ。",
+                answer: "太陽の回帰運動に伴い、雨を降らせる<span class='red-sheet-hide'>赤道低圧帯（熱帯収束帯）</span>と乾燥をもたらす<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>が南北に移動するため。太陽が真上に近く直射高度が最大となる「夏」の時期に、雨をもたらす赤道低圧帯が覆いかぶさるため、南北半球で雨季の時期が半年ずれることになる。",
+                explanation: "太陽高度が最大となる（夏を迎える）半球へ向けて、赤道付近の上昇気流の帯（赤道低圧帯）が偏ってシフトします。そのため、北半球の夏（7月頃）は北半球が雨季、南半球の夏（1月頃）は南半球が雨季になります。"
+            },
+            {
+                qNum: 4,
+                title: "ヨーロッパ西岸が高緯度のわりに温暖な理由",
+                question: "ヨーロッパ西岸は、同緯度の大陸東岸（日本海側や樺太など）に比べて冬が非常に温暖である。この気候的特徴をもたらす「海流」と「風」の具体的なはたらきを説明せよ。",
+                answer: "低緯度側から温かい海水を運ぶ暖流の<span class='red-sheet-hide'>北大西洋海流</span>によって、ヨーロッパ西岸周辺海域の気温が底上げされているため。その温められた海水の上にある湿潤で温かい空気が、恒常風である<span class='red-sheet-hide'>偏西風</span>によって西から東へ絶えず大陸側へ運び込まれるため。",
+                explanation: "暖流である「北大西洋海流」が温かい熱を供給し、大気大循環における「偏西風」がその熱を運搬することで、高緯度のヨーロッパは緯度のわりに劇的に暖かくなります。海流＋風のセットで解答する必要があります。"
+            },
+            {
+                qNum: 5,
+                title: "西岸海洋性気候（Cfb）における日照時間の少なさ",
+                question: "西岸海洋性気候（Cfb）地域において、年間を通じて穏やかな降水がある一方で、曇天の日が多く「日照時間が少ない」のはなぜか。海流と大気大循環の影響に注目してその理由を説明せよ。",
+                answer: "暖流の北大西洋海流の上を通る<span class='red-sheet-hide'>偏西風</span>が、海面から蒸発した大量の<span class='red-sheet-hide'>水蒸気（水分）</span>を蓄えて絶えず大陸へ運び込むため。この湿った空気が陸地で冷やされることで雲が発生しやすくなり、しとしとと降る霧雨や曇天の日が多くなるため。",
+                explanation: "偏西風は「熱」だけでなく「水蒸気」も多量に運んでくるため、年間を通じて曇りや霧雨の日が多く、強い日差しが降り注ぐ晴天の日（日照時間）が少なくなります。"
+            },
+            {
+                qNum: 6,
+                title: "亜寒帯冬季少雨気候（Dw）における極寒と乾燥の理由",
+                question: "ユーラシア大陸北東部に分布する亜寒帯冬季少雨気候（Dw）において、冬に極めて深刻な冷え込みと乾燥（少雨）が発生するメカニズムを説明せよ。",
+                answer: "冬に冷え切った大陸上に強力なシベリア高気圧が発達し、<span class='red-sheet-hide'>下降気流</span>が卓越するため雨や雪がほとんど降らず乾燥する。さらに、雲のない晴天が続くことで、夜間に地表面の熱が宇宙空間へ放出される強烈な<span class='red-sheet-hide'>放射冷却</span>が働き、気温が限界まで冷え込むため。",
+                explanation: "冬のシベリア等では猛烈な大陸性の寒冷高気圧が発達し、下降気流で空が晴れ渡ります。すると「熱を蓄える温室」の役目をする雲がないため、地面の熱がどんどん奪われ、極寒かつ極度の乾燥が同時に発生します（年較差は世界最大を記録します）。"
+            },
+            {
+                qNum: 7,
+                title: "乾燥帯（B気候）における「日較差」の最大化",
+                question: "砂漠気候（BW）に代表される乾燥帯地域において、1日の中での気温の変動（日較差）が極めて大きくなる気候的なメカニズムを、地面と大気（雲・水蒸気）の状態に注目して説明せよ。",
+                answer: "日中は水分や植物が皆無に等しい地面が、強い直射日射によって直接熱せられるため急激に地表温度が上昇する。一方、夜間は大気中に保温効果を持つ水蒸気や雲が極めて少ないため、地表の熱が一気に上空に逃げる強烈な<span class='red-sheet-hide'>放射冷却</span>が発生し、温度が急激に下がるため。",
+                explanation: "水蒸気や雲は、地表から出る熱をブロックする天然の毛布の役割を果たします。乾燥帯にはこれがないため、昼は日光をダイレクトに浴びて猛暑になり、夜は一瞬で寒冷地並みの冷え込みに変わります。"
+            },
+            {
+                qNum: 8,
+                title: "砂漠（BW）の成因4パターンとその発生条件",
+                question: "世界各地に広がる砂漠気候（BW）について、雨が極端に少なく砂漠が形成される主な要因（砂漠の成因）を4パターン挙げ、それぞれどのような地理的条件によって発生するか説明せよ。",
+                answer: "①年中下降気流が支配的な<span class='red-sheet-hide'>亜熱帯高圧帯</span>の影響下となる回帰線砂漠、②海から遠く水蒸気が供給されない内陸砂漠、③隣接する沿岸の<span class='red-sheet-hide'>寒流</span>により下層大気が冷えて上昇気流が起こりにくい海岸砂漠、④卓越風が湿気を落として山を越えた後に吹く風下乾燥地帯にあたる<span class='red-sheet-hide'>雨陰砂漠</span>の4パターン。",
+                explanation: "共通テストや二次試験でも特に出題頻度が高い超重要テーマです。緯度、隔海度、寒流、卓越風と山地地形という4つの異なる物理的アプローチが砂漠を形成しています。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default closed states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">解答・解説</span>
+                                <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default folded: hidden) -->
+                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+        };
+    </script>
+</body>
+</html>
