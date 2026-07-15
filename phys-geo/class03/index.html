@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自然地理学概論 第3回 論述試験演習ワークスペース</title>
+    <title>自然地理学概論 第3回 大気のはたらき 記述・論述演習アプリ</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome icons -->
@@ -17,7 +17,7 @@
         @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
         
         :root {
-            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            /* image_4b0c41.png から抽出した極上ベージュを基本背景に指定 */
             --bg-app: #FAF7F0;         
             --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
             --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
@@ -44,9 +44,10 @@
             cursor: pointer;
             display: inline-block;
             user-select: none;
+            transition: none !important; /* アニメーションなし */
         }
 
-        /* タップして開示された状態（もう一度タップすると元に戻る） */
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
         .red-sheet-hide.revealed {
             background-color: #FEE2E2 !important; /* 薄ピンク */
             color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
@@ -54,7 +55,7 @@
             user-select: auto;
         }
 
-        /* 瞬時フォントサイズ変更用スタイル（アニメーションは排除、"中"を排除してすっきり化） */
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
         .size-normal .dynamic-text-lg { font-size: 14px; }
         .size-normal .dynamic-text-md { font-size: 12px; }
         .size-normal .dynamic-text-sm { font-size: 11px; }
@@ -74,9 +75,10 @@
     <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
         <div class="max-w-2xl mx-auto flex flex-col gap-2">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-1.5">
-                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center">
-                        <i class="fa-solid fa-graduation-cap text-xs"></i>
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-cloud text-xs"></i>
                     </div>
                     <div>
                         <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第3回 大気のはたらき</h1>
@@ -84,7 +86,7 @@
                     </div>
                 </div>
 
-                <!-- Font Size Button "あぁ" (Instant toggle) -->
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
                 <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
                     <span class="text-[10px] font-bold">あぁ:</span>
                     <span id="font-size-label" class="text-[10px]">標準</span>
@@ -109,20 +111,9 @@
     <!-- Main Content Area -->
     <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
         
-        <!-- Explanation Note Banner -->
-        <div class="bg-[#F3EFE6] rounded-xl p-3 border border-[#E6DFD3] flex flex-col gap-1 shadow-sm">
-            <h2 class="text-xs font-bold text-[#2F2924] flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-info text-[#2E6F40]"></i>
-                論述演習モードの使い方
-            </h2>
-            <p class="text-[10px] text-slate-600 leading-relaxed">
-                各問は初期状態で折りたたまれており、問題文のみ確認できます。右上の「解答・解説」ボタンを押すと、正解の解答文と加点されるロジック背景が一瞬で開きます。赤シート箇所は個別にタップすることでもトグル開閉が可能です。
-            </p>
-        </div>
-
         <!-- Quiz List Container (Injected by JS) -->
         <div id="quiz-list-container" class="space-y-3">
-            <!-- Questions injected here -->
+            <!-- Questions will be dynamically injected here -->
         </div>
 
     </main>
@@ -134,60 +125,67 @@
     </div>
 
     <script>
-        // Quiz Questions Database (7 core descriptive questions from Lecture 3)
+        // Quiz Questions Database (8 core descriptive questions from Lecture 3 "大気のはたらき")
         const quizDatabase = [
             {
                 qNum: 1,
-                title: "気流と気圧の発生メカニズム",
+                title: "気流の垂直移動と地表気圧の発生物理メカニズム",
                 question: "空気の温度変化にともなう垂直方向の移動（気流）によって、地表に「高気圧」や「低気圧」が発生する物理的なメカニズムを、空気の密度や重さの変化に注目して簡潔に説明せよ。",
-                answer: "空気が暖められると密度が小さくなって軽くなり、<span class='red-sheet-hide'>上昇気流</span>が発生して地表を押す大気の量が減るため<span class='red-sheet-hide'>低気圧</span>となる。一方、空気が冷やされると密度が大きくなって重くなり、<span class='red-sheet-hide'>下降気流</span>が発生して地表を押す大気の量が増すため<span class='red-sheet-hide'>高気圧</span>となるため。",
-                explanation: "空気は熱せられると膨張して軽くなり上昇します。地表付近の上空へ空気が逃げるため気圧は下がります。逆に、冷やされた空気は凝縮して重くなり下降するため、地表を押す大気質量が増加し高気圧となります。"
+                answer: "太陽放射などで空気が暖められると、膨張して<span class='red-sheet-hide'>密度が小さく（軽く）</span>なり<span class='red-sheet-hide'>上昇気流</span>が発生する。これにより地表付近の空気量が減少して大気の重さ（地面を押す力）が下がり「低気圧」となる。一方、空気が冷やされると収縮して<span class='red-sheet-hide'>密度が大きく（重く）</span>なり<span class='red-sheet-hide'>下降気流</span>が発生し、地表付近の空気量が密集して大気の重さが増すことで「高気圧」が形成される。",
+                explanation: "大気は温度上昇で軽くなり、温度低下で重くなります。地表における気圧の本質は「頭上にある空気の総重量」であるため、上昇気流（地表の空気を上空に持ち去る）は気圧を下げ、下降気流（上空の空気を地表へ押し固める）は気圧を上げます。"
             },
             {
                 qNum: 2,
-                title: "コリオリの力と恒常風の向き",
-                question: "大気大循環において、風は高気圧から低気圧へ向かって直線的に吹かず、東西に曲がって吹く（偏西風や貿易風など）。この現象を引き起こす、地球の自転運動から生じる見かけの力について説明せよ。",
-                answer: "自転する地球の上を移動する大気には、見かけの力である<span class='red-sheet-hide'>コリオリの力（転向力）</span>が働くため。この力は地球の自転運動に起因し、北半球では進行方向に対して<span class='red-sheet-hide'>右方向</span>、南半球では<span class='red-sheet-hide'>左方向</span>にはたらくことで風向きを東西方向へと変向させる。",
-                explanation: "コリオリの力（転向力）は地球自転により生じる見かけの力です。北半球で右、南半球で左に大気流を偏向させるため、緯度帯に応じた東西方向の風（偏西風や極偏東風など）が生まれます。"
+                title: "地球自転による「コリオリの力」と恒常風の進行方向偏向",
+                question: "赤道から両極へ向けて吹く風や、極から赤道へ向けて吹く風は、なぜ地表に対して真っ直ぐ南北に吹かず、東西に曲がって吹くのか。地球の自転運動から生じる見かけの力に触れて説明せよ。",
+                answer: "自転する地球の上で運動する物体には、地球の自転運動に起因する見かけの力である<span class='red-sheet-hide'>コリオリの力（転向力）</span>が働くため。この力が、運動の進行方向に対して<span class='red-sheet-hide'>北半球では右向き</span>、<span class='red-sheet-hide'>南半球では左向き</span>に作用することで、移動する空気の風向が東西方向へと大きく偏向して吹くことになる。",
+                explanation: "地球の球体形状と緯度による自転線速度の差によって、極側へ向かう大気は自転方向（東）へ先回りする形になり（偏西風）、赤道へ向かう大気は取り残される形になります（貿易風）。北半球は進行右向き、南半球は左向きの力が加わります。"
             },
             {
                 qNum: 3,
-                title: "サバナ気候の雨季と乾季の交代",
-                question: "低緯度の「サバナ気候（Aw）」分布地域において、なぜ夏に大雨が降る「雨季」となり、冬に極度に乾燥する「乾季」となるのか。太陽の移動と地球全体の気圧帯の規則的移動に注目して説明せよ。",
-                answer: "太陽の移動に伴い、地球全体の気圧帯が南北に連動移動するため。夏は、強い上昇気流により雨雲が発達しやすい<span class='red-sheet-hide'>熱帯収束帯（赤道低圧帯）</span>に覆われて雨季となり、冬は、下降気流により雲が極めて発生しにくい<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>に覆われて乾季となる。",
-                explanation: "太陽の直射高度の季節変動に伴い、地球全体の主要気圧帯が南北に約10度シフトします。熱帯収束帯（多雨）と亜熱帯高圧帯（乾燥）の支配域が夏冬で交代することで、極端な雨乾季が成立します。"
+                title: "太陽の回帰による大気大循環気圧帯の移動とサバナ気候の成立",
+                question: "赤道に近い低・中緯度に分布する「サバナ気候」の地域において、夏に雨が多く降る「雨季」となり、冬に著しく乾燥する「乾季」となる理由を、地球規模の気圧帯の季節移動から説明せよ。",
+                answer: "地球が傾いて公転しているため、太陽の回帰（季節移動）にともなって、地球規模の大気大循環における気圧帯が南北に移動するため。太陽が真上に近くなる夏は、上昇気流により雨雲が活発に発達する<span class='red-sheet-hide'>赤道低圧帯（熱帯収束帯）</span>に覆われて「雨季」となるが、冬は、下降気流が卓越し大気が極めて乾燥する<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>に覆われるため「乾季」となる。",
+                explanation: "太陽が天頂を照らす位置が移動するにつれて、熱帯低圧帯と中緯度高圧帯という対照的な2つの空気の塊の帯が南北に波打つように動き、サバナ気候地域を代わる代わる支配することによって、劇的な乾湿のサイクルが生じます。"
             },
             {
                 qNum: 4,
-                title: "土と水の比熱の差と季節風の発生",
-                question: "陸地（土）と海洋（水）の熱的性質（比熱）の違いに注目し、大陸と海洋の間で、季節によって風向が逆転する「季節風（モンスーン）」が発生する原理を説明せよ。",
-                answer: "陸は海より比熱が小さく<span class='red-sheet-hide'>温まりやすく冷めやすい</span>、海は比熱が大きく温まりにくく冷めにくい熱特性を持つため。夏は陸が高温で低気圧になり<span class='red-sheet-hide'>海から陸へ</span>湿った風が吹き、冬は陸が低温で高気圧になり<span class='red-sheet-hide'>陸から海へ</span>乾燥した冷たい風が吹くため。",
-                explanation: "比熱が小さい大陸は、夏に海洋よりも急速に熱せられ上昇気流（低圧部）が生じます。この気圧差により、夏は海洋の高圧部から大陸へ、冬は大陸の強力な寒冷高気圧から海洋に向けて季節風が吹くようになります。"
+                title: "「土」と「水」の比熱の差が引き起こす季節風の反転原理",
+                question: "「土」と「水」の熱的性質（比熱）の違いに注目し、大陸と海洋の間で、夏と冬とで吹く風の向きが真逆になる「季節風（モンスーン）」が発生する物理的な仕組みを説明せよ。",
+                answer: "土は水に比べて<span class='red-sheet-hide'>比熱が小さく</span>「温まりやすく冷めやすい」が、水は<span class='red-sheet-hide'>比熱が大きく</span>「温まりにくく冷めにくい」性質を持つ。この差により、夏は太陽光で急激に温まった大陸側が低気圧、相対的に冷たい海洋側が高気圧となり<span class='red-sheet-hide'>海から陸（大陸）へ</span>風が吹く。反対に冬は、急速に冷え込んだ陸側が高気圧、温かさを保つ海洋側が低気圧となり<span class='red-sheet-hide'>陸から海へ</span>風が吹くため。",
+                explanation: "比熱とは物質1gの温度を1度上げるのに必要な熱量です。土の比熱は水の約5分の1と小さいため、季節交代による太陽熱の強弱に過敏に反応し、大陸が巨大な熱源（低気圧）または寒冷地（高気圧）に変化することで、風の進路を決定づけます。"
             },
             {
                 qNum: 5,
-                title: "日本の冬の気圧配置と特有の天候",
-                question: "日本周辺における冬の典型的な気圧配置の名称を答え、その配置が形成される理由と、それが日本海側・太平洋側にもたらす対照的な天候について詳しく説明せよ。",
-                answer: "冬の日本は<span class='red-sheet-hide'>西高東低</span>の気圧配置をとる。冷え切ったユーラシア大陸に強力なシベリア高気圧が、北太平洋に低気圧ができ、北西の冷たく乾燥した季節風が吹く。これが日本海で水蒸気を大量に補給し、日本列島の中央山脈に衝突して<span class='red-sheet-hide'>日本海側に大雪</span>を降らせ、山脈を越えた<span class='red-sheet-hide'>太平洋側に乾燥した晴天</span>をもたらすため。",
-                explanation: "シベリアからの極寒乾燥の北西季節風が、暖かい日本海を渡る過程で大量の潜熱と水蒸気を獲得します。中央の脊梁山脈を越える際に上昇・強制冷却されて日本海側に豪雪をもたらし、山を越えた後は乾燥した風となって太平洋側へ吹き下ります。"
+                title: "「西高東低」の冬型気圧配置と日本の特徴的な東西気候特性",
+                question: "日本周辺において、冬にみられる特徴的な気圧配置の名称を答え、その配置が形成される理由と、それが日本列島（特に日本海側と太平洋側）にもたらす気候的な特徴について説明せよ。",
+                answer: "冬の気圧配置は<span class='red-sheet-hide'>西高東低（せいこうとうてい）</span>と呼ばれる。極度に冷え込んだユーラシア大陸（シベリア）側に強力な高気圧が、太平洋側に低気圧が発生することで形成される。この配置により、乾燥して冷たい北西の季節風が日本海を渡る際、暖流から大量の水蒸気を吸収し、中央の山脈にぶつかって<span class='red-sheet-hide'>日本海側に大雪</span>を降らせ、山脈を越えた<span class='red-sheet-hide'>太平洋側には乾燥した晴天（からっ風）</span>をもたらす。",
+                explanation: "シベリア高気圧が西側から、アリューシャン低気圧が東側から日本を挟み撃ちにするため、等圧線が南北に密になり、冷たい北西風が吹き荒れます。日本海は天然の加湿器となり、日本海側の山岳地帯に大量の雪の盾を作ったのち、太平洋側には乾いた強風だけが吹き抜けます。"
             },
             {
                 qNum: 6,
-                title: "局地風「やませ」の仕組みと冷害",
-                question: "日本の東北地方などで春から秋にかけて吹く「やませ」とはどのような風か、その発生源となる気団（海洋）の名称と、それが引き起こす農業的な深刻な被害について説明せよ。",
-                answer: "春から秋にかけて、冷たい海であるオホーツク海上の<span class='red-sheet-hide'>オホーツク海気団</span>から吹く、冷たく湿った北東（東）よりの局地風。この低温の風と高密度の海霧が太平洋側から長期間吹き込むことで日照時間が著しく減少し、東北地方を中心に深刻な<span class='red-sheet-hide'>冷害（作物の不作）</span>をもたらすため。",
-                explanation: "オホーツク海の氷冷海水上で形成される冷涼湿潤な高気圧から吹き出す風です。高密度の濃霧「海霧」を伴い東北太平洋側に侵入し、夏の気温上昇と日照を妨げることで、稲の花粉障害や生育不全（冷害）を誘発します。"
+                title: "オホーツク海気団から吹く局地風「やませ」と冷害の因果関係",
+                question: "日本の東北地方などの太平洋側において、春から秋にかけて吹く局地風である「やませ」について、その発生源となる気団（海洋）の名称と、それが農業に与える深刻な影響を説明せよ。",
+                answer: "やませは、春から秋にかけて<span class='red-sheet-hide'>オホーツク海気団</span>から吹き込む、極めて冷たく湿った北東寄りの風である。この風が長期間にわたって継続して東北地方の太平洋側に吹き込むと、濃厚な海霧や曇天に覆われて<span class='red-sheet-hide'>日照時間が著しく不足</span>し、気温が上がらなくなることで、主食である稲作の生育に深刻な<span class='red-sheet-hide'>冷害（れいがい）</span>を引き起こす。",
+                explanation: "梅雨から初秋にかけて、冷たいオホーツク海の上で発達するオホーツク海高気圧が主原因です。ここから押し寄せる湿った冷気は、山脈を越えられないため太平洋側に溜まりやすく、夏でも防寒着が必要になるほどの冷え込み（冷害）を農作物に与えます。"
             },
             {
                 qNum: 7,
-                title: "フェーン現象と2つの気温逓減率",
-                question: "山地を越えて吹き下りてくる風が、ふもとの地域に著しい「高温」と「乾燥」をもたらす「フェーン現象」について、空気が山を「上る時」と「下る時」の「気温の逓減率（温度変化の割合）」の違いを比較して物理的に説明せよ。",
-                answer: "湿った空気が山を上る際は水蒸気が凝結（雨）して熱を放出するため、高度 $100\\text{ m}$ あたり約 $0.5 \\sim 0.65^\\circ\\text{C}$ の穏やかな割合（<span class='red-sheet-hide'>湿潤逓減率</span>）で冷える。一方、雨を降らせて乾燥した空気が山を下る際は熱放出を伴わないため、高度 $100\\text{ m}$ あたり <span class='red-sheet-hide'>$1.0^\\circ\\text{C}$</span> の急激な割合（<span class='red-sheet-hide'>乾燥逓減率</span>）で気温が上昇するため。",
-                explanation: "空気が上昇する際は膨張冷却されますが、水蒸気が雨に変わる（凝結）際に「潜熱」を放出するため温度低下が緩やか（湿潤逓減）になります。しかし、山頂で雨を降らせきって乾燥した空気が山を下る際は、潜熱のやり取りがなくなり、100mにつき1℃のペース（乾燥逓減）で圧縮加熱されるため、山麓で極度の高温乾燥が発生します。"
+                title: "湿潤・乾燥の逓減率ギャップが引き起こす「フェーン現象」の原理",
+                question: "山を越えて吹き下りてきた風が、ふもとの地域に著しい高温と乾燥をもたらす「フェーン現象」について、空気が山を「上る時」と「下る時」の「気温の逓減率」の違いに触れて説明せよ。",
+                answer: "水蒸気を含んだ空気が山を上る際は、水蒸気の凝結にともなう潜熱の放出があるため、高度$100\text{ m}$につき約$0.5 \sim 0.65^\circ\text{C}$の割合（<span class='red-sheet-hide'>湿潤逓減率</span>）で緩やかに冷える。しかし、雨を降らせて乾燥した空気が山を下る際は、潜熱の放出がないため、高度$100\text{ m}$につき$1^\circ\text{C}$の割合（<span class='red-sheet-hide'>乾燥逓減率</span>）で急激に昇温する。この冷却と加熱の割合の差により、風下で高温乾燥風が吹く。",
+                explanation: "水が気体（水蒸気）から液体（雲・雨滴）に変化するとき、周囲に大量の「潜熱」を配ります。これにより、山を登るときは熱が補給され、あまり冷えません。しかし、山頂で雨として水分を脱落させてしまった空気は、下る時には熱補給のない「ただの乾燥空気」となり、全力で急加熱されるため、ふもとは驚くほどの熱風に襲われます。"
+            },
+            {
+                qNum: 8,
+                title: "大気の重さ「気圧」の定義と、水平移動としての「風」の発生仕組み",
+                question: "地表面における「気圧」とは何かを科学的に定義した上で、高気圧から低気圧へ向かって水平な空気の移動（風）が発生する仕組みについて、大気の不均衡解消という観点から説明せよ。",
+                answer: "気圧とは、<span class='red-sheet-hide'>地上にかかる大気の重さ（大気が地表面を押す力）</span>のことである。空気の量が多く、頭上からの重量が大きい状態を「高気圧」、空気の量が少ない状態を「低気圧」という。地球上では、この大気の量の不均衡な状態を解消しようとする物理的な力が働くため、<span class='red-sheet-hide'>空気の多い場所（高気圧）から少ない場所（低気圧）</span>へと向けて空気が水平に補われるように移動する。これが「風」の発生する仕組みである。",
+                explanation: "地表の大気は絶えず重力に引かれており、私たちは厚さ約10kmの「空気の海の底」に暮らしています。局所的な気流によって空気の詰まり具合（密度）が変化すると、圧力差が生じます。自然界は物理的にこの偏りを平らにならそうとするため、大気流（高気圧から低気圧への移動＝風）が発生します。"
             }
         ];
 
-        // Font Sizes: normal, small, large ("medium/中" was removed as requested)
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
         const fontSizes = ["normal", "small", "large"];
         const fontLabels = {
             "normal": "標準",
@@ -197,7 +195,7 @@
         let currentFontIdx = 0;
 
         /**
-         * Render the exercise cards in their default closed states, with toggle buttons.
+         * Render the exercise cards in their default open states, with toggle buttons.
          */
         function renderQuizList() {
             const container = document.getElementById("quiz-list-container");
@@ -217,21 +215,21 @@
                         </div>
                     </div>
 
-                    <!-- Problem text & State Toggler Button inside -->
-                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#FAF7F0]/80 transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
                         <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
                         
-                        <!-- State Toggler placed directly below the text -->
-                        <div class="flex justify-end">
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
                             <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
-                                <span id="text-toggle-${quiz.qNum}">解答・解説</span>
-                                <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                                <span id="text-toggle-${quiz.qNum}">閉じる</span>
+                                <i class="fa-solid fa-chevron-up text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Answer & Explanation area (Default folded: hidden) -->
-                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
+                    <!-- Answer & Explanation area (Default open) -->
+                    <div id="answer-box-${quiz.qNum}" class="p-3 space-y-3 bg-white/40">
                         <!-- Model Answer with Tap-to-Reveal red sheet targets -->
                         <div class="space-y-1">
                             <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
@@ -321,7 +319,7 @@
 
         /**
          * Cycle application font sizing instantly.
-         * Sequence: normal -> medium -> small -> large -> normal ...
+         * Sequence: normal -> small -> large -> normal ...
          */
         function cycleFontSize() {
             const body = document.getElementById("app-body");
@@ -338,6 +336,14 @@
             // Apply new sizing and text label
             body.classList.add(`size-${nextSize}`);
             label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
         }
 
         /**
@@ -360,6 +366,16 @@
         // Initialize on load
         window.onload = function() {
             renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                const answerBox = document.getElementById(`answer-box-${q.qNum}`);
+                const btnText = document.getElementById(`text-toggle-${q.qNum}`);
+                const btnIcon = document.getElementById(`icon-toggle-${q.qNum}`);
+                
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            });
         };
     </script>
 </body>
