@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>自然地理学概論 第10回 論述試験演習ワークスペース</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-earth-asia text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第10回 扇状地と三角州</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        // Quiz Questions Database (8 core descriptive questions from Lecture 10 "扇状地と三角州")
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "扇状地と三角州の形成場所と堆積プロセスの違い",
+                question: "河川が運搬した土砂の堆積地形である「扇状地」と「三角州（デルタ）」について、それぞれの代表的な「形成場所」と、堆積する「土砂の粒径（粒の大きさ）」に決定的な差が生じる流体力学的なプロセスを説明せよ。",
+                answer: "扇状地は、河川が<span class='red-sheet-hide'>山地から平地に出た急勾配の谷口</span>に形成され、流速が急減するため、上流から運ばれた粒径が粗い<span class='red-sheet-hide'>砂礫（礫や砂）</span>が堆積する。一方、三角州は、河川が<span class='red-sheet-hide'>海や湖に流入する最下流の河口</span>に形成され、流下距離が長いため土砂の選別が進み、最も細かい<span class='red-sheet-hide'>粘土や泥などの細粒土砂</span>が堆積する。",
+                explanation: "扇状地（山地→平地の谷口、礫や砂などの粗い砂礫）と三角州（最下流の河口、粘土や泥などの微細土砂）を、河口に近づくにつれて流速や運搬能力が低下し土砂の「選別作用」が進むというプロセスに結びつけて対比させます。"
+            },
+            {
+                qNum: 2,
+                title: "扇状地の扇央で「水無川」化する水文学的理由",
+                question: "扇状地の中央部である「扇央」において、通常の時期に地表を流れる河川水（表流水）が消失し、涸れ川（水無川）となりやすい地質学的・水文学的なメカニズムを説明せよ。",
+                answer: "扇央は、山地から運ばれた粒径の大きい<span class='red-sheet-hide'>砂や礫（粗い砂礫）</span>が厚く堆積して形成されている。粗い砂礫は粒子同士の隙間が大きいため、きわめて<span class='red-sheet-hide'>水はけ（透水性）が良く</span>、地表の河川水が容易に地下へ浸透して<span class='red-sheet-hide'>伏流水（地下水）</span>となり、地表面の流路が干上がるため。",
+                explanation: "堆積物の性質（粗い砂礫＝透水性が非常に高い＝隙間が大きい）が、地表の水を地下へと容易に逃がして「伏流」させ、その結果地表が水無川（涸れ川）になるという因果の連鎖を明確に記述します。"
+            },
+            {
+                qNum: 3,
+                title: "扇状地における構造別の伝統的土地利用",
+                question: "扇状地における「扇央」と「扇端」の水環境の決定的な違いを明確にし、それが伝統的な土地利用（農業・集落）にどのような対照的な影響を与えたか説明せよ。",
+                answer: "水が得にくい扇央では、伝統的に水害を避ける<span class='red-sheet-hide'>桑畑や果樹園・畑</span>として利用され、水不足のため集落の立地も避けられた。一方、伏流水が再び地表に湧き出る湧水帯の扇端では、水が非常に得やすいため、湧水線に沿って<span class='red-sheet-hide'>水田</span>が耕作され、古くから<span class='red-sheet-hide'>列状集落（扇端集落）</span>が形成された。",
+                explanation: "扇央（水が伏流し乾燥＝畑・果樹園・桑畑、集落不適）と、扇端（伏流水が自噴する湧水帯＝水田、列状集落の発達）を対称的に配置して論述します。「水環境（得やすさ・得にくさ）」が人間の生業・居住地選択を規定したプロセスを語ることがポイントです。"
+            },
+            {
+                qNum: 4,
+                title: "三角州（デルタ）の地盤災害と防災上の脆弱性",
+                question: "三角州は平坦な土地が広がるため、古くから大都市や交易の拠点として高度に利用されてきた。しかし、その地質的・地形的な特質に由来する「防災・災害上の弱点（脆弱性）」について複数の観点から説明せよ。",
+                answer: "三角州は標高が極めて低い平坦地のため、大雨時の洪水や海からの<span class='red-sheet-hide'>高潮・津波による浸水被害</span>に極端に弱い。さらに、地盤を構成する土砂が微細な泥・粘土質で水分を多く含むため、地震時の<span class='red-sheet-hide'>液状化現象や地盤沈下</span>が発生しやすいという地盤工学的な弱点を抱えている。",
+                explanation: "地形的特性（低平な低地＝外水氾濫・高潮・津波に極めて脆弱）と、地質的特性（含水比の高い微細粘土質＝圧密沈下や地震時の液状化リスク）の2つの側面をバランスよく簡潔に指摘します。"
+            },
+            {
+                qNum: 5,
+                title: "地震に伴う「液状化現象」の物理的メカニズム",
+                question: "三角州や沿岸の埋立地などで発生しやすい「液状化現象」について、地盤中の土砂粒子の状態や、地震時の振動（物理的エネルギー）がもたらす地盤内部の挙動に注目して説明せよ。",
+                answer: "水分を多く含んだ砂や泥の地盤において、通常は<span class='red-sheet-hide'>土砂粒子同士の弱い結合</span>によってかろうじて支え合っている。しかし、地震による強い振動が加わるとその結合が瞬時に崩壊し、地中の砂粒子が<span class='red-sheet-hide'>水（隙間水）の中に浮いた不安定な状態</span>となり、地盤全体が液体のような泥水（ドロドロ）状態になる現象。",
+                explanation: "砂や泥の緩い結合が「剪断変形（地震の揺れ）」によってバラバラに破壊され、内部の「間隙水圧」が上昇して粒子が水中に浮遊する（固体から液体へと物性が変わる）状態を論理的に整理します。"
+            },
+            {
+                qNum: 6,
+                title: "信濃川と越後平野（新潟平野）の水はけが極端に悪い理由",
+                question: "新潟県に広がる「越後平野」は、かつて洪水が発生すると何ヶ月も水が引かず「舟で稲刈り」を行うような過酷な低湿地であった。これほど水はけが極端に悪くなった理由を、流入する信濃川の「長さ」および「土砂選別」の観点から説明せよ。",
+                answer: "日本最長の河川である信濃川（$367\text{ km}$）は流下距離が極めて長いため、下流に運ばれるまでに礫や粗い砂は沈殿し、<span class='red-sheet-hide'>極めて粒径の小さい微細な粘土や泥</span>だけが選別されて越後平野に堆積した。この微細土砂は粒子間の隙間が非常に狭いため、<span class='red-sheet-hide'>地表の雨水や洪水が地下に浸透しにくく</span>、排水が著しく困難となるため。",
+                explanation: "信濃川が「日本一長い」という事実を、土砂の「厳密な選別作用」に結びつけ、結果として越後平野に「透水性が最悪の極微細粘土層」が堆積したために、水はけが悪化したプロセスを説明します。"
+            },
+            {
+                qNum: 7,
+                title: "越後平野の農業を救った近代・現代の排水対策",
+                question: "かつて「日本で最も農業に適さない湿田」とされた越後平野が、現代において日本有数の「乾田化した穀倉地帯（米どころ）」へと劇的に変貌を遂げた。この排水不良を克服するために、大正期から昭和期にかけて行われた代表的な大規模排水・土木事業について説明せよ。",
+                answer: "信濃川の本流から日本海へ直接、洪水をショートカットさせて逃がす<span class='red-sheet-hide'>「大河津分水路」や「関屋分水路」</span>といった大規模なバイパス（分水路）を建設した。さらに、低湿地から機械的に水を引き上げるための大型機械排水機場（<span class='red-sheet-hide'>排水ポンプの設置</span>）や、縦横に走る排水路整備、暗渠排水の布設等によって地盤乾燥化を進めたため。",
+                explanation: "信濃川下流の莫大な水量を直接海へショートカットさせる「大河津分水路（1922年通水開始）」「関屋分水路（1972年）」というキーワード、および低地から水を汲み上げる強力な「排水ポンプ」の近代土木工事の歴史を要約します。"
+            },
+            {
+                qNum: 8,
+                title: "氾濫原における自然堤防と後背湿地の対比",
+                question: "河川の氾濫原に形成される「自然堤防」と「後背湿地」について、洪水時における「土砂堆積プロセスの違い（粒径の選別）」と、それがもたらす「伝統的な土地利用の違い」について説明せよ。",
+                answer: "洪水時に、流速が急速に落ちる河川両岸付近には粒の大きい<span class='red-sheet-hide'>粗い砂質土壌が堆積して自然堤防（微高地）</span>をなし、水はけが良い性質から<span class='red-sheet-hide'>集落や畑・道路</span>に利用された。一方、堤防の背後に溢れた水から微細な<span class='red-sheet-hide'>泥や粘土が沈殿して後背湿地（低湿地）</span>をなし、水持ちが良い性質から<span class='red-sheet-hide'>水田</span>として伝統的に利用された。",
+                explanation: "河川に近く流速の落ち始めの地点＝粗い砂（水はけ◎、微高地＝集落・畑）と、そこから離れた静水域＝細かい泥（水はけ×、低湿地＝水田）という土砂粒径の分布勾配と土地利用の合目的性を対比させます。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default closed states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">解答・解説</span>
+                                <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default folded: hidden) -->
+                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                toggleAnswer(q.qNum);
+            });
+        };
+    </script>
+</body>
+</html>
