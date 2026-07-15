@@ -2,366 +2,362 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自然地理学概論 第3回 論述試験演習ワークスペース</title>
-    <!-- Tailwind CSS for styling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自然地理学概論 - 資料一覧メニュー</title>
+    <!-- Tailwind CSS の導入 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- KaTeX for math typesetting -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
-        
-        :root {
-            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
-            --bg-app: #FAF7F0;         
-            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
-            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
-            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
-            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
-            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        /* テスト一覧メニューから引き継いだカラーパレット */
+        .status-active { background-color: #a0c832; } /* 公開中：鮮やかな黄緑 */
+        .status-prep { background-color: #4bc0c8; }   /* 準備中：さわやかな水色 */
+        .status-out { background-color: #9ca3af; }    /* 範囲外：落ち着いたグレー */
+
+        /* テーブル格子線を細くクリーンに統一 */
+        table, th, td {
+            border: 1px solid #d1d5db; /* border-gray-300 */
         }
 
-        body {
-            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
-            background-color: var(--bg-app);
-            color: var(--color-text);
-            -webkit-tap-highlight-color: transparent;
+        /* ロック表示用の網掛け背景（範囲外の授業資料以外のカラム用） */
+        .bg-stripes {
+            background-image: linear-gradient(135deg, #f3f4f6 25%, transparent 25%, transparent 50%, #f3f4f6 50%, #f3f4f6 75%, transparent 75%, transparent);
+            background-size: 8px 8px;
         }
-
-        /* 赤シートがON（目隠し状態）のスタイル */
-        .red-sheet-hide {
-            background-color: var(--color-accent-red) !important;
-            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
-            border-bottom: 2px solid #8B2635 !important;
-            padding: 1px 4px;
-            border-radius: 4px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-block;
-            user-select: none;
-        }
-
-        /* タップして開示された状態（もう一度タップすると元に戻る） */
-        .red-sheet-hide.revealed {
-            background-color: #FEE2E2 !important; /* 薄ピンク */
-            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
-            border-bottom: 2px solid #FCA5A5 !important;
-            user-select: auto;
-        }
-
-        /* 瞬時フォントサイズ変更用スタイル（アニメーションは排除） */
-        .size-normal .dynamic-text-lg { font-size: 14px; }
-        .size-normal .dynamic-text-md { font-size: 12px; }
-        .size-normal .dynamic-text-sm { font-size: 11px; }
-
-        .size-medium .dynamic-text-lg { font-size: 16px; }
-        .size-medium .dynamic-text-md { font-size: 14px; }
-        .size-medium .dynamic-text-sm { font-size: 13px; }
-
-        .size-small .dynamic-text-lg { font-size: 12px; }
-        .size-small .dynamic-text-md { font-size: 11px; }
-        .size-small .dynamic-text-sm { font-size: 10px; }
-
-        .size-large .dynamic-text-lg { font-size: 19px; }
-        .size-large .dynamic-text-md { font-size: 17px; }
-        .size-large .dynamic-text-sm { font-size: 15px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+<body class="bg-white text-gray-800 font-sans min-h-screen p-4 md:p-8">
 
-    <!-- Header Block -->
-    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-2xl mx-auto flex flex-col gap-2">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-1.5">
-                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center">
-                        <i class="fa-solid fa-graduation-cap text-xs"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第3回 大気のはたらき</h1>
-                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
-                    </div>
-                </div>
+    <div class="max-w-5xl mx-auto overflow-hidden">
+        <div class="flex-grow pb-6">
+            <!-- シンプルなH1タイトル -->
+            <h1 class="text-xl font-bold mb-4 pb-2 border-b border-gray-300 flex justify-between items-end">
+                <span>自然地理学概論 7/23(木)テスト</span>
+            </h1>
 
-                <!-- Font Size Button "あぁ" (Instant toggle) -->
-                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
-                    <span class="text-[10px] font-bold">あぁ:</span>
-                    <span id="font-size-label" class="text-[10px]">標準</span>
-                </button>
+            <!-- 8列の横長データを綺麗にスクロール表示するためのコンテナ -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm border-collapse border border-gray-300 text-center min-w-[900px]">
+                    <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
+                        <tr>
+                            <!-- 左から：資料名（固定列）、ステータス、授業資料、論述対策、一問一答、ワーク、ワーク解答、備考 -->
+                            <!-- 資料名カラムの幅を w-[18%] から w-[13%] に縮小して余分な余白を削減 -->
+                            <th class="border border-gray-300 p-3 font-bold w-[13%] text-left pl-4 sticky left-0 bg-gray-100 z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]">資料名</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[10%]">ステータス</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[11%]">授業資料</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[11%]">論述対策</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[11%]">一問一答</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[11%]">ワーク</th>
+                            <th class="border border-gray-300 p-3 font-normal w-[11%]">ワーク解答</th>
+                            <!-- 資料名から削った5%分を備考カラム（w-[17%] → w-[22%]）に配分して全体のバランスを維持 -->
+                            <th class="border border-gray-300 p-3 font-normal text-left pl-4 w-[22%]">備考</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pdf-list-body" class="divide-y divide-gray-200">
+                        <!-- ここにJavaScriptでリストが自動生成されます -->
+                    </tbody>
+                </table>
             </div>
 
-            <!-- Global Red Sheet Controls -->
-            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
-                <span>赤シート一括操作:</span>
-                <div class="flex gap-1.5">
-                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
-                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
-                    </button>
-                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
-                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
-                    </button>
-                </div>
+            <!-- 件数情報だけを表示するグレー帯 -->
+            <div class="bg-gray-200 p-2.5 mt-2 flex justify-center items-center text-sm text-gray-600">
+                <span id="total-count-label">全 14 件</span>
             </div>
         </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
-        
-        <!-- Explanation Note Banner -->
-        <div class="bg-[#F3EFE6] rounded-xl p-3 border border-[#E6DFD3] flex flex-col gap-1 shadow-sm">
-            <h2 class="text-xs font-bold text-[#2F2924] flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-info text-[#2E6F40]"></i>
-                論述演習モードの使い方
-            </h2>
-            <p class="text-[10px] text-slate-600 leading-relaxed">
-                各問は初期状態で折りたたまれており、問題文のみ確認できます。右上の「解答・解説」ボタンを押すと、正解の解答文と加点されるロジック背景が一瞬で開きます。赤シート箇所は個別にタップすることでもトグル開閉が可能です。
-            </p>
-        </div>
-
-        <!-- Quiz List Container (Injected by JS) -->
-        <div id="quiz-list-container" class="space-y-3">
-            <!-- Questions injected here -->
-        </div>
-
-    </main>
-
-    <!-- Global Interactive Toast Alert -->
-    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
-        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
-        <span id="toast-msg">メッセージ</span>
     </div>
 
     <script>
-        // Quiz Questions Database (7 core descriptive questions from Lecture 3)
-        const quizDatabase = [
-            {
-                qNum: 1,
-                title: "気流と気圧の発生メカニズム",
-                question: "空気の温度変化にともなう垂直方向の移動（気流）によって、地表に「高気圧」や「低気圧」が発生する物理的なメカニズムを、空気の密度や重さの変化に注目して簡潔に説明せよ。",
-                answer: "空気が暖められると密度が小さくなって軽くなり、<span class='red-sheet-hide'>上昇気流</span>が発生して地表を押す大気の量が減るため<span class='red-sheet-hide'>低気圧</span>となる。一方、空気が冷やされると密度が大きくなって重くなり、<span class='red-sheet-hide'>下降気流</span>が発生して地表を押す大気の量が増すため<span class='red-sheet-hide'>高気圧</span>となるため。",
-                explanation: "空気は熱せられると膨張して軽くなり上昇します。地表付近の上空へ空気が逃げるため気圧は下がります。逆に、冷やされた空気は凝縮して重くなり下降するため、地表を押す大気質量が増加し高気圧となります。"
+        /**
+         * STREAMING_CHUNK:Configuring the physical geography course data...
+         * 【講義データ設定 (GitHub管理用)】
+         */
+        const courseData = [
+            { 
+                id: 2, 
+                name: "第2回講義資料", 
+                status: "out",                     // 全体ステータス ("active" | "prep" | "out")
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1Aa9DnChSsQOHgXYlfLIQzNBN_C17hOhX/view?usp=sharing",    // 授業資料ステータス & リンク
+                essayStatus: "prep", essayLink: "#", // 論述対策ステータス & リンク
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1SVnD0iq8yaNLMP3WRv5ISgjS4V_HYkpeIR_Pzq3SzQY/edit?usp=sharing",       // 一問一答ステータス & リンク
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1L9JefjDBQeLYMQJSVXKUPykcek0l3jsf/view?usp=sharing",   // ワークステータス & リンク
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1qiOw0LYNBqCx3zxm6gkeSqyukZavnU99/view?usp=sharing", // ワーク解答ステータス & リンク
+                note: "地球の形成と地質年代", noteLink: "" // 備考 & 備考リンク（空の場合は通常テキスト）
             },
-            {
-                qNum: 2,
-                title: "コリオリの力と恒常風の向き",
-                question: "大気大循環において、風は高気圧から低気圧へ向かって直線的に吹かず、東西に曲がって吹く（偏西風や貿易風など）。この現象を引き起こす、地球の自転運動から生じる見かけの力について説明せよ。",
-                answer: "自転する地球の上を移動する大気には、見かけの力である<span class='red-sheet-hide'>コリオリの力（転向力）</span>が働くため。この力は地球の自転運動に起因し、北半球では進行方向に対して<span class='red-sheet-hide'>右方向</span>、南半球では<span class='red-sheet-hide'>左方向</span>にはたらくことで風向きを東西方向へと変向させる。",
-                explanation: "コリオリの力（転向力）は地球自転により生じる見かけの力です。北半球で右、南半球で左に大気流を偏向させるため、緯度帯に応じた東西方向の風（偏西風や極偏東風など）が生まれます。"
+            { 
+                id: 3, 
+                name: "第3回講義資料", 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1C3st8NqXkPaGJdViERW6lboxLGfymvkQ/view?usp=sharing", 
+                essayStatus: "active", essayLink: ".../.../.../class03/index.html", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/149tOO96-33cNlnnIBqJ8MDnzhfcjQMMFnmgUynHXdys/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1n0sp9ipfbxOyvBfX-shWm3ngYsHwsgRI/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xbB6-hpLa05z83VCx8VuLfCz55Z-R1ox/view?usp=sharing", 
+                note: "大気のはたらき", noteLink: "" 
             },
-            {
-                qNum: 3,
-                title: "サバナ気候の雨季と乾季の交代",
-                question: "低緯度の「サバナ気候（Aw）」分布地域において、なぜ夏に大雨が降る「雨季」となり、冬に極度に乾燥する「乾季」となるのか。太陽の移動と地球全体の気圧帯の規則的移動に注目して説明せよ。",
-                answer: "太陽の移動に伴い、地球全体の気圧帯が南北に連動移動するため。夏は、強い上昇気流により雨雲が発達しやすい<span class='red-sheet-hide'>熱帯収束帯（赤道低圧帯）</span>に覆われて雨季となり、冬は、下降気流により雲が極めて発生しにくい<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>に覆われて乾季となる。",
-                explanation: "太陽の直射高度の季節変動に伴い、地球全体の主要気圧帯が南北に約10度シフトします。熱帯収束帯（多雨）と亜熱帯高圧帯（乾燥）の支配域が夏冬で交代することで、極端な雨乾季が成立します。"
+            { 
+                id: 4, 
+                name: "第4回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1bLeLiHCtNqo16IlVL19MhiLv_qWpixPK/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/179zW-Q6QOV4ZM6OqoYjOn17bvoq42S77b0YoB9fVB0Y/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1bE_JF9_-lW8Z_vHtWDuITGANItZNXfow/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1vUAkWGDAfKOCa3DDlGcCO2z4o9TuXO9Z/view?usp=sharing", 
+                note: "海洋のはたらき", noteLink: "https://n-kyozai.github.io/ununipa.ac.jp/phys-geo/Global_Atmospheric_Dynamics_compressed.pdf" 
             },
-            {
-                qNum: 4,
-                title: "土と水の比熱の差と季節風の発生",
-                question: "陸地（土）と海洋（水）の熱的性質（比熱）の違いに注目し、大陸と海洋の間で、季節によって風向が逆転する「季節風（モンスーン）」が発生する原理を説明せよ。",
-                answer: "陸は海より比熱が小さく<span class='red-sheet-hide'>温まりやすく冷めやすい</span>、海は比熱が大きく温まりにくく冷めにくい熱特性を持つため。夏は陸が高温で低気圧になり<span class='red-sheet-hide'>海から陸へ</span>湿った風が吹き、冬は陸が低温で高気圧になり<span class='red-sheet-hide'>陸から海へ</span>乾燥した冷たい風が吹くため。",
-                explanation: "比熱が小さい大陸は、夏に海洋よりも急速に熱せられ上昇気流（低圧部）が生じます。この気圧差により、夏は海洋の高圧部から大陸へ、冬は大陸の強力な寒冷高気圧から海洋に向けて季節風が吹くようになります。"
+            { 
+                id: 5, 
+                name: "第5回講義資料", 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1s0UIX8dDVtB7IHjn5p2MKIO8a180stk2/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/121CzuNh9KGExILjd4x_dQUM2dKp_NApEuSYnsmieVug/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1DvBPde9FEJHn1JZS2ASB2MC5Q70TNhlq/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/165LTRMZ-_VvxBpsKF3xdYJisV102Z_2s/view?usp=sharing", 
+                note: "世界の気候", noteLink: "" 
             },
-            {
-                qNum: 5,
-                title: "日本の冬の気圧配置と特有の天候",
-                question: "日本周辺における冬の典型的な気圧配置の名称を答え、その配置が形成される理由と、それが日本海側・太平洋側にもたらす対照的な天候について詳しく説明せよ。",
-                answer: "冬の日本は<span class='red-sheet-hide'>西高東低</span>の気圧配置をとる。冷え切ったユーラシア大陸に強力なシベリア高気圧が、北太平洋に低気圧ができ、北西の冷たく乾燥した季節風が吹く。これが日本海で水蒸気を大量に補給し、日本列島の中央山脈に衝突して<span class='red-sheet-hide'>日本海側に大雪</span>を降らせ、山脈を越えた<span class='red-sheet-hide'>太平洋側に乾燥した晴天</span>をもたらすため。",
-                explanation: "シベリアからの極寒乾燥の北西季節風が、暖かい日本海を渡る過程で大量の潜熱と水蒸気を獲得します。中央の脊梁山脈を越える際に上昇・強制冷却されて日本海側に豪雪をもたらし、山を越えた後は乾燥した風となって太平洋側へ吹き下ります。"
+            { 
+                id: 6, 
+                name: "第6回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1ce8F1w3NYdowrzwBqzqo8lszyartG6an/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1azSCFKMw8MBkggzLCwRmfnCm-CUV-k2dH5AKLjxLB_E/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/15eUO0jm1Ac9t5F-62GvcUcEYLgRYEFS_/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xOx4dloyJhD6Vyv0pq-pla1fdvlgxQ7G/view?usp=sharing", 
+                note: "日本の気候", noteLink: "" 
             },
-            {
-                qNum: 6,
-                title: "局地風「やませ」の仕組みと冷害",
-                question: "日本の東北地方などで春から秋にかけて吹く「やませ」とはどのような風か、その発生源となる気団（海洋）の名称と、それが引き起こす農業的な深刻な被害について説明せよ。",
-                answer: "春から秋にかけて、冷たい海であるオホーツク海上の<span class='red-sheet-hide'>オホーツク海気団</span>から吹く、冷たく湿った北東（東）よりの局地風。この低温の風と高密度の海霧が太平洋側から長期間吹き込むことで日照時間が著しく減少し、東北地方を中心に深刻な<span class='red-sheet-hide'>冷害（作物の不作）</span>をもたらすため。",
-                explanation: "オホーツク海の氷冷海水上で形成される冷涼湿潤な高気圧から吹き出す風です。高密度の濃霧「海霧」を伴い東北太平洋側に侵入し、夏の気温上昇と日照を妨げることで、稲の花粉障害や生育不全（冷害）を誘発します。"
+            { 
+                id: 7, 
+                name: "第7回講義資料", 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1KTuCfcoZeuR3AAhCnfPnDWgWT08NTS7F/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1gL914w2BMyM88TEh7LLTeBYQNEr892RAHMx6E8P9B0c/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1-geibuvUocERK8xNKmLaggJtEZgxggCr/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xoxtKt0RGvIFZIVl9u3iBqpCO4KPaAP4/view?usp=sharing", 
+                note: "世界の主な大地形", noteLink: "" 
             },
-            {
-                qNum: 7,
-                title: "フェーン現象と2つの気温逓減率",
-                question: "山地を越えて吹き下りてくる風が、ふもとの地域に著しい「高温」と「乾燥」をもたらす「フェーン現象」について、空気が山を「上る時」と「下る時」の「気温の逓減率（温度変化の割合）」の違いを比較して物理的に説明せよ。",
-                answer: "湿った空気が山を上る際は水蒸気が凝結（雨）して熱を放出するため、高度 $100\\text{ m}$ あたり約 $0.5 \\sim 0.65^\\circ\\text{C}$ の穏やかな割合（<span class='red-sheet-hide'>湿潤逓減率</span>）で冷える。一方、雨を降らせて乾燥した空気が山を下る際は熱放出を伴わないため、高度 $100\\text{ m}$ あたり <span class='red-sheet-hide'>$1.0^\\circ\\text{C}$</span> の急激な割合（<span class='red-sheet-hide'>乾燥逓減率</span>）で気温が上昇するため。",
-                explanation: "空気が上昇する際は膨張冷却されますが、水蒸気が雨に変わる（凝結）際に「潜熱」を放出するため温度低下が緩やか（湿潤逓減）になります。しかし、山頂で雨を降らせきって乾燥した空気が山を下る際は、潜熱のやり取りがなくなり、100mにつき1℃のペース（乾燥逓減）で圧縮加熱されるため、山麓で極度の高温乾燥が発生します。"
+            { 
+                id: 8, 
+                name: "第8回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1Tnk8ASPYRH8c_SH4Mko_K8ZuMmgiKNFY/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/15BciZ5dN4mQnuydcZKTM9QzQZyrzkECjR5GhYpghJOQ/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1L0pgP6h8IwfCfEKjjlJP1pndtBE-LlVQ/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/17D1720_OSYDCh7Fnkh-asnsHKWeiP9az/view?usp=sharing", 
+                note: "プレートテクトニクス", noteLink: "" 
+            },
+            { 
+                id: 9, 
+                name: "第9回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1dxd_b_HSsb-A7ZvAW_QrzneeIsy4wrP_/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1ySBp-XHnJoxniooIfVnC16v5KUUjx92rUp8ljtr-qhM/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/15lZWtBiOvYS1e546r55JDvfWLY8B6Jt5/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1YjaMWe4YQcSu6gszz20Hu3D3A2iOYAuT/view?usp=sharing", 
+                note: "河川と海岸の小地形", noteLink: "" 
+            },
+            { 
+                id: 10, 
+                name: "第10回講義資料", 
+                status: "active", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1ucu0KxXnmMKzw4ZfQZvz0jQpRwy6oSY0/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1vq3uqHjtmRlqbF79O11r5aPnEsGIJKrsBUw8rV9D8T0/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/10eu7noqUKTC-4a_piZ7zucHK5yp-KKyf/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1KbZzP_Ur4ONX2BYAIkhMT2HSYUkyrt3F/view?usp=sharing", 
+                note: "扇状地と三角州", noteLink: "" 
+            },
+            { 
+                id: 11, 
+                name: "第11回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1DuX1rNvkyHA3zE8n7msISXPez2ss-OD2/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1sXgVkSl263KVHsYKnQwF14FI2ydZb1cNd-hvRN3z-NE/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1Q1h0qr1DSw7pHFaRABJ42UuqhXm1-T2_/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1LOopE3ENKzrruM4rlHO_mbdmjLroyRHJ/view?usp=sharing", 
+                note: "火山と火山地形", noteLink: "" 
+            },
+            { 
+                id: 12, 
+                name: "第12回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1Khb45rTh9LqN3NYAHQk4LNqY_zVFtSyB/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1uvbQvAGkWy2LWHi3uGiuSYxISjJwWbFWugZMgyFU0vw/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/1TvklAhWiG6XBcpjYstxIJlpRA8x2m1T8/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/139NXjxpPR2YdarhOSeAl6aqDE9SqJ6R8/view?usp=sharing", 
+                note: "カルスト地形", noteLink: "https://n-kyozai.github.io/ununipa.ac.jp/phys-geo/%E8%87%AA%E7%84%B6%E5%9C%B0%E7%90%86%E5%AD%A6%E6%A6%82%E8%AB%96_%E7%AC%AC12%E5%9B%9E_%E5%8F%82%E8%80%83%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%89_Ryukyu_Karst_and_Empire_compressed.pdf" 
+            },
+            { 
+                id: 13, 
+                name: "第13回講義資料", 
+                status: "out", 
+                docStatus: "active", docLink: "https://drive.google.com/file/d/1zPm0WmXrYDqMcIZ68J-xcKkPQznFN3HF/view?usp=sharing", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "active", qaLink: "https://docs.google.com/presentation/d/1wscZQ6T-n-IAYshj-KOozu3Ild78oyl1M7VOPCPNoWk/edit?usp=sharing", 
+                workStatus: "active", workLink: "https://drive.google.com/file/d/17FRx8dUi_KXLZwOnIjxBrMN4gndsfoIj/view?usp=sharing", 
+                workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/15eCEb3AJ7CNxj8FZ2zHBP5ETh7zOusy1/view?usp=sharing", 
+                note: "地震と災害", noteLink: "" 
+            },
+            { 
+                id: 14, 
+                name: "第14回講義資料", 
+                status: "out", 
+                docStatus: "prep", docLink: "#", 
+                essayStatus: "prep", essayLink: "#", 
+                qaStatus: "prep", qaLink: "#", 
+                workStatus: "prep", workLink: "#", 
+                workAnsStatus: "prep", workAnsLink: "#", 
+                note: "土壌と植生", noteLink: "" 
             }
         ];
 
-        // Font Sizes: normal, medium, small, large
-        const fontSizes = ["normal", "medium", "small", "large"];
-        const fontLabels = {
-            "normal": "標準",
-            "medium": "中",
-            "small": "小",
-            "large": "大"
-        };
-        let currentFontIdx = 0;
+        /**
+         * STREAMING_CHUNK:Defining internal JavaScript logic...
+         * 各マテリアルに対応するボタン/リンクのフラットなHTML要素を生成
+         * @param {string} type 教材区分 ('doc' | 'essay' | 'qa' | 'work' | 'workAns')
+         * @param {string} parentStatus 親の全体ステータス ('active' | 'prep' | 'out')
+         * @param {string} contentStatus 個別の準備状態 ('active' | 'prep')
+         * @param {string} url リンク先
+         */
+        function generateBtn(type, parentStatus, contentStatus, url) {
+            const labels = { doc: '閲覧', essay: '対策', qa: '開始', work: 'ワーク', workAns: '解答' };
+            const label = labels[type];
+
+            // 1. 範囲外（out）の制御：授業資料（doc）以外のすべてのアクセス権をロックする
+            if (parentStatus === 'out' && type !== 'doc') {
+                return `
+                    <button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-3 py-1 rounded text-xs cursor-not-allowed bg-stripes w-[72px]" title="範囲外のためアクセス不可">
+                        ロック
+                    </button>
+                `;
+            }
+
+            // 2. コンテンツが「準備中（prep）」の場合の制御
+            if (contentStatus === 'prep') {
+                return '';
+            }
+
+            // 3. コンテンツがアクティブな場合
+            const isDummy = url === '#' || url.startsWith('#');
+            const targetAttr = isDummy ? '' : 'target="_blank" rel="noopener noreferrer"';
+            
+            // 全てのボタンを同じグレー系統のデザインに統一。
+            const buttonStyleClass = 'border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700';
+
+            return `
+                <a href="${url}" ${targetAttr} class="inline-block px-3 py-1 rounded text-xs font-bold transition whitespace-nowrap w-[72px] ${buttonStyleClass}">
+                    ${label}
+                </a>
+            `;
+        }
 
         /**
-         * Render the exercise cards in their default closed states, with toggle buttons.
+         * STREAMING_CHUNK:Sorting and rendering the HTML table rows...
+         * 設定データに基づいてテーブル行を生成・レンダリングする
          */
-        function renderQuizList() {
-            const container = document.getElementById("quiz-list-container");
-            container.innerHTML = "";
+        function renderTable() {
+            const tbody = document.getElementById('pdf-list-body');
+            tbody.innerHTML = '';
 
-            quizDatabase.forEach((quiz) => {
-                const card = document.createElement("div");
-                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
-                card.id = `quiz-card-${quiz.qNum}`;
+            // 各ステータスの優先順位を定義 (1: 公開中, 2: 準備中, 3: 範囲外)
+            const statusPriority = {
+                'active': 1,
+                'prep': 2,
+                'out': 3
+            };
 
-                card.innerHTML = `
-                    <!-- Header with title & Expand-Collapse buttons -->
-                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3] hover:bg-[#E6DFD3]/60" onclick="toggleAnswer(${quiz.qNum})">
-                        <div class="flex items-center gap-2">
-                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
-                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
-                        </div>
-                        <!-- State Toggler -->
-                        <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1 rounded flex items-center gap-1 flex-shrink-0 active:scale-95" id="btn-toggle-${quiz.qNum}">
-                            <span id="text-toggle-${quiz.qNum}">解答・解説</span>
-                            <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
-                        </button>
-                    </div>
+            // 元データを破壊しないようにコピーを作成し、ステータス優先度 -> ID(回数)の順でソート
+            const sortedData = [...courseData].sort((a, b) => {
+                const priorityA = statusPriority[a.status] || 99;
+                const priorityB = statusPriority[b.status] || 99;
 
-                    <!-- Problem text (Always visible) -->
-                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50">
-                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
-                    </div>
+                // 1. ステータス優先度が異なる場合はそれで並び替え
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB;
+                }
+                // 2. 同じステータスの場合は、講義回数(ID)の昇順で並び替え
+                return a.id - b.id;
+            });
 
-                    <!-- Answer & Explanation area (Default folded: hidden) -->
-                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
-                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
-                        <div class="space-y-1">
-                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
-                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
-                            </h4>
-                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
-                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
-                                    ${parseRedSheetText(quiz.answer)}
-                                </p>
-                            </div>
-                        </div>
+            sortedData.forEach(item => {
+                const tr = document.createElement('tr');
+                // ホバー時の背景変化を固定列側（資料名）にも適用するため 'group' クラスを付与
+                tr.className = "hover:bg-gray-50 transition-colors group";
 
-                        <!-- Academic background analysis -->
-                        <div class="pt-2 border-t border-[#E6DFD3]">
-                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
-                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
-                            </h4>
-                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
-                        </div>
-                    </div>
+                // 全体ステータスのバッジ切り替え
+                let statusLabel = "公開中";
+                let statusClass = "status-active"; // 黄緑 #a0c832
+
+                if (item.status === "prep") {
+                    statusLabel = "準備中";
+                    statusClass = "status-prep";   // 水色 #4bc0c8
+                } else if (item.status === "out") {
+                    statusLabel = "範囲外";
+                    statusClass = "status-out";     // 灰色 #9ca3af
+                }
+
+                // 資料名セルのテキスト表示
+                const docNameHtml = `<span class="text-gray-800 font-medium">${item.name}</span>`;
+
+                // 備考欄リンク挿入機能の判定 (全体ステータス statusに関係なく、リンクがあれば常にアクティブにする)
+                let noteHtml = `<span class="text-gray-600 text-xs">${item.note}</span>`;
+                if (item.noteLink && item.noteLink.trim() !== "" && item.noteLink !== "#") {
+                    noteHtml = `<a href="${item.noteLink}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline font-bold text-xs">${item.note}</a>`;
+                }
+
+                // 8列のカラム構成
+                // ①資料名セルに `sticky left-0 bg-white group-hover:bg-gray-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]` を適用
+                tr.innerHTML = `
+                    <!-- ① 資料名（固定列） -->
+                    <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap font-medium text-gray-800 sticky left-0 bg-white group-hover:bg-gray-50 transition-colors z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.15)]">
+                        ${docNameHtml}
+                    </td>
+                    <!-- ② ステータス -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        <span class="inline-block text-white text-xs px-3 py-1 rounded font-bold ${statusClass}">
+                            ${statusLabel}
+                        </span>
+                    </td>
+                    <!-- ③ 授業資料 -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${generateBtn('doc', item.status, item.docStatus, item.docLink)}
+                    </td>
+                    <!-- ④ 論述対策 -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${generateBtn('essay', item.status, item.essayStatus, item.essayLink)}
+                    </td>
+                    <!-- ⑤ 一問一答 -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${generateBtn('qa', item.status, item.qaStatus, item.qaLink)}
+                    </td>
+                    <!-- ⑥ ワーク -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${generateBtn('work', item.status, item.workStatus, item.workLink)}
+                    </td>
+                    <!-- ⑦ ワーク解答 -->
+                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                        ${generateBtn('workAns', item.status, item.workAnsStatus, item.workAnsLink)}
+                    </td>
+                    <!-- ⑧ 備考 -->
+                    <td class="border border-gray-300 p-3 text-left pl-4 whitespace-nowrap">
+                        ${noteHtml}
+                    </td>
                 `;
 
-                container.appendChild(card);
+                tbody.appendChild(tr);
             });
 
-            // Parse math formulas using KaTeX
-            renderMathInElement(container, {
-                delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false}
-                ],
-                throwOnError: false
-            });
+            // 総件数表示の更新
+            document.getElementById('total-count-label').textContent = `登録件数: 全 ${courseData.length} 件`;
         }
 
-        /**
-         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
-         */
-        function parseRedSheetText(text) {
-            // Adds bi-directional toggle functionality to the individual element
-            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
-        }
-
-        /**
-         * Toggles the individual red sheet element state (mask vs reveal)
-         */
-        function toggleIndividualSheet(element, event) {
-            event.stopPropagation(); // Avoid triggering accordion close
-            element.classList.toggle("revealed");
-        }
-
-        /**
-         * Accordion open / close behavior
-         */
-        function toggleAnswer(qNum) {
-            const answerBox = document.getElementById(`answer-box-${qNum}`);
-            const btnText = document.getElementById(`text-toggle-${qNum}`);
-            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
-
-            if (answerBox.classList.contains("hidden")) {
-                answerBox.classList.remove("hidden");
-                btnText.textContent = "閉じる";
-                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
-            } else {
-                answerBox.classList.add("hidden");
-                btnText.textContent = "解答・解説";
-                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
-            }
-        }
-
-        /**
-         * Global control for all red sheet fields.
-         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
-         */
-        function setAllRedSheets(shouldHide) {
-            const sheets = document.querySelectorAll(".red-sheet-hide");
-            sheets.forEach(sheet => {
-                if (shouldHide) {
-                    sheet.classList.remove("revealed");
-                } else {
-                    sheet.classList.add("revealed");
-                }
-            });
-
-            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
-        }
-
-        /**
-         * Cycle application font sizing instantly.
-         * Sequence: normal -> medium -> small -> large -> normal ...
-         */
-        function cycleFontSize() {
-            const body = document.getElementById("app-body");
-            const label = document.getElementById("font-size-label");
-
-            // Remove current font size class
-            const currentSize = fontSizes[currentFontIdx];
-            body.classList.remove(`size-${currentSize}`);
-
-            // Cycle index
-            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
-            const nextSize = fontSizes[currentFontIdx];
-
-            // Apply new sizing and text label
-            body.classList.add(`size-${nextSize}`);
-            label.textContent = fontLabels[nextSize];
-        }
-
-        /**
-         * Toast notification utility
-         */
-        function triggerToast(msg) {
-            const banner = document.getElementById("toast-banner");
-            const text = document.getElementById("toast-msg");
-            
-            text.textContent = msg;
-            banner.style.transform = "translateY(0)";
-            banner.style.opacity = "1";
-
-            setTimeout(() => {
-                banner.style.transform = "translateY(5rem)";
-                banner.style.opacity = "0";
-            }, 1800);
-        }
-
-        // Initialize on load
+        // 初期ロード時に描画処理を実行
         window.onload = function() {
-            renderQuizList();
+            renderTable();
         };
     </script>
 </body>
