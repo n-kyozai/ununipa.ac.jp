@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>人文地理学概論 第4回 工業地理学 記述・論述演習アプリ</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for math typesetting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+        
+        :root {
+            /* image_4b0c41.png から抽出した極上ベージュを基本背景に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'BIZ UDGothic', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--color-text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 赤シートがON（目隠し状態）のスタイル */
+        .red-sheet-hide {
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            transition: none !important; /* アニメーションなし */
+        }
+
+        /* タップ・クリックして開示された状態（もう一度タップすると再び隠れる） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
+            border-bottom: 2px solid #FCA5A5 !important;
+            user-select: auto;
+        }
+
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションなし、"中"サイズ排除の3段階） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
+
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <!-- Clickable title to scroll to top and refresh page -->
+                <div onclick="resetApp()" class="flex items-center gap-1.5 cursor-pointer select-none group active:opacity-80" title="最上部に移動してアプリを再読み込みします">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center group-hover:bg-[#20512D]">
+                        <i class="fa-solid fa-industry text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">人文地理学 第4回 工業地理学</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
+                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle: Normal -> Small -> Large) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
+            </div>
+
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions will be dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Global Interactive Toast Alert -->
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
+        <span id="toast-msg">メッセージ</span>
+    </div>
+
+    <script>
+        // Quiz Questions Database (8 core descriptive questions from Lecture 4 "工業地理学")
+        const quizDatabase = [
+            {
+                qNum: 1,
+                title: "工場制手工業から工場制機械工業への産業発展プロセス",
+                question: "17世紀の「工場制手工業（マニュファクチュア）」から、18世紀後半のイギリス産業革命を経て「工場制機械工業」へと工業の生産形態が発展したプロセスを、労働形態と生産設備の変化に注目して説明せよ。",
+                answer: "工場制手工業では、資本家が工場に労働者を集め、道具を用いて<span class='red-sheet-hide'>手作業による分業</span>で効率的に生産を行っていた。これに対し、産業革命以降の工場制機械工業では、大規模な資本が導入され、多くの労働者が工場に集まり、従来の道具に代わって<span class='red-sheet-hide'>機械（蒸気機関などの動力）</span>を用いることで、均一的な製品の<span class='red-sheet-hide'>安価で圧倒的な大量生産</span>が可能になった。",
+                explanation: "マニュファクチュアの核心は「手作業による徹底的な専門分業」です。これに「動力（石炭・蒸気）と機械」が合体したのが工場制機械工業であり、生産効率が天文学的に向上し、現代の大量生産・大量消費社会の土台が築かれました。"
+            },
+            {
+                qNum: 2,
+                title: "ウェーバーの工業立地論における「原料志向型」の成立メカニズム",
+                question: "ウェーバーの工業立地論において、原料輸送費の比重が製品輸送費に比べて極めて大きく示される（原料輸送費を示すコスト曲線の傾きが急である）場合、工場が原料産地に立地する物理・経済的な理由を説明せよ。",
+                answer: "製品に加工される過程で重量が大幅に減少する<span class='red-sheet-hide'>減量原料</span>を扱う場合、遠く離れた消費地まで原料のまま運搬すると、重量に比例する原料輸送費が激増するため。原料のままで輸送するコストに比べて製品化後の輸送コストの方が遥かに安いため、両者を合算した<span class='red-sheet-hide'>総輸送費（原料＋製品）が最小になる地点</span>は、重い原料が存在する<span class='red-sheet-hide'>原料産地付近</span>となるため。",
+                explanation: "ウェーバー理論の核心は「総輸送費を最小にする地点の決定」です。例えば、セメント原料である石灰石、あるいは製鉄に用いる鉄鉱石や石炭は「重くて、加工すると軽くなる（滓が抜ける）」ため、わざわざ市場まで重い状態で運ぶより、産地で即座に加工した方が圧倒的に輸送コストを削減できます。"
+            },
+            {
+                qNum: 3,
+                title: "「市場指向型工業」の立地因子と具体的な特性",
+                question: "ビールなどの清涼飲料水工業や、出版・印刷業が、消費市場である「大都市（市場）」の付近に立地しやすい理由を、製品の物理的・社会的特性から説明せよ。",
+                answer: "ビールや清涼飲料水は、どこでも手に入る「水」を工場で注入して製品にするため原料に比べて製品の方が著しく重くなり、<span class='red-sheet-hide'>製品輸送費の方が高くつく</span>ため。また、出版・印刷業や高級服飾品は、大都市に集中する最新の<span class='red-sheet-hide'>情報や流行の入手、迅速な製品供給</span>が不可欠な社会的条件を持つため、消費者に近い大都市市場への立地が極めて有利となるから。",
+                explanation: "原料（濃縮液や紙）よりも完成品（炭酸水や新聞）の方が重くなったり、速報性・鮮度（流行）が求められる工業は「市場指向型」となります。水を製品内に閉じ込める産業や、情報の集積が命となる産業がこれに合致し、消費地直近への立地が必須となります。"
+            },
+            {
+                qNum: 4,
+                title: "繊維工業（紡績業・縫製業）における国際的分業と立地特性",
+                question: "繊維工業の生産工程における「紡績業（糸つむぎ）」と、それに続く「縫製業（アパレル）」の立地特性や主要生産国の違いについて、必要とされる工業の生産要素に着目して説明せよ。",
+                answer: "綿糸などをつくる紡績業は、原料の綿花や羊毛を入手しやすい<span class='red-sheet-hide'>原料産地</span>の近くに立地しやすい。一方で、衣類に仕立てる縫製（アパレル）業は、工程において機械化が難しく多数の手作業が必要となるため、バングラデシュや中国、ベトナムなどの<span class='red-sheet-hide'>安価で豊富な労働力</span>を求めて工場が立地する<span class='red-sheet-hide'>労働力指向型</span>の特性を示す。",
+                explanation: "繊維工業は軽工業の代表格ですが、工程によって要件が異なります。紡績は比較的機械化が進み原料に近い位置で生産されますが、最後の衣服縫製は人間の手によるミシンがけなど「多大な労働力」を浪費します。そのため、労働費の圧倒的に安い発展途上国へのアウトソーシングが進んでいます。"
+            },
+            {
+                qNum: 5,
+                title: "石油化学コンビナートの形成とパイプライン結合の経済的合理性",
+                question: "原油の精製からナフサの熱分解、プラスチックや合成繊維などの誘導品製造に至る多様な工場群が、互いにパイプラインで直結した「石油化学コンビナート」を形成する技術的・経済的メリットを説明せよ。",
+                answer: "原油を蒸留して得られる<span class='red-sheet-hide'>ナフサ</span>を原料とし、エチレンやプロピレンなどの基礎製品からプラスチックや合成ゴムなどの誘導品までを、別々の工場間で<span class='red-sheet-hide'>パイプラインで直接結合して連続稼働</span>させるため。これにより、中間原料の輸送容器・梱包の手間や、冷却・再加熱に伴う膨大なエネルギーの浪費を極限まで排除し、<span class='red-sheet-hide'>生産プロセス全体を極めて計画的・合理的に統合</span>できるから。",
+                explanation: "石油化学工業は気体や液体の中間生産物を連続的に化学変化させていくため、一連の工場が物理的に「パイプでつながっている」ことが究極の省エネ・省コスト（連続生産）になります。この計画的大規模結合体がコンビナートであり、日本では水運の便がよく原料を搬入しやすい臨海部に作られます。"
+            },
+            {
+                qNum: 6,
+                title: "鉄鋼業の立地変化（原料・燃料指向から交通指向臨海部へ）",
+                question: "かつて炭田や鉄鉱石の産地に立地していた鉄鋼業が、現代の日本や先進国において、沿岸の臨海部に立地する「交通指向型」へと劇的に移行した理由を説明せよ。",
+                answer: "石炭や鉄鉱石などの国内資源が枯渇し、主要な原料調達を海外からの安価な輸入に依存するようになったため。臨海部に工場を建設することで、<span class='red-sheet-hide'>大型専用船</span>で海外から直接運ばれてきた原料を直接高炉へ無駄なく搬入でき、かつ完成した鉄鋼製品を国内外の<span class='red-sheet-hide'>巨大な消費市場</span>へと効率的に海上輸送・出荷することができるため、<span class='red-sheet-hide'>総輸送費の大幅な削減</span>が可能になるから。",
+                explanation: "19世紀の八幡製鉄所（筑豊炭田直近）のように、かつては重い石炭や鉄鉱石が採掘される場所が工場の定位置でした。しかし世界的な原料貿易の拡大と、タンカーや大型専用船の進歩により、世界中から最安値で原料を仕入れて巨大市場に近い湾岸で加工する「臨海型（交通指向）」が現代の鉄鋼業の最適解となりました。"
+            },
+            {
+                qNum: 7,
+                title: "自動車工業が多数の部品メーカーを引き連れて「集積」する理由",
+                question: "自動車工業が「総合組立産業」と呼ばれる所以について、部品の多様性や関連産業との結びつき、および組立工場の周囲に関連企業が集積する技術・ロジスティクス上の理由を説明せよ。",
+                answer: "自動車は数万点に及ぶ膨大かつ多種多様な機械、電機、化学、繊維などの精密部品を組み合わせる<span class='red-sheet-hide'>総合組立産業</span>だからである。部品製造にかかる輸送費を節約し、かつ組立工場が在庫を抱えずにタイムリーに部品を受け取る<span class='red-sheet-hide'>ジャストインタイム方式（かんばん方式）</span>を維持するために、自動車メーカー（親企業）の周辺に膨大な下請け・関連部品メーカーが物理的に強固に<span class='red-sheet-hide'>集積指向型</span>の立地をとる必要があるため。",
+                explanation: "自動車工業は自社だけで鉄板からネジまですべてを作るわけではありません。すそ野の広い巨大な「部品サプライチェーン」の頂点に君臨しています。そのため、無駄な在庫を省いて瞬時に組み立てをシンクロさせるために、工場の周りに関連産業がクモの巣のように張り巡らされて集積します。"
+            },
+            {
+                qNum: 8,
+                title: "先端技術産業（航空機・宇宙産業）における「国際共同分業」の必要性",
+                question: "ボーイング787型機に代表される最新鋭の民間旅客機製造において、一国で完結させず、日本など世界各国のメーカーが分担して製造した部品を1箇所（米国など）に集めて組み立てる「国際共同分業」を行う理由を説明せよ。",
+                answer: "航空機・宇宙産業は、最も高度な知識と先端技術を集約した難度の高い産業であり、一機の新型機を開発・製造するには<span class='red-sheet-hide'>莫大な開発資金と技術力</span>が要求されるため。各部位の製造において高い競争力を持つ世界各国の優秀な企業（主翼ボックスを担う日本など）に委託・共同分担させることで、<span class='red-sheet-hide'>開発リスクの分散と巨額資金負担の軽減</span>を図りつつ、最高品質の機体を安定して供給・生産できるシステムを築くため。",
+                explanation: "現代の旅客機は、莫大なリスクの塊です。一社、あるいは一国だけで数千億〜数兆円の最新機体開発を抱え込むと、失敗時に経済が傾きます。そのため、主翼は炭素繊維の最先端を行く「日本」、ドアは「カナダ」、エンジンは「ロールスロイス（イギリス）」のように、最高技術を持つ適材適所に分業し、最後に最終組み立て地であるアメリカにボーイング専用の貨物機で空輸する形態が定着しました。"
+            }
+        ];
+
+        // Font Sizes: normal, small, large (excluding medium for simplicity)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
+        };
+        let currentFontIdx = 0;
+
+        /**
+         * Render the exercise cards in their default open states, with toggle buttons.
+         */
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
+
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
+
+                card.innerHTML = `
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Problem text (Clicking this entire block also toggles the answer) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#F0ECE1] transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed immediately below the text in the bottom right -->
+                        <div class="flex justify-end mt-1">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">閉じる</span>
+                                <i class="fa-solid fa-chevron-up text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Answer & Explanation area (Default open) -->
+                    <div id="answer-box-${quiz.qNum}" class="p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            } else {
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
+            }
+        }
+
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
+        }
+
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
+        }
+
+        /**
+         * Robust function to navigate to top and reload app on click (removes hashes safely)
+         */
+        function resetApp() {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.location.href = window.location.href.split('#')[0];
+        }
+
+        /**
+         * Toast notification utility
+         */
+        function triggerToast(msg) {
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
+            
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                const answerBox = document.getElementById(`answer-box-${q.qNum}`);
+                const btnText = document.getElementById(`text-toggle-${q.qNum}`);
+                const btnIcon = document.getElementById(`icon-toggle-${q.qNum}`);
+                
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            });
+        };
+    </script>
+</body>
+</html>
