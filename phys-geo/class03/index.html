@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自然地理学概論 第3回 論述試験対策スライド</title>
-    <!-- Tailwind CSS for modern layouts -->
+    <title>自然地理学概論 第3回 論述試験演習ワークスペース</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- KaTeX for crisp rendering of equations -->
+    <!-- KaTeX for math typesetting -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
@@ -17,12 +17,13 @@
         @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
         
         :root {
-            --bg-app: #F3EFE6;         /* 少し深い温かみのあるベージュ（アプリ背景用） */
-            --bg-slide: #FAF7F0;       /* image_4b0c41.png から抽出した極上ベージュ（スライド背景用） */
-            --color-text: #2F2924;      /* 深いウォームダークブラウン（抜群の可読性） */
-            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色（問い・警告用） */
-            --color-accent-green: #2E6F40; /* 落ち着いた深い緑（答え・成功用） */
-            --border-beige: #E6DFD3;    /* 境界線用の穏やかなベージュ */
+            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            --bg-app: #FAF7F0;         
+            --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
+            --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
+            --color-accent-red: #A83E4C; /* 落ち着いたえんじ色 */
+            --color-accent-green: #2E6F40; /* 落ち着いた深い緑 */
+            --border-beige: #E6DFD3;    /* 穏やかな境界線用ベージュ */
         }
 
         body {
@@ -30,676 +31,332 @@
             background-color: var(--bg-app);
             color: var(--color-text);
             -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
         }
 
-        /* スライドの基準解像度は1024x576(16:9) */
-        .slide-canvas-scaled {
-            width: 1024px;
-            height: 576px;
-            padding: 30px 45px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-            background-color: var(--bg-slide);
-            border-radius: 12px;
-            position: absolute;
-        }
-
-        .slide-outer-wrapper {
-            position: relative;
-            overflow: hidden;
-            background-color: var(--bg-slide);
-            border: 1px solid var(--border-beige);
-            box-shadow: 0 4px 12px rgba(47, 41, 36, 0.08);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s ease-out;
-        }
-
-        /* 通常時のハイライト表示 */
+        /* 赤シートがON（目隠し状態）のスタイル */
         .red-sheet-hide {
-            background-color: #FEE2E2;
-            color: #A83E4C;
+            background-color: var(--color-accent-red) !important;
+            color: var(--color-accent-red) !important; /* 文字を完全に赤で隠す */
+            border-bottom: 2px solid #8B2635 !important;
             padding: 1px 4px;
             border-radius: 4px;
             font-weight: 700;
-            transition: all 0.15s ease-in-out;
-            border-bottom: 2px solid #FCA5A5;
             cursor: pointer;
             display: inline-block;
+            user-select: none;
         }
 
-        /* 赤シートがONのときの目隠し（スマホ・PC共通） */
-        .red-sheet-active .red-sheet-hide {
-            background-color: #EF4444 !important;
-            color: #EF4444 !important; /* 文字を赤と同化させて完全に隠す */
-            border-bottom: 2px solid #B91C1C !important;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.15);
-        }
-
-        /* 赤シートON状態で、ホバー、タッチ中（:active）、タップされた後（.revealed）は極上に見えるようにする */
-        .red-sheet-active .red-sheet-hide:hover,
-        .red-sheet-active .red-sheet-hide:active,
-        .red-sheet-active .red-sheet-hide.revealed {
-            background-color: #FEE2E2 !important;
-            color: #A83E4C !important; /* 明確に視認可能なえんじ色 */
+        /* タップして開示された状態（もう一度タップすると元に戻る） */
+        .red-sheet-hide.revealed {
+            background-color: #FEE2E2 !important; /* 薄ピンク */
+            color: var(--color-accent-red) !important; /* 文字はしっかり読める濃いえんじ色 */
             border-bottom: 2px solid #FCA5A5 !important;
-            box-shadow: none !important;
-            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+            user-select: auto;
         }
 
-        /* カスタムスクロールバー */
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-            background: rgba(47, 41, 36, 0.03);
-        }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(47, 41, 36, 0.15);
-            border-radius: 2px;
-        }
+        /* 瞬時フォントサイズ変更用スタイル（アニメーションは排除、"中"を排除してすっきり化） */
+        .size-normal .dynamic-text-lg { font-size: 14px; }
+        .size-normal .dynamic-text-md { font-size: 12px; }
+        .size-normal .dynamic-text-sm { font-size: 11px; }
+
+        .size-small .dynamic-text-lg { font-size: 12px; }
+        .size-small .dynamic-text-md { font-size: 11px; }
+        .size-small .dynamic-text-sm { font-size: 10px; }
+
+        .size-large .dynamic-text-lg { font-size: 19px; }
+        .size-large .dynamic-text-md { font-size: 17px; }
+        .size-large .dynamic-text-sm { font-size: 15px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col pb-4">
+<body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
 
-    <!-- Simple, Clean Header suitable for mobile landscape as well -->
-    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-2 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-5xl mx-auto flex flex-row justify-between items-center gap-2">
-            <div class="flex items-center gap-2">
-                <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-wind text-xs sm:text-sm"></i>
+    <!-- Header Block -->
+    <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-2xl mx-auto flex flex-col gap-2">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-1.5">
+                    <div class="bg-[#2E6F40] text-white p-1.5 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-graduation-cap text-xs"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第3回 大気のはたらき</h1>
+                        <p class="text-[8px] sm:text-[9px] text-slate-500 font-bold">第15回まとめ試験・論述完全特化演習</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="font-bold text-xs sm:text-sm tracking-tight text-[#2F2924]">自然地理学 第3回 論述対策</h1>
-                    <p class="text-[8px] sm:text-[10px] text-slate-500 hidden sm:block">大気のはたらき（定期・まとめ試験対策）</p>
-                </div>
+
+                <!-- Font Size Button "あぁ" (Instant toggle) -->
+                <button onclick="cycleFontSize()" class="bg-[#2F2924] hover:bg-black text-white text-xs font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" title="文字サイズを変更">
+                    <span class="text-[10px] font-bold">あぁ:</span>
+                    <span id="font-size-label" class="text-[10px]">標準</span>
+                </button>
             </div>
 
-            <!-- Two-Tab Nav -->
-            <div class="flex items-center bg-[#F3EFE6] rounded-lg p-0.5 border border-[#E6DFD3]">
-                <button onclick="setTab('present')" id="tab-present" class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all duration-200 bg-[#FAF7F0] text-[#2F2924] shadow-sm">
-                    <i class="fa-solid fa-desktop mr-1"></i>スライド
-                </button>
-                <button onclick="setTab('study')" id="tab-study" class="px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all duration-200 text-[#5C534C] hover:text-[#2F2924]">
-                    <i class="fa-solid fa-eye-slash mr-1"></i>赤シート暗記
-                </button>
+            <!-- Global Red Sheet Controls -->
+            <div class="flex items-center justify-between bg-[#F3EFE6] px-2.5 py-1.5 rounded-lg border border-[#E6DFD3] text-[10px] font-bold text-[#2F2924]">
+                <span>赤シート一括操作:</span>
+                <div class="flex gap-1.5">
+                    <button onclick="setAllRedSheets(true)" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye-slash mr-1"></i>すべて隠す
+                    </button>
+                    <button onclick="setAllRedSheets(false)" class="bg-[#2E6F40] hover:bg-[#20512D] text-white px-2 py-1 rounded text-[9px] font-black active:scale-95">
+                        <i class="fa-solid fa-eye mr-1"></i>すべて表示
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow max-w-5xl w-full mx-auto p-2 sm:p-4 flex flex-col gap-3">
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
+        
+        <!-- Explanation Note Banner -->
+        <div class="bg-[#F3EFE6] rounded-xl p-3 border border-[#E6DFD3] flex flex-col gap-1 shadow-sm">
+            <h2 class="text-xs font-bold text-[#2F2924] flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info text-[#2E6F40]"></i>
+                論述演習モードの使い方
+            </h2>
+            <p class="text-[10px] text-slate-600 leading-relaxed">
+                各問は初期状態で折りたたまれており、問題文のみ確認できます。右上の「解答・解説」ボタンを押すと、正解の解答文と加点されるロジック背景が一瞬で開きます。赤シート箇所は個別にタップすることでもトグル開閉が可能です。
+            </p>
+        </div>
 
-        <!-- ==================== TAB 1: PRESENTATION (AUTOSCALE) ==================== -->
-        <section id="sec-present" class="block space-y-3">
-            
-            <!-- Flexible Master Scaler Container (Centers slide regardless of screen orientation) -->
-            <div class="w-full flex justify-center items-center py-1">
-                <div id="slide-container-wrapper" class="slide-outer-wrapper">
-                    <!-- Scaled slide canvas inside -->
-                    <div id="slide-canvas-scaled" class="slide-canvas-scaled">
-                        <!-- Content Injected Dynamically by JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Optimized Mobile Control Bar -->
-            <div id="slide-controls-area" class="bg-[#FAF7F0] rounded-xl p-2 border border-[#E6DFD3] flex items-center justify-between gap-2 max-w-lg mx-auto">
-                <button onclick="prevSlide()" class="flex-1 px-3 py-2 bg-[#F3EFE6] hover:bg-[#E6DFD3] text-[#2F2924] rounded-lg text-xs font-bold transition active:scale-95 flex items-center justify-center gap-1">
-                    <i class="fa-solid fa-chevron-left"></i> 前へ
-                </button>
-                
-                <span id="slide-counter" class="px-3 py-2 bg-[#F3EFE6] rounded-lg text-[11px] sm:text-xs font-bold text-[#2F2924] min-w-[85px] text-center border border-[#E6DFD3]">
-                    Slide 1 / 16
-                </span>
-
-                <button onclick="nextSlide()" class="flex-1 px-3 py-2 bg-[#F3EFE6] hover:bg-[#E6DFD3] text-[#2F2924] rounded-lg text-xs font-bold transition active:scale-95 flex items-center justify-center gap-1">
-                    次へ <i class="fa-solid fa-chevron-right"></i>
-                </button>
-
-                <button onclick="toggleSpeakerNotes()" id="btn-toggle-notes" class="px-3 py-2 bg-[#2F2924] text-white rounded-lg text-xs font-bold transition active:scale-95" title="解説ノート切替">
-                    <i class="fa-solid fa-message"></i>
-                </button>
-            </div>
-
-            <!-- Responsive commentary panel -->
-            <div id="notes-area" class="bg-[#FAF7F0] rounded-xl p-3 border border-[#E6DFD3] shadow-sm max-w-lg mx-auto">
-                <div class="flex items-center gap-1.5 border-b border-[#E6DFD3] pb-1.5 mb-1.5">
-                    <i class="fa-solid fa-graduation-cap text-[#2E6F40] text-xs"></i>
-                    <h3 class="font-bold text-[10px] tracking-wider text-[#2F2924] uppercase">講義解説・論述記述ノート</h3>
-                </div>
-                <div id="notes-content" class="text-[11px] leading-relaxed text-[#5C534C] space-y-1.5 max-h-[100px] overflow-y-auto custom-scroll">
-                    <!-- Injected dynamically -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== TAB 2: STUDY VIEW (RED SHEET) ==================== -->
-        <section id="sec-study" class="hidden space-y-3">
-            
-            <div class="bg-[#FAF7F0] rounded-xl p-3 border border-[#E6DFD3] flex flex-row justify-between items-center gap-2">
-                <div class="flex-grow">
-                    <h2 class="text-xs sm:text-sm font-bold text-[#2F2924] flex items-center gap-1">
-                        <i class="fa-solid fa-circle-dot text-[#A83E4C]"></i>
-                        赤シート論述練習
-                    </h2>
-                    <p class="text-[9px] sm:text-[11px] text-slate-500">赤い隠し部分をタップすると解答が鮮明に表示されます。</p>
-                </div>
-                
-                <button onclick="toggleRedSheetMode()" id="btn-red-sheet-switch" class="bg-[#A83E4C] hover:bg-[#8B2635] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition duration-150 active:scale-95 shadow-sm">
-                    <i class="fa-solid fa-eye-slash"></i>
-                    <span>赤シート: ON</span>
-                </button>
-            </div>
-
-            <!-- Quiz Accordion Container -->
-            <div id="study-container" class="space-y-2 max-w-xl mx-auto">
-                <!-- Injected dynamically by JavaScript -->
-            </div>
-        </section>
+        <!-- Quiz List Container (Injected by JS) -->
+        <div id="quiz-list-container" class="space-y-3">
+            <!-- Questions injected here -->
+        </div>
 
     </main>
 
     <!-- Global Interactive Toast Alert -->
-    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-xl flex items-center gap-2 translate-y-20 opacity-0 transition-all duration-300 z-50 text-xs font-bold pointer-events-none">
-        <i class="fa-solid fa-circle-info text-[#2E6F40]"></i>
+    <div id="toast-banner" class="fixed bottom-4 right-4 bg-[#2F2924] text-[#FAF7F0] px-3 py-2 rounded-lg shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-transform duration-200 z-50 text-[10px] font-bold pointer-events-none">
+        <i class="fa-solid fa-info-circle text-[#2E6F40]"></i>
         <span id="toast-msg">メッセージ</span>
     </div>
 
-    <!-- ==================== JAVASCRIPT SYSTEM ENGINE ==================== -->
     <script>
-        const slideDatabase = [
+        // Quiz Questions Database (7 core descriptive questions from Lecture 3)
+        const quizDatabase = [
             {
-                slideNum: 1,
-                type: "title",
-                title: "自然地理学概論 第3回<br><span style='color: var(--color-accent-green)'>大気のはたらき</span>",
-                subtitle: "一問一答テスト ＆ 論述記述試験対策スライド",
-                content: "【出題範囲】 気圧・気流・大気大循環・サバナの雨乾季・季節風・やませ・フェーン現象",
-                notes: "本スライドは自然地理学概論の第3回まとめテスト対策用の演習集です。<br>地球規模の大気物理法則から、ローカルな局地風・気象災害にいたるまで、記述試験で確実に合格点を取るためのロジックを再編しました。モバイルでの回転（横画面）表示に完全対応しています。"
-            },
-            {
-                slideNum: 2,
-                type: "question",
                 qNum: 1,
-                title: "【問1：気流と気圧】",
-                content: "空気の温度変化にともなう垂直方向の移動（気流）によって、地表に「高気圧」や「低気圧」が発生する物理的なメカニズムを、空気の密度や重さの変化に注目して簡潔に説明せよ。",
-                notes: "「気圧」の物理的な定義である『地上にかかる大気の重さ』を軸にして、空気の熱変化による上昇・下降のメカニズムを説明する必要があります。"
+                title: "気流と気圧の発生メカニズム",
+                question: "空気の温度変化にともなう垂直方向の移動（気流）によって、地表に「高気圧」や「低気圧」が発生する物理的なメカニズムを、空気の密度や重さの変化に注目して簡潔に説明せよ。",
+                answer: "空気が暖められると密度が小さくなって軽くなり、<span class='red-sheet-hide'>上昇気流</span>が発生して地表を押す大気の量が減るため<span class='red-sheet-hide'>低気圧</span>となる。一方、空気が冷やされると密度が大きくなって重くなり、<span class='red-sheet-hide'>下降気流</span>が発生して地表を押す大気の量が増すため<span class='red-sheet-hide'>高気圧</span>となるため。",
+                explanation: "空気は熱せられると膨張して軽くなり上昇します。地表付近の上空へ空気が逃げるため気圧は下がります。逆に、冷やされた空気は凝縮して重くなり下降するため、地表を押す大気質量が増加し高気圧となります。"
             },
             {
-                slideNum: 3,
-                type: "answer",
-                qNum: 1,
-                title: "【答1：気流と気圧】",
-                content: "空気が暖められると密度が小さくなって軽くなり、<span class='red-sheet-hide'>上昇気流</span>が発生して地表を押す大気の量が減るため<span class='red-sheet-hide'>低気圧</span>となる。一方、空気が冷やされると密度が大きくなって重くなり、<span class='red-sheet-hide'>下降気流</span>が発生して地表を押す大気の量が増すため<span class='red-sheet-hide'>高気圧</span>となるため。",
-                explanation: "気圧の正体は「地上にかかる大気の重さ（地面を押す力）」です。<br>空気が温められると膨張して密度が小さくなり（軽くなり）上昇します（上昇気流）。地表から空気が逃げていくため、地面を押しつける重さが減少し「低気圧」が発生します。逆に、冷やされた空気は収縮して重くなり、上空から降下します（下降気流）。これにより地表に空気が押し寄せて密集するため、大気の重さが増して「高気圧」が形成されます。この地表での気圧のアンバランスを埋めるための水平移動が「風」です。",
-                notes: "必須キーワード：上昇気流、低気圧、下降気流、高気圧、地表の空気（大気）の重さ・量"
-            },
-            {
-                slideNum: 4,
-                type: "question",
                 qNum: 2,
-                title: "【問2：コリオリの力と恒常風】",
-                content: "大気大循環において、風は高気圧から低気圧へ向かって直線的に吹かず、東西に曲がって吹く（偏西風や貿易風など）。この現象を引き起こする地球の自転運動から生じる見かけの力について説明せよ。",
-                notes: "自転する回転座標系（地球上）で動く物体に作用する、進行方向を偏向させる見かけの力を正確に説明させます。"
+                title: "コリオリの力と恒常風の向き",
+                question: "大気大循環において、風は高気圧から低気圧へ向かって直線的に吹かず、東西に曲がって吹く（偏西風や貿易風など）。この現象を引き起こす、地球の自転運動から生じる見かけの力について説明せよ。",
+                answer: "自転する地球の上を移動する大気には、見かけの力である<span class='red-sheet-hide'>コリオリの力（転向力）</span>が働くため。この力は地球の自転運動に起因し、北半球では進行方向に対して<span class='red-sheet-hide'>右方向</span>、南半球では<span class='red-sheet-hide'>左方向</span>にはたらくことで風向きを東西方向へと変向させる。",
+                explanation: "コリオリの力（転向力）は地球自転により生じる見かけの力です。北半球で右、南半球で左に大気流を偏向させるため、緯度帯に応じた東西方向の風（偏西風や極偏東風など）が生まれます。"
             },
             {
-                slideNum: 5,
-                type: "answer",
-                qNum: 2,
-                title: "【答2：コリオリの力と恒常風】",
-                content: "自転する地球の上を移動する大気には、見かけの力である<span class='red-sheet-hide'>コリオリの力（転向力）</span>が働くため。この力は地球の自転運動に起因し、北半球では進行方向に対して<span class='red-sheet-hide'>右方向</span>、南半球では<span class='red-sheet-hide'>左方向</span>にはたらくことで風向きを東西方向へと変向させる。",
-                explanation: "地球は自転しているため、地表の上を移動する風や海流は常に進行方向をねじ曲げる力を受けます。これを「コリオリの力（転向力）」といいます。<br>北半球では進行方向の「右」へと曲げられるため、赤道から高緯度（極側）へ吹こうとする風は右に曲がり西からの風（偏西風）になり、中緯度から赤道（低緯度）へと吹き戻る風は右に曲がって東よりの風（貿易風）になります。南半球では逆に、進行方向の「左」に曲げられます。",
-                notes: "必須キーワード：コリオリの力（または転向力）、地球の自転、北半球は右、南半球は左"
-            },
-            {
-                slideNum: 6,
-                type: "question",
                 qNum: 3,
-                title: "【問3：サバナ気候の雨季と乾季】",
-                content: "低緯度の「サバナ気候（Aw）」分布地域において、なぜ夏に大雨が降る「雨季」となり、冬に極度に乾燥する「乾季」となるのか。太陽の移動と地球全体の気圧帯の規則的移動に注目して説明せよ。",
-                notes: "太陽の南中高度の季節変化（回帰運動）に連動して、地球規模の大気大循環（気圧帯）が南北にシフトするダイナミクスを答えさせます。"
+                title: "サバナ気候の雨季と乾季の交代",
+                question: "低緯度の「サバナ気候（Aw）」分布地域において、なぜ夏に大雨が降る「雨季」となり、冬に極度に乾燥する「乾季」となるのか。太陽の移動と地球全体の気圧帯の規則的移動に注目して説明せよ。",
+                answer: "太陽の移動に伴い、地球全体の気圧帯が南北に連動移動するため。夏は、強い上昇気流により雨雲が発達しやすい<span class='red-sheet-hide'>熱帯収束帯（赤道低圧帯）</span>に覆われて雨季となり、冬は、下降気流により雲が極めて発生しにくい<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>に覆われて乾季となる。",
+                explanation: "太陽の直射高度の季節変動に伴い、地球全体の主要気圧帯が南北に約10度シフトします。熱帯収束帯（多雨）と亜熱帯高圧帯（乾燥）の支配域が夏冬で交代することで、極端な雨乾季が成立します。"
             },
             {
-                slideNum: 7,
-                type: "answer",
-                qNum: 3,
-                title: "【答3：サバナ気候の雨季と乾季】",
-                content: "太陽の移動に伴い、地球全体の気圧帯が南北に連動移動するため。夏は、強い上昇気流により雨雲が発達しやすい<span class='red-sheet-hide'>熱帯収束帯（赤道低圧帯）</span>に覆われて雨季となり、冬は、下降気流により雲が極めて発生しにくい<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>に覆われて乾季となる。",
-                explanation: "赤道付近の上昇気流帯である「熱帯収束帯」と、緯度20〜30度付近の下降気流帯である「亜熱帯高圧帯」は固定されておらず、太陽の直射位置（熱を最も受ける緯度）の季節移動とともに南北に年間約10度ほど移動します。<br>サバナ気候地帯は、これら2つの気圧帯のちょうど間に位置します。そのため、北半球の夏になると、赤道付近から北上してきた雨の多い熱帯収束帯にすっぽりと包まれ（雨季）、冬になると、今度は北から南下してきた乾燥した亜熱帯高圧帯に支配される（乾季）という劇的なサイクルが完成します。",
-                notes: "必須キーワード：気圧帯の南北移動（連動）、夏＝熱帯収束帯（赤道低圧帯）、冬＝亜熱帯高圧帯"
-            },
-            {
-                slideNum: 8,
-                type: "question",
                 qNum: 4,
-                title: "【問4：土と水の比熱の差と季節風】",
-                content: "陸地（土）と海洋（水）の熱的性質（比熱）の違いに注目し、大陸と海洋の間で、季節によって風向が逆転する「季節風（モンスーン）」が発生する原理を説明せよ。",
-                notes: "物質の温まりやすさ、冷めやすさの指標である「比熱」が陸地と海洋で異なることが気圧差を作り、結果として風向が変わる現象を論述します。"
+                title: "土と水の比熱の差と季節風の発生",
+                question: "陸地（土）と海洋（水）の熱的性質（比熱）の違いに注目し、大陸と海洋の間で、季節によって風向が逆転する「季節風（モンスーン）」が発生する原理を説明せよ。",
+                answer: "陸は海より比熱が小さく<span class='red-sheet-hide'>温まりやすく冷めやすい</span>、海は比熱が大きく温まりにくく冷めにくい熱特性を持つため。夏は陸が高温で低気圧になり<span class='red-sheet-hide'>海から陸へ</span>湿った風が吹き、冬は陸が低温で高気圧になり<span class='red-sheet-hide'>陸から海へ</span>乾燥した冷たい風が吹くため。",
+                explanation: "比熱が小さい大陸は、夏に海洋よりも急速に熱せられ上昇気流（低圧部）が生じます。この気圧差により、夏は海洋の高圧部から大陸へ、冬は大陸の強力な寒冷高気圧から海洋に向けて季節風が吹くようになります。"
             },
             {
-                slideNum: 9,
-                type: "answer",
-                qNum: 4,
-                title: "【答4：土と水の比熱の差と季節風】",
-                content: "陸は海より比熱が小さく<span class='red-sheet-hide'>温まりやすく冷めやすい</span>、海は比熱が大きく温まりにくく冷めにくい熱特性を持つため。夏は陸が高温で低気圧になり<span class='red-sheet-hide'>海から陸へ</span>風が吹き、冬は陸が低温で高気圧になり<span class='red-sheet-hide'>陸から海へ</span>乾燥した風が吹くため。",
-                explanation: "「比熱」は、ある物質の温度を1度上げるために必要な熱量です。土（陸）は比熱が水（海）の約5分の1しかなく、非常に熱しやすく冷めやすいという性質があります。<br>【夏】：太陽熱を浴びた大陸は急速に熱くなり上昇気流をうみ、陸地に「低気圧」ができます。海の上は冷たく保たれるため「高気圧」となり、風は海から陸へ向かって吹き込み、多くの水分をもたらします。<br>【冬】：太陽熱が減ると大陸は一気に極寒になり下降気流が発生、強力な「高気圧」ができます。海の上は冷めにくいため「低気圧」となり、風は陸から海へ吹き出します。これが「季節風」の発生プロセスです。",
-                notes: "必須キーワード：比熱の違い、陸（土）＝温まりやすく冷めやすい、夏＝海から陸の風、冬＝陸から海の風"
-            },
-            {
-                slideNum: 10,
-                type: "question",
                 qNum: 5,
-                title: "【問5：日本の冬の気圧配置と天候】",
-                content: "日本周辺における冬の気圧配置の名称を答え、その配置が形成される熱力学的背景と、それが日本海側・太平洋側にもたらす対照的な天候について詳しく説明せよ。",
-                notes: "日本の冬特有の「西高東低」という配置が、シベリア高気圧の形成と脊梁山脈（日本列島の中央山脈）の遮断プロセスを経て日本海・太平洋の気候コントラストを生む仕組みを解説します。"
+                title: "日本の冬の気圧配置と特有の天候",
+                question: "日本周辺における冬の典型的な気圧配置の名称を答え、その配置が形成される理由と、それが日本海側・太平洋側にもたらす対照的な天候について詳しく説明せよ。",
+                answer: "冬の日本は<span class='red-sheet-hide'>西高東低</span>の気圧配置をとる。冷え切ったユーラシア大陸に強力なシベリア高気圧が、北太平洋に低気圧ができ、北西の冷たく乾燥した季節風が吹く。これが日本海で水蒸気を大量に補給し、日本列島の中央山脈に衝突して<span class='red-sheet-hide'>日本海側に大雪</span>を降らせ、山脈を越えた<span class='red-sheet-hide'>太平洋側に乾燥した晴天</span>をもたらすため。",
+                explanation: "シベリアからの極寒乾燥の北西季節風が、暖かい日本海を渡る過程で大量の潜熱と水蒸気を獲得します。中央の脊梁山脈を越える際に上昇・強制冷却されて日本海側に豪雪をもたらし、山を越えた後は乾燥した風となって太平洋側へ吹き下ります。"
             },
             {
-                slideNum: 11,
-                type: "answer",
-                qNum: 5,
-                title: "【答5：日本の冬の気圧配置と天候】",
-                content: "冬の日本は<span class='red-sheet-hide'>西高東低</span>の気圧配置をとる。冷え切ったユーラシア大陸に強力なシベリア高気圧が、北太平洋に低気圧ができ、北西の冷たく乾燥した季節風が吹く。これが日本海で水蒸気を大量に補給し、日本列島の中央山脈に衝突して<span class='red-sheet-hide'>日本海側に大雪</span>を降らせ、山脈を越えた<span class='red-sheet-hide'>太平洋側に乾燥した晴天</span>をもたらすため。",
-                explanation: "日本の冬は典型的な冬型の気圧配置である「西高東低」となります。極寒の大陸側（西）に発達するシベリア高気圧から、暖かく湿った太平洋側（東）の低気圧に向かって、猛烈な「北西の季節風」が吹き出します。<br>この超冷涼で本来は乾燥している風が暖かい「日本海」を通過する際、海水温のぬくもりで大量の蒸発水蒸気を吸収し、巨大な雪雲に変わります。これが日本の中央を縦断する脊梁山脈にぶつかって上昇することで、日本海側に世界的な豪雪をもたらします。雪を絞り尽くし、水分を失ってカラカラになった風が山脈を越えて吹き下りるため、太平洋側は極端に乾燥した青空（冬晴れ、からっ風）となります。",
-                notes: "必須キーワード：西高東低、シベリア高気圧、北西の季節風、中央山脈による遮断、日本海側（雪）と太平洋側（晴・乾燥）の対比"
-            },
-            {
-                slideNum: 12,
-                type: "question",
                 qNum: 6,
-                title: "【問6：局地風「やませ」の仕組みと災害】",
-                content: "日本の東北地方などで春から秋にかけて吹く「やませ」とはどのような風か、その発生源となる気団（海洋）の名称と、それが引き起こす農業的な深刻な被害について説明せよ。",
-                notes: "オホーツク海の冷涼湿潤な気団から吹き出す風が、東北地方（特に太平洋側の三陸地方）の農作物の生育を妨げる「冷害」を引き起こす背景を回答させます。"
+                title: "局地風「やませ」の仕組みと冷害",
+                question: "日本の東北地方などで春から秋にかけて吹く「やませ」とはどのような風か、その発生源となる気団（海洋）の名称と、それが引き起こす農業的な深刻な被害について説明せよ。",
+                answer: "春から秋にかけて、冷たい海であるオホーツク海上の<span class='red-sheet-hide'>オホーツク海気団</span>から吹く、冷たく湿った北東（東）よりの局地風。この低温の風と高密度の海霧が太平洋側から長期間吹き込むことで日照時間が著しく減少し、東北地方を中心に深刻な<span class='red-sheet-hide'>冷害（作物の不作）</span>をもたらすため。",
+                explanation: "オホーツク海の氷冷海水上で形成される冷涼湿潤な高気圧から吹き出す風です。高密度の濃霧「海霧」を伴い東北太平洋側に侵入し、夏の気温上昇と日照を妨げることで、稲の花粉障害や生育不全（冷害）を誘発します。"
             },
             {
-                slideNum: 13,
-                type: "answer",
-                qNum: 6,
-                title: "【答6：局地風「やませ」の仕組みと災害】",
-                content: "春から秋にかけて、冷たい海であるオホーツク海上の<span class='red-sheet-hide'>オホーツク海気団</span>から吹く、冷たく湿った北東（東）よりの局地風。この低温の風と高密度の海霧が太平洋側から長期間吹き込むことで日照時間が著しく減少し、東北地方を中心に深刻な<span class='red-sheet-hide'>冷害（作物の不作）</span>をもたらす。",
-                explanation: "「やませ（山背）」は東北地方の太平洋側などに吹く、冷たくて湿った厄介な東風です。<br>夏になってもなかなか消滅しないオホーツク海上のオホーツク海気団（冷涼高気圧）から吹き出します。この風は、冷えた海水の上を舐めるように移動してくるため、たくさんの冷たい水蒸気（海霧）を含んでいます。これが三陸海岸から東北の平野部を覆うと、日中の太陽光がまったく届かなくなり（日照不足）、気温が米の生育限界以下に低下します。これが長引くと、お米が稔らなくなる最悪の「農業冷害（大凶作）」をもたらします。",
-                notes: "必須キーワード：オホーツク海気団（オホーツク海）、冷たく湿った北東（東）よりの風、日照不足、冷害"
-            },
-            {
-                slideNum: 14,
-                type: "question",
                 qNum: 7,
-                title: "【問7：フェーン現象と気温の逓減率】",
-                content: "山地を越えて吹き下りてくる風が、ふもとの地域に著しい「高温」と「乾燥」をもたらす「フェーン現象」について、空気が山を「上る時」と「下る時」の「気温の逓減率（温度変化の割合）」の違いを比較して物理的に説明せよ。",
-                notes: "物理学的な熱力学変化。空気に含まれる水蒸気が「凝結（雨）」を誘発することで放出される熱（潜熱）の有無により、山の登坂と下降時の温度勾配が変わるメカニズムを解説させます。"
-            },
-            {
-                slideNum: 15,
-                type: "answer",
-                qNum: 7,
-                title: "【答7：フェーン現象と気温の逓減率】",
-                content: "湿った空気が山を上る際は水蒸気が凝結（雨）して熱を放出するため、高度 $100\\text{ m}$ あたり約 $0.5 \\sim 0.65^\\circ\\text{C}$ の穏やかな割合（<span class='red-sheet-hide'>湿潤逓減率</span>）で冷える。一方、雨を降らせて乾燥した空気が山を下る際は熱放出を伴わないため、高度 $100\\text{ m}$ あたり <span class='red-sheet-hide'>$1.0^\\circ\\text{C}$</span> の急激な割合（<span class='red-sheet-hide'>乾燥逓減率</span>）で気温が上昇するため。",
-                explanation: "海抜高度が上がると気圧低下により空気が膨張冷却され、気温が下がります（気温の逓減）。<br>【山を上る時】：水蒸気を含んだ「湿潤な空気」が上昇すると、冷やされた水蒸気が「雲・雨」に変わる（凝結する）際、内部に秘めていた潜熱という熱を空気に放出します。そのため、熱が相殺されて高度100mにつき約0.5〜0.65℃しか冷えません（湿潤逓減率）。<br>【山を下る時】：山頂付近で雨をすべて降らせて「乾燥した空気」になった大気は、山から一気に吹き下ります。乾燥空気は100m低下するごとにピタッと1.0℃の割合で急激に温まります（乾燥逓減率）。<br>この「上りの冷え方（小さめ）」と「下りの温まり方（大きめ）」のギャップにより、風下のふもとでは風上よりも何℃も気温が高く、カラカラに乾燥した気流（フェーン）が発生します。",
-                notes: "必須キーワード：湿潤逓減率（100mで0.5〜0.65℃）、乾燥逓減率（100mで1℃）、凝結に伴う潜熱放出、山頂での降水"
-            },
-            {
-                slideNum: 16,
-                type: "summary",
-                title: "第3回 大気の熱循環ダイナミクス・総括",
-                content: "地球上のあらゆる『風』と『天候』は、太陽エネルギーの受熱アンバランスを解消するための、巨大な大気による熱分配（熱力学の法則）から生まれています。<br><br>赤道高角直射による「熱帯収束帯」の上昇流や、冷やされ下降した「亜熱帯高圧帯」の乾燥下降気流という地球規模のマクロな大気大循環。これらは季節による太陽高度変化（太陽の回帰）によって南北移動し、サバナ気候に明確な「雨季・乾季」をデザインします。そして自転軸上の回転が生む見かけの運動量「コリオリの力」が恒常風を曲げ、大気は東西循環を得ます。<br><br>これらが日本をはじめとしたローカルスケールに持ち込まれるとき、陸地（土）と海（水）の『比熱の違い（温まりやすさ・冷めにくさ）』が大陸気圧差を急変させ、「季節風（モンスーン）」を起動します。冬の日本に卓越する「西高東低」は、日本海で水蒸気を飽和させた空気を脊梁山脈に衝突させ、日本海側の雪と太平洋側のからっ風を鮮やかに対比させます。<br><br>さらに、オホーツク海の冷涼なオホーツク海気団がもたらす夏の局地風「やませ」の冷害、水蒸気の相変化（凝結）時の熱収支（湿潤逓減率と乾燥逓減率の違い）がふもとを急激に高温乾燥させる「フェーン現象」のように、大気のすべての現象は、物理学的（熱力学・力学的）に一分の狂いもなく説明可能です。これらの物理的なつながりとメカニズムの因果関係（原因と結果）を完全に説明できることが、論述攻略への唯一無二の切符となります。",
-                notes: "第3回で学んだマクロ・ミクロの大気の物理運動は、一貫した地球物理法則に貫かれています。各テーマのキーワードと因果関係をしっかりと言葉に落とし込んで試験に臨みましょう！"
+                title: "フェーン現象と2つの気温逓減率",
+                question: "山地を越えて吹き下りてくる風が、ふもとの地域に著しい「高温」と「乾燥」をもたらす「フェーン現象」について、空気が山を「上る時」と「下る時」の「気温の逓減率（温度変化の割合）」の違いを比較して物理的に説明せよ。",
+                answer: "湿った空気が山を上る際は水蒸気が凝結（雨）して熱を放出するため、高度 $100\\text{ m}$ あたり約 $0.5 \\sim 0.65^\\circ\\text{C}$ の穏やかな割合（<span class='red-sheet-hide'>湿潤逓減率</span>）で冷える。一方、雨を降らせて乾燥した空気が山を下る際は熱放出を伴わないため、高度 $100\\text{ m}$ あたり <span class='red-sheet-hide'>$1.0^\\circ\\text{C}$</span> の急激な割合（<span class='red-sheet-hide'>乾燥逓減率</span>）で気温が上昇するため。",
+                explanation: "空気が上昇する際は膨張冷却されますが、水蒸気が雨に変わる（凝結）際に「潜熱」を放出するため温度低下が緩やか（湿潤逓減）になります。しかし、山頂で雨を降らせきって乾燥した空気が山を下る際は、潜熱のやり取りがなくなり、100mにつき1℃のペース（乾燥逓減）で圧縮加熱されるため、山麓で極度の高温乾燥が発生します。"
             }
         ];
 
-        let activeTabIndex = "present"; 
-        let currentSlideIndex = 0;
-        let showSpeakerNotes = true;
-        let isRedSheetActive = true; // デフォルトで赤シートONにしてすぐ学習できるように
-
-        // Dom components mapping
-        const elements = {
-            tabPresent: document.getElementById("tab-present"),
-            tabStudy: document.getElementById("tab-study"),
-            secPresent: document.getElementById("sec-present"),
-            secStudy: document.getElementById("sec-study"),
-            slideWrapper: document.getElementById("slide-container-wrapper"),
-            slideCanvas: document.getElementById("slide-canvas-scaled"),
-            slideCounter: document.getElementById("slide-counter"),
-            btnToggleNotes: document.getElementById("btn-toggle-notes"),
-            notesArea: document.getElementById("notes-area"),
-            notesContent: document.getElementById("notes-content"),
-            studyContainer: document.getElementById("study-container"),
-            btnRedSheetSwitch: document.getElementById("btn-red-sheet-switch"),
-            toastBanner: document.getElementById("toast-banner"),
-            toastMsg: document.getElementById("toast-msg")
+        // Font Sizes: normal, small, large ("medium/中" was removed as requested)
+        const fontSizes = ["normal", "small", "large"];
+        const fontLabels = {
+            "normal": "標準",
+            "small": "小",
+            "large": "大"
         };
+        let currentFontIdx = 0;
 
         /**
-         * モバイルの縦横回転、PCリサイズに連動して、高さを突き破らない等倍変形
+         * Render the exercise cards in their default closed states, with toggle buttons.
          */
-        function resizeSlideCanvas() {
-            const wrapper = elements.slideWrapper;
-            const canvas = elements.slideCanvas;
-            if (!wrapper || !canvas || activeTabIndex !== "present") return;
+        function renderQuizList() {
+            const container = document.getElementById("quiz-list-container");
+            container.innerHTML = "";
 
-            const baseWidth = 1024;
-            const baseHeight = 576;
-            const baseRatio = baseWidth / baseHeight; // 16:9 ≒ 1.777
+            quizDatabase.forEach((quiz) => {
+                const card = document.createElement("div");
+                card.className = "bg-[#F3EFE6] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm";
+                card.id = `quiz-card-${quiz.qNum}`;
 
-            // 親コンテナの横幅限界
-            const parentWidth = wrapper.parentElement.clientWidth;
-
-            // 回転（縦・横）した際のために、画面高さ（window.innerHeight）から、ヘッダー、コントロール、解説エリアの占有高さを差し引いてリアルに算定
-            const headerHeight = document.querySelector('header').offsetHeight || 50;
-            const controlsHeight = document.getElementById('slide-controls-area').offsetHeight || 50;
-            const notesHeight = (showSpeakerNotes && elements.notesArea && !elements.notesArea.classList.contains('hidden')) 
-                                ? elements.notesArea.offsetHeight 
-                                : 0;
-            
-            // 安全用余白パディング
-            const extraGap = 24; 
-            const maxAvailableHeight = window.innerHeight - headerHeight - controlsHeight - notesHeight - extraGap;
-
-            const currentRatio = parentWidth / maxAvailableHeight;
-
-            let scale = 1;
-
-            if (currentRatio > baseRatio) {
-                // 画面が十分に横長（モバイル横画面またはPC大画面）→ 高さが制限因子になる
-                scale = maxAvailableHeight / baseHeight;
-            } else {
-                // 画面が縦長（モバイル縦画面）→ 横幅が制限因子になる
-                scale = parentWidth / baseWidth;
-            }
-
-            // 極端な極小化を防ぐ（下限値を設定）
-            scale = Math.max(scale, 0.28);
-            // 無駄な大画面拡大によるぼやけを防ぐ（上限値を設定）
-            scale = Math.min(scale, 1.1);
-
-            // CSS Transformで完全等倍変形をかける
-            canvas.style.transform = `scale(${scale})`;
-            canvas.style.transformOrigin = "center center";
-
-            // 親ラッパーにスケール後の実寸バウンディングを上書きして余計な余白やスクロールバーを絶滅させる
-            wrapper.style.width = `${baseWidth * scale}px`;
-            wrapper.style.height = `${baseHeight * scale}px`;
-        }
-
-        // Resize hook
-        window.addEventListener("resize", resizeSlideCanvas);
-        window.addEventListener("orientationchange", () => {
-            setTimeout(resizeSlideCanvas, 200); // 画面回転完了までディレイ
-        });
-
-        function setTab(tab) {
-            activeTabIndex = tab;
-            
-            // UI tabs normalize
-            elements.tabPresent.className = "px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all duration-200 text-[#5C534C] hover:text-[#2F2924]";
-            elements.tabStudy.className = "px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all duration-200 text-[#5C534C] hover:text-[#2F2924]";
-            
-            elements.secPresent.classList.add("hidden");
-            elements.secStudy.classList.add("hidden");
-
-            if (tab === "present") {
-                elements.tabPresent.className = "px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all duration-200 bg-[#FAF7F0] text-[#2F2924] shadow-sm";
-                elements.secPresent.classList.remove("hidden");
-                renderSlide();
-                setTimeout(resizeSlideCanvas, 80);
-            } else if (tab === "study") {
-                elements.tabStudy.className = "px-2.5 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all duration-200 bg-[#FAF7F0] text-[#2F2924] shadow-sm";
-                elements.secStudy.classList.remove("hidden");
-                renderStudyView();
-            }
-        }
-
-        function renderSlide() {
-            const slide = slideDatabase[currentSlideIndex];
-            if (!slide) return;
-
-            let canvasHtml = "";
-
-            if (slide.type === "title") {
-                canvasHtml = `
-                    <div class="flex-grow flex flex-col justify-center items-center text-center bg-[#FAF7F0] h-full rounded-lg border border-[#E6DFD3] p-6">
-                        <span class="text-[12px] uppercase tracking-wider text-[#2E6F40] font-black px-3 py-1 bg-[#2E6F40]/10 rounded-full mb-3">定期試験・論述対策</span>
-                        <h2 class="text-[32px] font-extrabold leading-tight text-[#2F2924] mb-3">${slide.title}</h2>
-                        <p class="text-[15px] text-[#5C534C] font-semibold mb-4">${slide.subtitle}</p>
-                        <div class="h-0.5 w-16 bg-[#A83E4C] rounded-full mb-3"></div>
-                        <p class="text-[12px] text-slate-500 font-medium">${slide.content}</p>
+                card.innerHTML = `
+                    <!-- Header with title & Expand-Collapse buttons -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3] hover:bg-[#E6DFD3]/60" onclick="toggleAnswer(${quiz.qNum})">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
+                            <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
+                        </div>
+                        <!-- State Toggler -->
+                        <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1 rounded flex items-center gap-1 flex-shrink-0 active:scale-95" id="btn-toggle-${quiz.qNum}">
+                            <span id="text-toggle-${quiz.qNum}">解答・解説</span>
+                            <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                        </button>
                     </div>
-                `;
-            } 
-            else if (slide.type === "question") {
-                canvasHtml = `
-                    <div class="flex-grow flex flex-col justify-between bg-[#FAF7F0] h-full rounded-lg border border-[#E6DFD3] p-8 relative">
-                        <div>
-                            <span class="text-[11px] font-black text-[#A83E4C] tracking-wider uppercase bg-[#A83E4C]/10 px-3 py-0.5 rounded-full">QUESTION</span>
-                            <h3 class="text-[22px] font-extrabold text-[#A83E4C] mt-3 flex items-center gap-2">
-                                <i class="fa-solid fa-circle-question"></i>
-                                ${slide.title}
-                            </h3>
-                        </div>
-                        <div class="my-auto">
-                            <p class="text-[18px] leading-relaxed font-bold text-[#2F2924] bg-[#F3EFE6] p-5 rounded-xl border border-[#E6DFD3]">${slide.content}</p>
-                        </div>
-                        <div class="text-[10px] text-slate-400">※自然地理学概論 第3回 講義資料対応</div>
-                    </div>
-                `;
-            } 
-            else if (slide.type === "answer") {
-                canvasHtml = `
-                    <div class="flex-grow flex flex-col justify-between bg-[#FAF7F0] h-full rounded-lg border border-[#E6DFD3] p-6 relative overflow-hidden">
-                        <div>
-                            <span class="text-[11px] font-black text-[#2E6F40] tracking-wider uppercase bg-[#2E6F40]/10 px-3 py-0.5 rounded-full">ANSWER</span>
-                            <h3 class="text-[20px] font-extrabold text-[#2E6F40] mt-2 flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check"></i>
-                                ${slide.title}
-                            </h3>
-                        </div>
-                        
-                        <div class="bg-[#F3EFE6] border-l-4 border-[#2E6F40] p-4 rounded-r-xl my-2">
-                            <p class="text-[14px] font-bold leading-relaxed text-[#2F2924]">${slide.content}</p>
-                        </div>
 
-                        <div class="text-[11px] text-[#5C534C] bg-white/50 p-3 rounded-lg border border-[#E6DFD3] max-h-[140px] overflow-y-auto custom-scroll leading-relaxed">
-                            <strong class="text-[#2E6F40]">解説：</strong>${slide.explanation}
-                        </div>
+                    <!-- Problem text (Always visible) -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50">
+                        <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
                     </div>
-                `;
-            } 
-            else if (slide.type === "summary") {
-                canvasHtml = `
-                    <div class="flex-grow flex flex-col justify-between bg-[#FAF7F0] h-full rounded-lg border border-[#E6DFD3] p-8">
-                        <div class="flex items-center gap-2 border-b border-[#E6DFD3] pb-2">
-                            <div class="bg-[#2E6F40] text-white p-2 rounded-lg flex items-center justify-center">
-                                <i class="fa-solid fa-cube text-[14px]"></i>
+
+                    <!-- Answer & Explanation area (Default folded: hidden) -->
+                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
+                        <!-- Model Answer with Tap-to-Reveal red sheet targets -->
+                        <div class="space-y-1">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-pen-fancy"></i> 論述・記述模範解答 (赤シート対応)
+                            </h4>
+                            <div class="bg-[#A83E4C]/5 border-l-4 border-[#A83E4C] p-3 rounded-r-lg">
+                                <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">
+                                    ${parseRedSheetText(quiz.answer)}
+                                </p>
                             </div>
-                            <h3 class="text-[20px] font-extrabold text-[#2F2924]">${slide.title}</h3>
                         </div>
-                        <div class="text-[12px] leading-relaxed text-[#5C534C] overflow-y-auto pr-1 custom-scroll max-h-[350px] my-3 space-y-2">
-                            ${slide.content}
+
+                        <!-- Academic background analysis -->
+                        <div class="pt-2 border-t border-[#E6DFD3]">
+                            <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-lightbulb"></i> 得点獲得のための論理
+                            </h4>
+                            <p class="text-[#5C534C] bg-[#FAF7F0]/80 p-2.5 rounded border border-[#E6DFD3]/50 leading-relaxed dynamic-text-md">${quiz.explanation}</p>
                         </div>
                     </div>
                 `;
-            }
 
-            elements.slideCanvas.innerHTML = canvasHtml;
-            elements.slideCounter.textContent = `Slide ${currentSlideIndex + 1} / ${slideDatabase.length}`;
-            elements.notesContent.innerHTML = `<p class="font-bold text-[#2F2924] mb-1">■ 記述の加点ポイント・コア:</p><p class="leading-relaxed text-[#5C534C]">${slide.notes}</p>`;
+                container.appendChild(card);
+            });
 
-            // Math parse with KaTeX
-            renderMathInElement(elements.slideCanvas, {
+            // Parse math formulas using KaTeX
+            renderMathInElement(container, {
                 delimiters: [
                     {left: '$$', right: '$$', display: true},
                     {left: '$', right: '$', display: false}
                 ],
                 throwOnError: false
             });
-
-            // Re-fit canvas layout immediately
-            resizeSlideCanvas();
         }
 
-        function nextSlide() {
-            if (currentSlideIndex < slideDatabase.length - 1) {
-                currentSlideIndex++;
-                renderSlide();
+        /**
+         * Replaces red-sheet-hide markings with dynamic interactive inline wrappers.
+         */
+        function parseRedSheetText(text) {
+            // Adds bi-directional toggle functionality to the individual element
+            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='toggleIndividualSheet(this, event)'");
+        }
+
+        /**
+         * Toggles the individual red sheet element state (mask vs reveal)
+         */
+        function toggleIndividualSheet(element, event) {
+            event.stopPropagation(); // Avoid triggering accordion close
+            element.classList.toggle("revealed");
+        }
+
+        /**
+         * Accordion open / close behavior
+         */
+        function toggleAnswer(qNum) {
+            const answerBox = document.getElementById(`answer-box-${qNum}`);
+            const btnText = document.getElementById(`text-toggle-${qNum}`);
+            const btnIcon = document.getElementById(`icon-toggle-${qNum}`);
+
+            if (answerBox.classList.contains("hidden")) {
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
             } else {
-                triggerToast("これが最後のスライドです。試験勉強頑張りましょう！");
+                answerBox.classList.add("hidden");
+                btnText.textContent = "解答・解説";
+                btnIcon.className = "fa-solid fa-chevron-down text-[8px]";
             }
         }
 
-        function prevSlide() {
-            if (currentSlideIndex > 0) {
-                currentSlideIndex--;
-                renderSlide();
-            } else {
-                triggerToast("最初のスライドです。");
-            }
+        /**
+         * Global control for all red sheet fields.
+         * @param {boolean} shouldHide - If true, masks everything. If false, reveals everything.
+         */
+        function setAllRedSheets(shouldHide) {
+            const sheets = document.querySelectorAll(".red-sheet-hide");
+            sheets.forEach(sheet => {
+                if (shouldHide) {
+                    sheet.classList.remove("revealed");
+                } else {
+                    sheet.classList.add("revealed");
+                }
+            });
+
+            triggerToast(shouldHide ? "すべての赤シートを隠しました" : "すべての赤シートを開示しました");
         }
 
-        function toggleSpeakerNotes() {
-            showSpeakerNotes = !showSpeakerNotes;
-            if (showSpeakerNotes) {
-                elements.notesArea.classList.remove("hidden");
-                elements.btnToggleNotes.innerHTML = `<i class="fa-solid fa-message"></i>`;
-                elements.btnToggleNotes.classList.remove("bg-[#F3EFE6]", "text-[#5C534C]");
-                elements.btnToggleNotes.classList.add("bg-[#2F2924]", "text-white");
-            } else {
-                elements.notesArea.classList.add("hidden");
-                elements.btnToggleNotes.innerHTML = `<i class="fa-solid fa-message-slash"></i>`;
-                elements.btnToggleNotes.classList.remove("bg-[#2F2924]", "text-white");
-                elements.btnToggleNotes.classList.add("bg-[#F3EFE6]", "text-[#5C534C]");
-            }
-            // スピーカーノート開閉時にもスライドの高さを再測定して隙間なくフィットさせる
-            setTimeout(resizeSlideCanvas, 150);
+        /**
+         * Cycle application font sizing instantly.
+         * Sequence: normal -> medium -> small -> large -> normal ...
+         */
+        function cycleFontSize() {
+            const body = document.getElementById("app-body");
+            const label = document.getElementById("font-size-label");
+
+            // Remove current font size class
+            const currentSize = fontSizes[currentFontIdx];
+            body.classList.remove(`size-${currentSize}`);
+
+            // Cycle index
+            currentFontIdx = (currentFontIdx + 1) % fontSizes.length;
+            const nextSize = fontSizes[currentFontIdx];
+
+            // Apply new sizing and text label
+            body.classList.add(`size-${nextSize}`);
+            label.textContent = fontLabels[nextSize];
         }
 
+        /**
+         * Toast notification utility
+         */
         function triggerToast(msg) {
-            elements.toastMsg.textContent = msg;
-            elements.toastBanner.classList.remove("translate-y-20", "opacity-0");
-            setTimeout(() => {
-                elements.toastBanner.classList.add("translate-y-20", "opacity-0");
-            }, 2500);
-        }
-
-        // PC Arrow Keys support
-        document.addEventListener("keydown", (e) => {
-            if (activeTabIndex !== "present") return;
-            if (e.key === "ArrowRight" || e.key === " ") {
-                nextSlide();
-            } else if (e.key === "ArrowLeft") {
-                prevSlide();
-            }
-        });
-
-        function renderStudyView() {
-            let html = `<div id="study-interactive-wrapper" class="${isRedSheetActive ? 'red-sheet-active' : ''} space-y-3">`;
-
-            // Filter questions (qNum 1 to 7)
-            for (let qNum = 1; qNum <= 7; qNum++) {
-                const qSlide = slideDatabase.find(s => s.type === "question" && s.qNum === qNum);
-                const aSlide = slideDatabase.find(s => s.type === "answer" && s.qNum === qNum);
-
-                if (!qSlide || !aSlide) continue;
-
-                html += `
-                    <div class="bg-[#FAF7F0] rounded-xl border border-[#E6DFD3] overflow-hidden shadow-sm">
-                        <!-- Accordion Tab Header -->
-                        <div onclick="toggleQuizAccordion(${qNum})" class="bg-[#F3EFE6] text-[#2F2924] p-3 flex justify-between items-center cursor-pointer select-none border-b border-[#E6DFD3] hover:bg-[#E6DFD3]/30 transition">
-                            <div class="flex items-center gap-1.5">
-                                <span class="bg-[#A83E4C] text-white text-[9px] font-black px-1.5 py-0.5 rounded">問 ${qNum}</span>
-                                <h3 class="font-bold text-xs text-[#2F2924]">${qSlide.title.replace(/【問\d：|】/g, "")}</h3>
-                            </div>
-                            <span class="text-[9px] text-slate-500 flex items-center gap-1 font-bold">
-                                <span id="label-acc-${qNum}">開く</span>
-                                <i class="fa-solid fa-chevron-down transition duration-200" id="icon-acc-${qNum}"></i>
-                            </span>
-                        </div>
-
-                        <!-- Accordion Core Content -->
-                        <div id="body-acc-${qNum}" class="hidden p-3 space-y-2.5 bg-white/20">
-                            
-                            <!-- Question container -->
-                            <div class="p-2.5 bg-[#FAF7F0] rounded-lg border border-[#E6DFD3]">
-                                <p class="text-xs text-[#2F2924] font-bold leading-relaxed">${qSlide.content}</p>
-                            </div>
-
-                            <!-- Answer container (Supports seamless interactive click to reveal) -->
-                            <div class="space-y-1">
-                                <h4 class="text-[9px] font-black tracking-wider text-[#2E6F40] uppercase">論述記述の模範解答</h4>
-                                <div class="bg-[#2E6F40]/5 border-l-4 border-[#2E6F40] p-2.5 rounded-r-lg">
-                                    <p class="text-xs text-[#2F2924] font-bold leading-relaxed">
-                                        ${attachInteractiveRedSheet(aSlide.content)}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Scientific detailed background comments -->
-                            <div class="pt-2 border-t border-[#E6DFD3]/40">
-                                <h4 class="text-[9px] font-black tracking-wider text-slate-400 uppercase mb-0.5">背景解説（加点プロセス）</h4>
-                                <p class="text-[10px] text-[#5C534C] leading-relaxed bg-[#FAF7F0]/40 p-2.5 rounded border border-[#E6DFD3]/30">${aSlide.explanation}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            html += `</div>`;
-            elements.studyContainer.innerHTML = html;
-
-            // Math parser implementation inside study tab
-            renderMathInElement(elements.studyContainer, {
-                delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false}
-                ],
-                throwOnError: false
-            });
-        }
-
-        function attachInteractiveRedSheet(text) {
-            // Adds seamless click toggle action directly to matching tags for perfect mobile touchscreen support
-            return text.replace(/class='red-sheet-hide'/g, "class='red-sheet-hide' onclick='this.classList.toggle(\"revealed\")'");
-        }
-
-        function toggleQuizAccordion(qNum) {
-            const body = document.getElementById(`body-acc-${qNum}`);
-            const icon = document.getElementById(`icon-acc-${qNum}`);
-            const label = document.getElementById(`label-acc-${qNum}`);
-
-            if (body.classList.contains("hidden")) {
-                body.classList.remove("hidden");
-                icon.classList.add("rotate-180");
-                label.textContent = "閉じる";
-            } else {
-                body.classList.add("hidden");
-                icon.classList.remove("rotate-180");
-                label.textContent = "開く";
-            }
-        }
-
-        function toggleRedSheetMode() {
-            isRedSheetActive = !isRedSheetActive;
-            const container = document.getElementById("study-interactive-wrapper");
+            const banner = document.getElementById("toast-banner");
+            const text = document.getElementById("toast-msg");
             
-            if (isRedSheetActive) {
-                if (container) container.classList.add("red-sheet-active");
-                elements.btnRedSheetSwitch.innerHTML = `<i class="fa-solid fa-eye"></i> <span>赤シート: ON</span>`;
-                elements.btnRedSheetSwitch.className = "bg-[#A83E4C] hover:bg-[#8B2635] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition duration-150 active:scale-95 shadow-sm";
-                triggerToast("赤シートを配置。隠し部分をタップすると解答が表示されます。");
-            } else {
-                if (container) container.classList.remove("red-sheet-active");
-                elements.btnRedSheetSwitch.innerHTML = `<i class="fa-solid fa-eye-slash"></i> <span>赤シート: OFF</span>`;
-                elements.btnRedSheetSwitch.className = "bg-[#2E6F40] hover:bg-[#20512D] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition duration-150 active:scale-95 shadow-sm";
-            }
+            text.textContent = msg;
+            banner.style.transform = "translateY(0)";
+            banner.style.opacity = "1";
+
+            setTimeout(() => {
+                banner.style.transform = "translateY(5rem)";
+                banner.style.opacity = "0";
+            }, 1800);
         }
 
-        // Window load bootstrap initialization
+        // Initialize on load
         window.onload = function() {
-            renderSlide();
-            renderStudyView();
-            setTimeout(resizeSlideCanvas, 150);
+            renderQuizList();
         };
     </script>
 </body>
