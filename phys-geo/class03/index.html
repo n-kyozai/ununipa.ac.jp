@@ -209,22 +209,25 @@
                 card.id = `quiz-card-${quiz.qNum}`;
 
                 card.innerHTML = `
-                    <!-- Header with title & Expand-Collapse buttons -->
-                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3] hover:bg-[#E6DFD3]/60" onclick="toggleAnswer(${quiz.qNum})">
+                    <!-- Header with title -->
+                    <div class="p-3 flex justify-between items-start gap-2 cursor-pointer select-none bg-[#E6DFD3]/40 border-b border-[#E6DFD3]" onclick="toggleAnswer(${quiz.qNum})">
                         <div class="flex items-center gap-2">
                             <span class="bg-[#2E6F40] text-white text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0">問 ${quiz.qNum}</span>
                             <h3 class="font-bold text-xs sm:text-sm text-[#2F2924] leading-tight">${quiz.title}</h3>
                         </div>
-                        <!-- State Toggler -->
-                        <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1 rounded flex items-center gap-1 flex-shrink-0 active:scale-95" id="btn-toggle-${quiz.qNum}">
-                            <span id="text-toggle-${quiz.qNum}">解答・解説</span>
-                            <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
-                        </button>
                     </div>
 
-                    <!-- Problem text (Always visible) -->
-                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50">
+                    <!-- Problem text & State Toggler Button inside -->
+                    <div class="p-3 bg-[#FAF7F0] border-b border-[#E6DFD3]/50 cursor-pointer hover:bg-[#FAF7F0]/80 transition-colors flex flex-col gap-2" onclick="toggleAnswer(${quiz.qNum})">
                         <p class="font-bold text-[#2F2924] leading-relaxed dynamic-text-lg">${quiz.question}</p>
+                        
+                        <!-- State Toggler placed directly below the text -->
+                        <div class="flex justify-end">
+                            <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
+                                <span id="text-toggle-${quiz.qNum}">解答・解説</span>
+                                <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Answer & Explanation area (Default folded: hidden) -->
