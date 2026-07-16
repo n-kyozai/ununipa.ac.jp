@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自然地理学概論 第5回 論述試験演習ワークスペース</title>
+    <title>自然地理学概論 第5回 世界の気候 記述・論述演習アプリ</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome icons -->
@@ -17,7 +17,7 @@
         @import url('https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
         
         :root {
-            /* image_4b0c41.png から抽出した極上ベージュをアプリ基本背景色に指定 */
+            /* image_4b0c41.png から抽出した極上ベージュを基本背景に指定 */
             --bg-app: #FAF7F0;         
             --bg-card: #F3EFE6;        /* カード等に使う少し濃いベージュ */
             --color-text: #2F2924;      /* 極めて読みやすい深いウォームダークブラウン */
@@ -71,7 +71,6 @@
 </head>
 <body class="min-h-screen flex flex-col pb-8 size-normal" id="app-body">
 
-    <!-- Header Block -->
     <header class="bg-[#FAF7F0] border-b border-[#E6DFD3] px-3 py-3 sticky top-0 z-40 shadow-sm">
         <div class="max-w-2xl mx-auto flex flex-col gap-2">
             <div class="flex justify-between items-center">
@@ -108,7 +107,6 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-grow max-w-2xl w-full mx-auto p-3 flex flex-col gap-3">
         
         <!-- Quiz List Container (Injected by JS) -->
@@ -125,63 +123,62 @@
     </div>
 
     <script>
-        // Quiz Questions Database (8 core descriptive questions from Lecture 5 "世界の気候")
         const quizDatabase = [
             {
                 qNum: 1,
-                title: "気候要素と気候因子の関係性",
-                question: "大気の長期的な状態を示す「気候」について、「気候要素」と「気候因子」という2つの用語の違いを明確にし、両者の関係性を簡潔に説明せよ。",
-                answer: "気候要素とは気温・降水量・風など<span class='red-sheet-hide'>気候を構成する大気の状態</span>を指し、気候因子とは海抜高度・地形・海流・緯度など<span class='red-sheet-hide'>気候要素に影響を与えて地域差を生み出す要因</span>を指す。気候因子によって特定の気候要素が形成され、その長期的な状態が気候となる関係にある。",
-                explanation: "気候因子（原因・環境条件）が、気候要素（結果・観測可能な大気の状態）に作用して、特定の気候が形作られます。論述の際は原因と結果の関係を明確にすることが得点の鍵です。"
+                title: "気候と気象の定義の違いと関係性",
+                question: "日々の大気状態を表す「気象」に対し、長期的な大気状態を指す「気候」の定義を述べよ。また、「気候因子」が「気候要素」に与える影響の具体例を一つ挙げて説明せよ。",
+                answer: "気候とは大気の<span class='red-sheet-hide'>長期的な平均状態</span>を指す言葉であり、日々の一次的な状態を指す「気象」と区別される。また、気温や降水量などの<span class='red-sheet-hide'>気候要素</span>に対し、海抜高度や地形、海流などの<span class='red-sheet-hide'>気候因子</span>が影響を与える。具体例として、高緯度でありながら温かい暖流（北大西洋海流）という因子の影響で、ヨーロッパ西岸の気温が高くなる現象が挙げられる。",
+                explanation: "「自然地理学概論_第05回_授業資料_世界の気候.pdf」のスライド2に基づき、気候・気象・気候要素・気候因子の関係性を整理する問題です。因子（地形や海流など）が要素（気温や降水量など）を決定し、その長期的状態が気候となります。"
             },
             {
                 qNum: 2,
-                title: "大陸性と海洋性気候の気温年較差",
-                question: "大陸の内陸部（大陸性気候）と、海に近い沿岸部（海洋性気候）における、気温の「年較差」の大きさの違いとその物理的な理由を、土と水の性質に注目して説明せよ。",
-                answer: "陸（土）は海（水）に比べて<span class='red-sheet-hide'>比熱が小さく</span>温まりやすく冷めやすい性質があるため、内陸部では気温の<span class='red-sheet-hide'>年較差が大きく</span>なる。一方、海洋（水）は比熱が大きく温度変化しにくいため、温和な風に影響される沿岸部では気温の年較差が小さくなるため。",
-                explanation: "比熱とは、物質の温度を1度上げるのに必要な熱量のこと。比熱が小さい土（陸地）は季節や昼夜による温度変動が大きくなる一方、比熱の大きい水（海洋）は緩やかにしか変化しないため、海洋に近いほど穏やかな気候になります。"
+                title: "内陸部と沿岸部における気温年較差の決定要因",
+                question: "大陸の内陸部において、気温の「年較差」が沿岸部（海洋周辺）よりも著しく大きくなる物理的・熱力学的なメカニズムを、陸地（土）と水（海洋）の熱的性質の違いから説明せよ。",
+                answer: "土と水は比熱が大きく異なり、陸地は比熱が小さいため<span class='red-sheet-hide'>「温まりやすく冷めやすい」</span>性質を持つのに対し、海洋は比熱が大きいため<span class='red-sheet-hide'>「温まりにくく冷めにくい」</span>。そのため、海洋から遠く離れた大陸の内陸部（大陸性気候）では、夏は極端に高温となり冬は著しく冷え込むため、年較差が沿岸部より著しく大きくなる。",
+                explanation: "スライド3に基づき、比熱の違いによる大陸性気候（内陸：年較差大）と海洋性気候（沿岸：年較差小）の違いを記述する典型的な問題です。「土＝温まりやすく冷めやすい」「水＝温まりにくく冷めにくい」の対比が採点基準となります。"
             },
             {
                 qNum: 3,
-                title: "サバナ気候（Aw）における南北の雨季・乾季逆転現象",
-                question: "サバナ気候（Aw）において、同じ気候区でありながら、北半球と南半球とで「雨季」と「乾季」の時期が完全に逆転（約半年ずれる）するメカニズムを、太陽の動きと気圧帯の移動から説明せよ。",
-                answer: "太陽の回帰運動に伴い、雨を降らせる<span class='red-sheet-hide'>赤道低圧帯（熱帯収束帯）</span>と乾燥をもたらす<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>が南北に移動するため。太陽が真上に近く直射高度が最大となる「夏」の時期に、雨をもたらす赤道低圧帯が覆いかぶさるため、南北半球で雨季の時期が半年ずれることになる。",
-                explanation: "太陽高度が最大となる（夏を迎える）半球へ向けて、赤道付近の上昇気流の帯（赤道低圧帯）が偏ってシフトします。そのため、北半球の夏（7月頃）は北半球が雨季、南半球の夏（1月頃）は南半球が雨季になります。"
+                title: "サバナ気候（Aw）における雨季と乾季の発生理由",
+                question: "サバナ気候（Aw）において、夏に多くの雨が降る「雨季」となり、冬に著しく乾燥する「乾季」となる理由を、太陽の季節移動にともなう地球規模の気圧帯の移動から説明せよ。",
+                answer: "季節による太陽の回帰に伴い、地球全体の気圧帯が南北に移動するため。北半球の夏（南半球の冬）には、強い日射による上昇気流で雨が降りやすい<span class='red-sheet-hide'>赤道低圧帯（熱帯収束帯）</span>が北上して覆うため雨季となる。一方、冬には、下降気流により空気が著しく乾燥する<span class='red-sheet-hide'>亜熱帯高圧帯（中緯度高圧帯）</span>の支配下に入るため乾季となる。",
+                explanation: "スライド7および9に詳しく解説されているサバナ気候のメカニズムです。「太陽の回帰運動に伴う気圧帯の南北移動」という前提と、「赤道低圧帯（夏に覆う）＝雨季」「亜熱帯高圧帯（冬に覆う）＝乾季」を論理的に組み立てることが高得点につながります。"
             },
             {
                 qNum: 4,
-                title: "ヨーロッパ西岸が高緯度のわりに温暖な理由",
-                question: "ヨーロッパ西岸は、同緯度の大陸東岸（日本海側や樺太など）に比べて冬が非常に温暖である。この気候的特徴をもたらす「海流」と「風」の具体的なはたらきを説明せよ。",
-                answer: "低緯度側から温かい海水を運ぶ暖流の<span class='red-sheet-hide'>北大西洋海流</span>によって、ヨーロッパ西岸周辺海域の気温が底上げされているため。その温められた海水の上にある湿潤で温かい空気が、恒常風である<span class='red-sheet-hide'>偏西風</span>によって西から東へ絶えず大陸側へ運び込まれるため。",
-                explanation: "暖流である「北大西洋海流」が温かい熱を供給し、大気大循環における「偏西風」がその熱を運搬することで、高緯度のヨーロッパは緯度のわりに劇的に暖かくなります。海流＋風のセットで解答する必要があります。"
+                title: "南北両半球のサバナ気候における季節の反転",
+                question: "同じサバナ気候であっても、北半球（例：アフリカのスーダンなど）と南半球（例：ブラジルのカンポなど）とで、雨季と乾季のタイミングがカレンダー上で約半年ずれる理由を説明せよ。",
+                answer: "太陽が真上に来る「夏」の時期が、北半球と南半球で真逆になるため。太陽が北寄りを照らす<span class='red-sheet-hide'>7月頃は、北半球が夏</span>となって赤道低圧帯が北上し雨季となるが、南半球は冬となり亜熱帯高圧帯に覆われて乾季となる。太陽が南寄りを照らす<span class='red-sheet-hide'>1月頃は、南半球が夏</span>となって赤道低圧帯が南下し雨季となるため、季節のタイミングが半年ずれる。",
+                explanation: "スライド9および12の「同じサバナ気候でも北半球と南半球で乾季と雨季の時期が逆になる」理由を記述する問題です。太陽の運動に連動して雨を降らせる気圧帯が南北へシフトするため、北が夏（7月頃）のときは北が雨、南が夏（1月頃）のときは南が雨になります。"
             },
             {
                 qNum: 5,
-                title: "西岸海洋性気候（Cfb）における日照時間の少なさ",
-                question: "西岸海洋性気候（Cfb）地域において、年間を通じて穏やかな降水がある一方で、曇天の日が多く「日照時間が少ない」のはなぜか。海流と大気大循環の影響に注目してその理由を説明せよ。",
-                answer: "暖流の北大西洋海流の上を通る<span class='red-sheet-hide'>偏西風</span>が、海面から蒸発した大量の<span class='red-sheet-hide'>水蒸気（水分）</span>を蓄えて絶えず大陸へ運び込むため。この湿った空気が陸地で冷やされることで雲が発生しやすくなり、しとしとと降る霧雨や曇天の日が多くなるため。",
-                explanation: "偏西風は「熱」だけでなく「水蒸気」も多量に運んでくるため、年間を通じて曇りや霧雨の日が多く、強い日差しが降り注ぐ晴天の日（日照時間）が少なくなります。"
+                title: "西岸海洋性気候（Cfb）が緯度のわりに温暖な理由",
+                question: "ヨーロッパ西岸などの西岸海洋性気候（Cfb）地域が、同緯度の大陸東岸（日本やサハリンなど）に比べて高緯度であるにもかかわらず、冬でも比較的温暖である理由を説明せよ。",
+                answer: "ヨーロッパ西岸沖には、低緯度から温かい海水を運ぶ強力な暖流である<span class='red-sheet-hide'>北大西洋海流</span>が流れている。この暖流の上空で温められた熱（空気）が、大気大循環によって一年中西から東へと吹き続ける<span class='red-sheet-hide'>偏西風</span>によって絶えず大陸西岸（ヨーロッパ西側）へと運び込まれるため、高緯度ながら冬の寒さが劇的に緩和される。",
+                explanation: "スライド12および13の「西岸海洋性気候が高緯度のわりに温暖な理由」です。暖流である「北大西洋海流」と、恒常風である「偏西風」の2大キーワードのセット送風効果について論理的に述べる必要があります。"
             },
             {
                 qNum: 6,
-                title: "亜寒帯冬季少雨気候（Dw）における極寒と乾燥の理由",
-                question: "ユーラシア大陸北東部に分布する亜寒帯冬季少雨気候（Dw）において、冬に極めて深刻な冷え込みと乾燥（少雨）が発生するメカニズムを説明せよ。",
-                answer: "冬に冷え切った大陸上に強力なシベリア高気圧が発達し、<span class='red-sheet-hide'>下降気流</span>が卓越するため雨や雪がほとんど降らず乾燥する。さらに、雲のない晴天が続くことで、夜間に地表面の熱が宇宙空間へ放出される強烈な<span class='red-sheet-hide'>放射冷却</span>が働き、気温が限界まで冷え込むため。",
-                explanation: "冬のシベリア等では猛烈な大陸性の寒冷高気圧が発達し、下降気流で空が晴れ渡ります。すると「熱を蓄える温室」の役目をする雲がないため、地面の熱がどんどん奪われ、極寒かつ極度の乾燥が同時に発生します（年較差は世界最大を記録します）。"
+                title: "西岸海洋性気候（Cfb）に曇天が多く日照時間が短い理由",
+                question: "西岸海洋性気候（Cfb）地域において、年間を通じてしとしととした霧雨や曇天の日が多く、晴天の日が少なく「日照時間が短い」気候的な背景を、海風の観点から説明せよ。",
+                answer: "暖流である北大西洋海流の海面から蒸発した<span class='red-sheet-hide'>大量の水蒸気（湿った空気）</span>が、偏西風によって絶えず大陸へと供給されるため。この湿った空気が陸地へと流れ込み、冷やされることで<span class='red-sheet-hide'>絶えず雲が発生しやすい気象環境</span>が形作られる。その結果、激しい豪雨ではなくしとしととした雨や曇天が続き、日照時間が著しく短くなる。",
+                explanation: "スライド13の「なぜ曇りが多く、日照時間が少ないのか？」に基づきます。暖流（温かい海水）からの豊富な水蒸気の蒸発と、偏西風による大陸側へのたゆまぬ運搬が組み合わさることで、慢性的な曇天・日照不足が形成されます。"
             },
             {
                 qNum: 7,
-                title: "乾燥帯（B気候）における「日較差」の最大化",
-                question: "砂漠気候（BW）に代表される乾燥帯地域において、1日の中での気温の変動（日較差）が極めて大きくなる気候的なメカニズムを、地面と大気（雲・水蒸気）の状態に注目して説明せよ。",
-                answer: "日中は水分や植物が皆無に等しい地面が、強い直射日射によって直接熱せられるため急激に地表温度が上昇する。一方、夜間は大気中に保温効果を持つ水蒸気や雲が極めて少ないため、地表の熱が一気に上空に逃げる強烈な<span class='red-sheet-hide'>放射冷却</span>が発生し、温度が急激に下がるため。",
-                explanation: "水蒸気や雲は、地表から出る熱をブロックする天然の毛布の役割を果たします。乾燥帯にはこれがないため、昼は日光をダイレクトに浴びて猛暑になり、夜は一瞬で寒冷地並みの冷え込みに変わります。"
+                title: "亜寒帯（冷帯）気候（D）が南半球に存在しない理由",
+                question: "亜寒帯（冷帯）気候（Df・Dw）は、ユーラシア大陸北部や北アメリカ北部などの北半球高緯度帯に広く見られるが、南半球の同緯度帯には一切分布しない地理的な理由を説明せよ。",
+                answer: "亜寒帯気候の判定基準である「最寒月平均気温が$-3^\circ\text{C}$未満かつ最暖月平均気温が$10^\circ\text{C}$以上」という激しい寒暖差を生み出すための<span class='red-sheet-hide'>広大な陸地（大陸）が、南半球の緯度$50^\circ \sim 70^\circ$付近にほとんど存在しない</span>ため。南半球の同緯度帯はほぼ海洋で占められており、比熱の大きい海洋の温和な影響を強く受けて気温が極端に下がりにくいため、冷帯は形成されない。",
+                explanation: "スライド15および21に基づきます。D気候（冷帯・亜寒帯）は「大陸性気候」を前提とするため、冬に大陸性高気圧が発達するような巨大な陸地が必要です。しかし、南半球の緯度50〜70度付近はほぼ海（南大洋）であるため、比熱が大きく冬に極低温（-3℃未満）に達することができず、冷帯は分布しません。"
             },
             {
                 qNum: 8,
-                title: "砂漠（BW）の成因4パターンとその発生条件",
-                question: "世界各地に広がる砂漠気候（BW）について、雨が極端に少なく砂漠が形成される主な要因（砂漠の成因）を4パターン挙げ、それぞれどのような地理的条件によって発生するか説明せよ。",
-                answer: "①年中下降気流が支配的な<span class='red-sheet-hide'>亜熱帯高圧帯</span>の影響下となる回帰線砂漠、②海から遠く水蒸気が供給されない内陸砂漠、③隣接する沿岸の<span class='red-sheet-hide'>寒流</span>により下層大気が冷えて上昇気流が起こりにくい海岸砂漠、④卓越風が湿気を落として山を越えた後に吹く風下乾燥地帯にあたる<span class='red-sheet-hide'>雨陰砂漠</span>の4パターン。",
-                explanation: "共通テストや二次試験でも特に出題頻度が高い超重要テーマです。緯度、隔海度、寒流、卓越風と山地地形という4つの異なる物理的アプローチが砂漠を形成しています。"
+                title: "砂漠気候（BW）を形成する多様な成因（海岸砂漠・雨陰砂漠）",
+                question: "乾燥帯を形成する少雨の要因には複数のパターンが存在する。資料に示されている砂漠の成因のうち、寒流の影響で生じる「海岸砂漠」と、山脈の影響で生じる「雨陰砂漠」のメカニズムをそれぞれ簡潔に説明せよ。",
+                answer: "【海岸砂漠】：沖合を流れる<span class='red-sheet-hide'>冷たい寒流</span>によって空気の下層が冷やされ、大気が極めて安定（逆転層が形成）するため、上昇気流が発生せず雨雲が発達しない。 【雨陰砂漠】：湿った風が卓越する風上側に巨大な山脈が立ち塞がることで、山を越える際にすべての雨を降らせてしまい、<span class='red-sheet-hide'>山脈の風下側には水分を失った乾燥した空気</span>のみが吹き下りるため。",
+                explanation: "スライド21の「共テ解法コレだけ!①」および「図⑤」に基づきます。少雨・砂漠化をもたらす地形・気候的成因の記述です。海岸砂漠（例：ナミブ砂漠、アタカマ砂漠）における寒流冷却による上昇気流抑制、および雨陰砂漠（例：パタゴニア）における山脈越えの風下乾燥という理屈を整理します。"
             }
         ];
 
@@ -195,7 +192,8 @@
         let currentFontIdx = 0;
 
         /**
-         * Render the exercise cards in their default closed states, with toggle buttons.
+         * STREAMING_CHUNK: Crafting the HTML renderer and parser functions
+         * Render the exercise cards in their default open states, with toggle buttons.
          */
         function renderQuizList() {
             const container = document.getElementById("quiz-list-container");
@@ -222,14 +220,14 @@
                         <!-- State Toggler placed immediately below the text in the bottom right -->
                         <div class="flex justify-end mt-1">
                             <button class="bg-[#2F2924] hover:bg-black text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1 active:scale-95 transition-transform" id="btn-toggle-${quiz.qNum}" onclick="event.stopPropagation(); toggleAnswer(${quiz.qNum})">
-                                <span id="text-toggle-${quiz.qNum}">解答・解説</span>
-                                <i class="fa-solid fa-chevron-down text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
+                                <span id="text-toggle-${quiz.qNum}">閉じる</span>
+                                <i class="fa-solid fa-chevron-up text-[8px]" id="icon-toggle-${quiz.qNum}"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Answer & Explanation area (Default folded: hidden) -->
-                    <div id="answer-box-${quiz.qNum}" class="hidden p-3 space-y-3 bg-white/40">
+                    <!-- Answer & Explanation area (Default open) -->
+                    <div id="answer-box-${quiz.qNum}" class="p-3 space-y-3 bg-white/40">
                         <!-- Model Answer with Tap-to-Reveal red sheet targets -->
                         <div class="space-y-1">
                             <h4 class="text-[9px] font-black tracking-wider text-[#A83E4C] uppercase flex items-center gap-1">
@@ -274,6 +272,7 @@
         }
 
         /**
+         * STREAMING_CHUNK: Setting up interactive event handlers for sheet toggle and font resize
          * Toggles the individual red sheet element state (mask vs reveal)
          */
         function toggleIndividualSheet(element, event) {
@@ -319,7 +318,7 @@
 
         /**
          * Cycle application font sizing instantly.
-         * Sequence: normal -> small -> large -> normal ...
+         * Sequence: normal -> small -> large (excluding medium as per specification)
          */
         function cycleFontSize() {
             const body = document.getElementById("app-body");
@@ -366,6 +365,16 @@
         // Initialize on load
         window.onload = function() {
             renderQuizList();
+            // Start with all open by default as per UI workflow requirement
+            quizDatabase.forEach(q => {
+                const answerBox = document.getElementById(`answer-box-${q.qNum}`);
+                const btnText = document.getElementById(`text-toggle-${q.qNum}`);
+                const btnIcon = document.getElementById(`icon-toggle-${q.qNum}`);
+                
+                answerBox.classList.remove("hidden");
+                btnText.textContent = "閉じる";
+                btnIcon.className = "fa-solid fa-chevron-up text-[8px]";
+            });
         };
     </script>
 </body>
