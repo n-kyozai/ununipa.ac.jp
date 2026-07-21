@@ -21,6 +21,33 @@
             background-color: #003d46;
         }
 
+        /* 横スクロールバーの常時表示とスタイリング */
+        .custom-scrollbar {
+            overflow-x: scroll !important;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Webkit (Chrome, Safari, Edge) 用スクロールバー設定 */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            display: block;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #005662;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #003d46;
+        }
+        /* Firefox用スクロールバー設定 */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #005662 #e2e8f0;
+        }
+
         /* モバイル表示時の表示倍率・余白最適化（画面幅が狭い場合に全列が収まるよう自動縮小） */
         @media (max-width: 640px) {
             .mobile-compact-table {
@@ -57,8 +84,8 @@
                 会社法 8/4(火)テスト
             </h1>
 
-            <!-- テスト一覧テーブル (モバイル時は縮小表示で横スクロール不要に最適化) -->
-            <div class="w-full overflow-x-auto">
+            <!-- テスト一覧テーブル (スクロールバー常時表示クラス custom-scrollbar を追加) -->
+            <div class="w-full custom-scrollbar pb-2">
                 <table class="w-full text-xs sm:text-sm border-collapse border border-gray-300 text-center min-w-[520px] mobile-compact-table">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
