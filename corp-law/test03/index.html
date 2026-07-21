@@ -72,7 +72,7 @@
     <!-- メインコンテンツ領域 -->
     <main class="flex-1 py-8 px-4 md:px-8 max-w-5xl mx-auto w-full">
 
-        <!-- スタート画面 -->
+        <!-- ================= スタート画面 ================= -->
         <div id="start-screen" class="w-full mx-auto">
             <div class="bg-white border border-gray-300 shadow-sm mb-6">
                 <table class="w-full text-sm border-collapse">
@@ -90,7 +90,7 @@
             </div>
         </div>
 
-        <!-- テスト画面 -->
+        <!-- ================= テスト画面 ================= -->
         <div id="test-screen" class="hidden flex-col md:flex-row gap-4 lg:gap-8 items-start w-full">
             <!-- デスクトップ用 左サイドバー -->
             <div id="desktop-sidebar" class="hidden md:flex flex-col gap-2 w-48 shrink-0 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2 sticky top-8">
@@ -144,7 +144,7 @@
             </div>
         </div>
 
-        <!-- 採点結果画面 -->
+        <!-- ================= 採点結果画面 ================= -->
         <div id="result-screen" class="hidden w-full mx-auto">
             <div class="bg-white rounded shadow-sm p-6 md:p-10 text-center mb-8 border border-gray-300">
                 <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b-2 theme-border pb-2 fs-2xl">採点結果</h2>
@@ -175,6 +175,7 @@
         </div>
     </div>
 
+    <!-- ================= JavaScript Logic ================= -->
     <script>
         // 第3回の問題データ
         const originalQuestions = [
@@ -401,6 +402,7 @@
             els.drawerOverlay.classList.add('hidden');
         }
 
+        // --- STREAMING_CHUNK: Rendering current question interface... ---
         // --- 問題の表示 ---
         function renderQuestion() {
             const q = questions[currentQuestionIndex];
@@ -440,7 +442,7 @@
                 
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.className = 'answer-input shadow-sm appearance-none border border-gray-400 rounded w-full sm:w-64 md:w-80 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring fs-base';
+                input.className = 'answer-input single-input shadow-sm appearance-none border border-gray-400 rounded w-full sm:w-64 md:w-80 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 theme-ring fs-base';
                 input.placeholder = '解答を入力';
                 input.value = userAnswers[q.id] || "";
                 els.answerContainer.appendChild(input);
@@ -470,6 +472,7 @@
             }
         }
 
+        // --- STREAMING_CHUNK: Scoring and rendering scoring results... ---
         // --- 採点と結果表示 ---
         function executeScoring() {
             screens.test.classList.add('hidden');
