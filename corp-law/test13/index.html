@@ -185,9 +185,9 @@
                 pointPerItem: 1,
                 inputCount: 4,
                 ordered: false, // 順不同
-                text: "以下の（　）に当てはまる言葉を答えなさい。\n会社法上の組織再編には、（①　　　）、（②　　　）、（③　　　）、（④　　　）などがある。\n※回答に①②③④という番号は入力しないこと。", 
+                text: "以下の（　）に当てはまる言葉を答えなさい。（順不同）\n会社法上の組織再編には、（①　　　）、（②　　　）、（③　　　）、（④　　　）などがある。\n※回答に①②③④という番号は入力しないこと。", 
                 answer: ["合併", "会社分割", "株式交換", "株式移転"],
-                displayAnswer: "合併\n会社分割\n株式交換\n株式移転"
+                displayAnswer: "合併\n会社分割\n株式交換\n株式移転（順不同）"
             },
             { 
                 id: 2, 
@@ -409,7 +409,6 @@
             els.drawerOverlay.classList.add('hidden');
         }
 
-        // --- STREAMING_CHUNK: Rendering current question view... ---
         // --- 問題の表示 ---
         function renderQuestion() {
             const q = questions[currentQuestionIndex];
@@ -421,7 +420,7 @@
             els.answerContainer.innerHTML = '';
             const label = document.createElement('label');
             label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
-            label.innerText = q.inputCount > 1 ? '解答を記述してください：' : '解答を記述してください：';
+            label.innerText = '解答を記述してください：';
             els.answerContainer.appendChild(label);
 
             if (q.inputCount && q.inputCount > 1) {
@@ -473,7 +472,6 @@
             }
         }
 
-        // --- STREAMING_CHUNK: Scoring and rendering results list... ---
         // --- 採点と結果表示 ---
         function executeScoring() {
             screens.test.classList.add('hidden');
@@ -507,6 +505,7 @@
                         });
                     } else {
                         // 順不同判定 (問題1)
+                        // 重複入力対策として Set でユニーク化
                         const normalizedUserAns = [...new Set(userAnsArray.map(ans => normalize(ans)))].filter(ans => ans !== '');
                         q.answer.forEach(correctWord => {
                             if (normalizedUserAns.includes(normalize(correctWord))) {
