@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人口学 第14回 テスト対策［2in1］</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts for Handwriting and Clean Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Zen+Kaku+Gothic+New:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      background-color: #f3f4f6;
+      color: #111827;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* A4 Landscape Size: 297mm x 210mm */
+    .a4-page {
+      width: 297mm;
+      height: 210mm;
+      background: white;
+      margin: 0 auto;
+      padding: 6mm 8mm;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 6mm;
+    }
+
+    .page-col {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #d1d5db;
+      padding: 4mm;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      position: relative;
+    }
+
+    /* Print Specific Style */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+      body {
+        background: white;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .a4-page {
+        box-shadow: none;
+        margin: 0;
+        width: 297mm !important;
+        height: 210mm !important;
+        border: none;
+      }
+      .preview-wrapper {
+        transform: scale(1) !important;
+        padding: 0 !important;
+      }
+    }
+
+    /* Custom Input and Answers Style */
+    .ans-red {
+      color: #dc2626;
+      font-weight: bold;
+      font-family: 'Yuji Syuku', serif, cursive;
+    }
+    .ans-blue {
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    table, th, td {
+      border: 1px solid #374151;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1px 3px;
+      text-align: center;
+      font-size: 10.5px;
+      line-height: 1.2;
+    }
+
+    .editable-active {
+      outline: 2px dashed #3b82f6 !important;
+      background-color: #eff6ff !important;
+    }
+
+    /* Lexis Diagram Styling */
+    .lexis-grid {
+      position: relative;
+      width: 100%;
+      height: 130px;
+      border-left: 2px solid #000;
+      border-bottom: 2px solid #000;
+      background-size: 25% 33.33%;
+      background-image: linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+                        linear-gradient(to top, #e5e7eb 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- Main View Container -->
+  <div class="flex-grow flex items-center justify-center p-2 sm:p-4 preview-wrapper overflow-auto" id="preview-container">
+    <div id="print-area" class="a4-page text-xs leading-snug">
+
+      <!-- LEFT PAGE (問1 - 問3) -->
+      <div class="page-col">
+        <div>
+          <!-- Header -->
+          <div class="border border-gray-800 p-1 mb-1 bg-gray-50 text-[10px]">
+            <div class="flex justify-between items-center border-b border-gray-400 pb-0.5 mb-0.5">
+              <span class="font-bold border border-gray-700 px-1">2026年度 前期対策</span>
+              <span>試験日: 2026年 月 日( )限</span>
+              <span class="border border-gray-700 px-1">試験時間 & 答案用紙</span>
+              <span>科目名 & 担当者: <strong class="text-sm">人口学</strong> 入江 雅仁 込</span>
+            </div>
+            <div class="flex justify-between items-center text-[9px]">
+              <span>卓上電卓使用可 (携帯電話等は使用不可) 指定用紙1枚 (両面使用可・手書き)</span>
+              <span>筆記具: 1.ボールペン(色ペンも可) 2.鉛筆 3.修正液など</span>
+            </div>
+          </div>
+
+          <!-- 問1 -->
+          <div class="mb-1.5">
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問1】以下の表を完成させ、4年間に渡る人口増減を求めよ。</span>
+              <span class="text-[10px] font-normal">(小計 : 8点)</span>
+            </div>
+            <table class="w-full text-[10px]">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th rowspan="2" class="w-16">年・月</th>
+                  <th rowspan="2">人口増減</th>
+                  <th colspan="2">自然動態</th>
+                  <th colspan="2">社会動態</th>
+                  <th colspan="2">その他の動態</th>
+                </tr>
+                <tr>
+                  <th>出生</th>
+                  <th>(死亡)</th>
+                  <th>転入</th>
+                  <th>(転出)</th>
+                  <th>増加</th>
+                  <th>(減少)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>**01年 1月</td>
+                  <td class="ans-blue">-5</td>
+                  <td>7</td>
+                  <td>-(10)</td>
+                  <td>30</td>
+                  <td>-(33)</td>
+                  <td>1</td>
+                  <td>-0</td>
+                </tr>
+                <tr>
+                  <td>**02年 1月</td>
+                  <td class="ans-blue">+2</td>
+                  <td>9</td>
+                  <td>-(8)</td>
+                  <td>30</td>
+                  <td>-(30)</td>
+                  <td>2</td>
+                  <td>-(1)</td>
+                </tr>
+                <tr>
+                  <td>**03年 1月</td>
+                  <td>-2</td>
+                  <td>10</td>
+                  <td>-(11)</td>
+                  <td class="ans-blue">30</td>
+                  <td>-(31)</td>
+                  <td>2</td>
+                  <td>-(2)</td>
+                </tr>
+                <tr>
+                  <td>**04年 1月</td>
+                  <td>-5</td>
+                  <td>9</td>
+                  <td>-9=(9)</td>
+                  <td>30</td>
+                  <td>-(34)</td>
+                  <td>1</td>
+                  <td>-(2)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 問2 -->
+          <div class="mb-1.5">
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問2】以下の表に基づいて各問に答えよ。</span>
+              <span class="text-[10px] font-normal">(小計 : 18点)</span>
+            </div>
+            <div class="flex gap-2">
+              <table class="w-1/2 text-[9px]">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th>年齢</th>
+                    <th>**01年 人口</th>
+                    <th>**01年 累積人口</th>
+                    <th>**01年 中央値年齢</th>
+                    <th>**01年 中央値×人口</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>階層1 (0~14歳)</td>
+                    <td>14</td>
+                    <td>14</td>
+                    <td class="ans-blue">9.5</td>
+                    <td class="ans-blue">133</td>
+                  </tr>
+                  <tr>
+                    <td>階層2 (15~22歳)</td>
+                    <td>19</td>
+                    <td class="ans-blue">33</td>
+                    <td>19</td>
+                    <td>361</td>
+                  </tr>
+                  <tr>
+                    <td>階層3 (23~64歳)</td>
+                    <td>35</td>
+                    <td>68</td>
+                    <td class="ans-blue">44</td>
+                    <td class="ans-blue">1540</td>
+                  </tr>
+                  <tr>
+                    <td>階層4 (65~74歳)</td>
+                    <td>21</td>
+                    <td>89</td>
+                    <td>70</td>
+                    <td class="ans-blue">1470</td>
+                  </tr>
+                  <tr>
+                    <td>階層5 (75歳以上)</td>
+                    <td>11</td>
+                    <td class="ans-blue">100</td>
+                    <td>88</td>
+                    <td>968</td>
+                  </tr>
+                  <tr class="font-bold bg-gray-50">
+                    <td>合計</td>
+                    <td class="ans-blue">100</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="ans-blue">4472</td>
+                  </tr>
+                </tbody>
+              </table>
+              
+              <div class="w-1/2 text-[10px] space-y-1">
+                <div>(1) 表を完成させ、総人口と平均年齢を求めよ。</div>
+                <div class="pl-2">
+                  総人口 = <span class="ans-red inline-block border-b border-red-500 w-12 text-center">100</span>
+                  平均年齢 = <span class="ans-red inline-block border-b border-red-500 w-24 text-center">4472/100 = 44.72才</span>
+                </div>
+                <div>(2) 表から次の人口係数を分数で求めよ。</div>
+                <div class="pl-2 flex justify-between">
+                  <span>年少人口係数 = <span class="ans-red">14/100</span></span>
+                  <span>老年人口係数 = <span class="ans-red">32/100</span></span>
+                </div>
+                <div>(3) 表から次の人口指数を分数で求めよ。</div>
+                <div class="pl-2 grid grid-cols-2 gap-1 text-[9px]">
+                  <span>年少人口指数 = <span class="ans-red">14/54</span></span>
+                  <span>老年化指数 = <span class="ans-red">32/14</span></span>
+                  <span>潜在扶養指数 = <span class="ans-red">54/32</span></span>
+                  <span>従属人口指数 = <span class="ans-red">46/54</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 問3 -->
+          <div>
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問3】以下のレキシス図に基づいて各問に答えよ。</span>
+              <span class="text-[10px] font-normal">(小計 : 16点)</span>
+            </div>
+            
+            <div class="flex gap-2">
+              <!-- Lexis Diagram Graphic Representation -->
+              <div class="w-5/12 border border-gray-400 p-1 relative text-[8px] bg-white">
+                <div class="font-bold text-center mb-1">レキシス図（人口・動態）</div>
+                <div class="relative h-28 border-l-2 border-b-2 border-gray-800 ml-4 mb-3">
+                  <!-- Grid Lines & Labels -->
+                  <span class="absolute -left-4 top-0">2歳</span>
+                  <span class="absolute -left-4 top-12">1歳</span>
+                  <span class="absolute -left-4 top-24">0歳</span>
+
+                  <span class="absolute left-0 -bottom-3">**01</span>
+                  <span class="absolute left-1/3 -bottom-3">**02</span>
+                  <span class="absolute left-2/3 -bottom-3">**03</span>
+                  <span class="absolute right-0 -bottom-3">**04</span>
+
+                  <!-- Cohort Lines & Numbers -->
+                  <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                    <line x1="0%" y1="100%" x2="66%" y2="0%" stroke="#2563eb" stroke-width="1.5"/>
+                    <line x1="33%" y1="100%" x2="100%" y2="0%" stroke="#2563eb" stroke-width="1.5"/>
+                    <line x1="66%" y1="100%" x2="100%" y2="50%" stroke="#2563eb" stroke-width="1.5"/>
+                  </svg>
+                  
+                  <!-- Display Values inside Lexis -->
+                  <span class="absolute left-[15%] top-[10%] text-blue-600 font-bold">70</span>
+                  <span class="absolute left-[45%] top-[10%] text-blue-600 font-bold">70</span>
+                  <span class="absolute left-[15%] top-[50%] text-blue-600 font-bold">74</span>
+                  <span class="absolute left-[48%] top-[50%] text-blue-600 font-bold">77</span>
+                  <span class="absolute left-[15%] top-[80%] text-red-600 font-bold">100</span>
+                  <span class="absolute left-[48%] top-[80%] text-blue-600 font-bold">95</span>
+                </div>
+              </div>
+
+              <div class="w-7/12 text-[9px] space-y-1">
+                <div>(1) 図の空欄を埋めて、図を完成させよ。</div>
+                <div>(2) **02年の誕生日(1/1)時点における以下の各年齢人口を求めよ。</div>
+                <div class="pl-2">1歳 = <span class="ans-red">74</span>　　2歳 = <span class="ans-red">70</span></div>
+                <div>(3) **03年の期末(12/31)時点における以下の各年齢人口を求めよ。</div>
+                <div class="pl-2">0歳 = <span class="ans-red">85</span>　　1歳 = <span class="ans-red">73</span></div>
+                <div>(4) 2歳の誕生日(1/1)時点における以下のコーホート別年齢人口を求めよ。</div>
+                <div class="pl-2">**01年生 = <span class="ans-red">67</span>　　**02年生 = <span class="ans-red">72</span></div>
+                <div>(5) 1歳の期末(12/31)時点における以下のコーホート別年齢人口を求めよ。</div>
+                <div class="pl-2">**01年生 = <span class="ans-red">69</span>　**02年生 = <span class="ans-red">73</span>　**03年生 = <span class="ans-red">78</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Left -->
+        <div class="border-t border-gray-800 pt-1 flex justify-between items-center text-[10px]">
+          <span class="font-bold">九州共立大学 経済学部</span>
+          <span>学科( &nbsp;&nbsp;&nbsp;&nbsp; ) ・学年( &nbsp;&nbsp;&nbsp;&nbsp; )クラス</span>
+          <span>学籍番号：_________________</span>
+          <span>氏名：_____________________</span>
+        </div>
+      </div>
+
+      <!-- RIGHT PAGE (問4 - 問7) -->
+      <div class="page-col">
+        <div>
+          <!-- Header Right -->
+          <div class="border border-gray-800 p-1 mb-1 bg-gray-50 text-[10px]">
+            <div class="flex justify-between items-center border-b border-gray-400 pb-0.5 mb-0.5">
+              <span class="font-bold border border-gray-700 px-1">2026年度 前期対策</span>
+              <span>試験日: 2026年 月 日( )限</span>
+              <span class="border border-gray-700 px-1">試験時間 & 答案用紙</span>
+              <span>科目名 & 担当者: <strong class="text-sm">人口学</strong> 入江 雅仁 込</span>
+            </div>
+            <div class="flex justify-between items-center text-[9px]">
+              <span>卓上電卓使用可 (携帯電話等は使用不可) 指定用紙1枚 (両面使用可・手書き)</span>
+              <span>筆記具: 1.ボールペン 2.鉛筆 3.修正液など</span>
+            </div>
+          </div>
+
+          <!-- 問4 -->
+          <div class="mb-1.5">
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問4】以下の文章に対応する専門用語を答えよ。</span>
+              <span class="text-[10px] font-normal">(小計 : 9点)</span>
+            </div>
+            <div class="space-y-0.5 text-[9.5px]">
+              <div class="flex justify-between">
+                <span>(1) 2つの変数の観測値を横軸と縦軸に対応させて、点（プロット）として表したグラフ</span>
+                <span>答：<strong class="ans-red underline"> 散布図 </strong></span>
+              </div>
+              <div class="flex justify-between">
+                <span>(2) 年齢3区分における65歳以上の人口</span>
+                <span>答：<strong class="ans-red underline"> 老年人口 </strong></span>
+              </div>
+              <div class="flex justify-between">
+                <span>(3) データ間の関係性を表す回帰式を統計的手法によって推計し、傾向や予測を行う方法</span>
+                <span>答：<strong class="ans-red underline"> 回帰分析 </strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 問5 -->
+          <div class="mb-1.5">
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問5】次の文章が正しい場合には〇を、間違っている場合には×を記入せよ。</span>
+              <span class="text-[10px] font-normal">(小計 : 10点)</span>
+            </div>
+            <div class="grid grid-cols-1 gap-0.5 text-[9px]">
+              <div class="flex justify-between">
+                <span>(1) 年少人口とは0歳から18歳の人口である。</span>
+                <span>答：<strong class="ans-red border border-gray-600 px-1.5"> X </strong></span>
+              </div>
+              <div class="flex justify-between">
+                <span>(2) 平均年齢は全ての女性を若い順に並べて全体のちょうど半分となる人の年齢である。</span>
+                <span>答：<strong class="ans-red border border-gray-600 px-1.5"> X </strong></span>
+              </div>
+              <div class="flex justify-between">
+                <span>(3) 平成12年(2000)年9月30日時点における北九州市の人口は100万人以上である。</span>
+                <span>答：<strong class="ans-red border border-gray-600 px-1.5"> 〇 </strong></span>
+              </div>
+              <div class="flex justify-between">
+                <span>(4) 生存数はフロー変数である。</span>
+                <span>答：<strong class="ans-red border border-gray-600 px-1.5"> X </strong></span>
+              </div>
+              <div class="flex justify-between">
+                <span>(5) 一般的に、(合計特殊)出生率は全てのコーホートで同一である。</span>
+                <span>答：<strong class="ans-red border border-gray-600 px-1.5"> X </strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 問6 -->
+          <div class="mb-1.5">
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問6】以下の文章の空欄①〜⑥に適当な語句を語句欄から選択し、記入せよ。</span>
+              <span class="text-[10px] font-normal">(配点 : 12点)</span>
+            </div>
+            <div class="text-[9px] leading-tight space-y-0.5">
+              <div>(1) 人口ピラミッドで左に伸びる数値は ( ① <span class="ans-red font-bold">男</span> ) 性の人数である。</div>
+              <div>(2) ツリガネ型の人口ピラミッドは人口 ( ② <span class="ans-red font-bold">安定型</span> ) のグラフである。</div>
+              <div>(3) 老年人口係数とは、老年人口を ( ③ <span class="ans-red font-bold">総人口</span> ) で割った指標である。</div>
+              <div>(4) 社会動態を省略したコーホート人口を観察すると、時間の経過とともに人口は ( ④ <span class="ans-red font-bold">減少</span> ) する。</div>
+              <div>(5) 人口方程式の増加人口は、( ⑤ <span class="ans-red font-bold">自然</span> ) 変動と社会変動の和に等しい。</div>
+              <div>(6) 推定した回帰式に基づいて人口を予測する場合、信頼性が高いのは ( ⑥ <span class="ans-red font-bold">内挿</span> ) である。</div>
+            </div>
+            <div class="border border-gray-400 p-0.5 mt-1 bg-gray-50 text-[8px] flex flex-wrap gap-1 justify-center">
+              <span class="font-bold">語句欄:</span>
+              <span>男</span>・<span>女</span>・<span>増加型</span>・<span>安定型</span>・<span>減少型</span>・<span>総人口</span>・<span>生産年齢人口</span>・<span>ストック</span>・<span>フロー</span>・<span>増加</span>・<span>減少</span>・<span>人工</span>・<span>自然</span>・<span>内挿</span>・<span>外挿</span>
+            </div>
+          </div>
+
+          <!-- 問7 -->
+          <div>
+            <div class="font-bold border-b border-gray-800 mb-0.5 flex justify-between">
+              <span>【問7】以下の表に基づいて各問に答えよ。</span>
+              <span class="text-[10px] font-normal">(小計 : 28点)</span>
+            </div>
+            <div class="flex gap-2 items-start">
+              <table class="w-5/12 text-[8.5px]">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th>No.</th>
+                    <th>t</th>
+                    <th>p</th>
+                    <th>t<sup>2</sup></th>
+                    <th>t·p</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>-2</td><td>3</td><td>4</td><td class="ans-blue">-6</td></tr>
+                  <tr><td>2</td><td>-1</td><td>4</td><td>1</td><td class="ans-blue">-4</td></tr>
+                  <tr><td>3</td><td>0</td><td>5</td><td>0</td><td>0</td></tr>
+                  <tr><td>4</td><td>1</td><td>6</td><td>1</td><td>6</td></tr>
+                  <tr><td>5</td><td>2</td><td>7</td><td>4</td><td>14</td></tr>
+                  <tr class="font-bold bg-gray-50">
+                    <td>合計 Σ</td>
+                    <td class="ans-red">0</td>
+                    <td class="ans-red">25</td>
+                    <td class="ans-red">10</td>
+                    <td class="ans-red">10</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="w-7/12 text-[8.5px] space-y-1">
+                <div>(1) 表の空欄を計算し表を完成させよ。</div>
+                <div>(2) 回帰式 $\hat{p}_t = \hat{a}t + \hat{b}$ の切片 $\hat{b}$ と傾き $\hat{a}$ を推定するための正規方程式の行列表現を完成させよ。</div>
+                <div class="text-[8px] border p-1 bg-gray-50 rounded">
+                  正規方程式: 
+                  $\begin{pmatrix} 5 & 0 \\ 0 & 10 \end{pmatrix} \begin{pmatrix} \hat{b} \\ \hat{a} \end{pmatrix} = \begin{pmatrix} 25 \\ 10 \end{pmatrix}$
+                  <br>
+                  クラメールの公式より:
+                  $\hat{b} = \frac{250}{50} = \mathbf{5}$, 
+                  $\hat{a} = \frac{50}{50} = \mathbf{1}$
+                </div>
+                <div>(3) 推定した回帰式 $\hat{p}_t = 1t + 5$ に基づいて、$t = 6$ 年における人口を予測せよ。</div>
+                <div class="pl-2">
+                  $\hat{p}_6 = 1 \times 6 + 5 =$ <strong class="ans-red text-sm"> 11 </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Right -->
+        <div class="border-t border-gray-800 pt-1 flex justify-between items-center text-[10px]">
+          <span class="font-bold">九州共立大学 経済学部</span>
+          <span>学科( &nbsp;&nbsp;&nbsp;&nbsp; ) ・学年( &nbsp;&nbsp;&nbsp;&nbsp; )クラス</span>
+          <span>学籍番号：_________________</span>
+          <span>氏名：_____________________</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Toolbar (Fixed position for A4 Landscape Mode) -->
+  <footer class="no-print bg-slate-900 text-white p-3 shadow-lg border-t border-slate-700 sticky bottom-0 z-50">
+    <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid me-1 fa-file-invoice text-blue-400 text-lg"></i>
+        <span class="font-bold text-sm">人口学 テスト対策［2in1］キャンバス編集</span>
+      </div>
+
+      <!-- Button Group -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Answer Toggle Button -->
+        <button id="toggleAnsBtn" onclick="toggleAnswers()" class="px-3 py-1.5 rounded text-xs font-semibold bg-amber-600 hover:bg-amber-500 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-eye-slash"></i>
+          <span>解答表示 ON/OFF</span>
+        </button>
+
+        <!-- Edit/Update Button -->
+        <button id="editBtn" onclick="toggleEditMode()" class="px-3 py-1.5 rounded text-xs font-semibold bg-blue-600 hover:bg-blue-500 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span id="editText">直接編集モード: OFF</span>
+        </button>
+
+        <!-- Print Button -->
+        <button onclick="window.print()" class="px-3 py-1.5 rounded text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-print"></i>
+          <span>ブラウザ印刷</span>
+        </button>
+
+        <!-- PDF Export Button -->
+        <button onclick="downloadPDF()" class="px-3 py-1.5 rounded text-xs font-semibold bg-rose-600 hover:bg-rose-500 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>PDFで保存</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for Actions -->
+  <script>
+    let isEditing = false;
+    let answersVisible = true;
+
+    // Toggle Editable Mode
+    function toggleEditMode() {
+      isEditing = !isEditing;
+      const container = document.getElementById('print-area');
+      const btnText = document.getElementById('editText');
+      
+      if (isEditing) {
+        container.contentEditable = "true";
+        container.classList.add('editable-active');
+        btnText.innerText = "直接編集モード: ON";
+      } else {
+        container.contentEditable = "false";
+        container.classList.remove('editable-active');
+        btnText.innerText = "直接編集モード: OFF";
+      }
+    }
+
+    // Toggle 赤ペン解答表示
+    function toggleAnswers() {
+      answersVisible = !answersVisible;
+      const redAnswers = document.querySelectorAll('.ans-red');
+      redAnswers.forEach(el => {
+        if (answersVisible) {
+          el.style.visibility = 'visible';
+        } else {
+          el.style.visibility = 'hidden';
+        }
+      });
+    }
+
+    // PDF Download Function using html2pdf
+    function downloadPDF() {
+      const element = document.getElementById('print-area');
+      
+      // PDF化時に確実に1ページに収めるための一時的な高さ調整 (297mm x 208mm)
+      const originalHeight = element.style.height;
+      element.style.height = '208mm';
+
+      const opt = {
+        margin:       0,
+        filename:     '人口学_第14回_テスト対策_2in1.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        element.style.height = originalHeight || '210mm';
+      }).catch(err => {
+        console.error('PDF Generation Error:', err);
+        element.style.height = originalHeight || '210mm';
+      });
+    }
+
+    // Auto-scale preview window for mobile/smaller screens
+    function adjustScale() {
+      const wrapper = document.getElementById('preview-container');
+      const target = document.getElementById('print-area');
+      const windowWidth = wrapper.clientWidth - 16;
+      const targetWidth = 1122; // 297mm in standard px (~96dpi)
+
+      if (windowWidth < targetWidth) {
+        const scale = windowWidth / targetWidth;
+        target.style.transform = `scale(${scale})`;
+        target.style.transformOrigin = 'center top';
+      } else {
+        target.style.transform = 'scale(1)';
+      }
+    }
+
+    window.addEventListener('resize', adjustScale);
+    window.addEventListener('DOMContentLoaded', adjustScale);
+  </script>
+</body>
+</html>
+
