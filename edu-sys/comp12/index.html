@@ -85,7 +85,7 @@
         .fs-5xl { font-size: calc(3rem * var(--font-scale)) !important; line-height: calc(1) !important; }
         .fs-sm { font-size: calc(0.875rem * var(--font-scale)) !important; line-height: calc(1.25rem * var(--font-scale)) !important; }
 
-        /* ご要望：答え合わせ（採点結果）画面用の少し小さめのフォントサイズ設定 */
+        /* 答え合わせ（採点結果）画面用のフォントサイズ設定 */
         .result-screen-font {
             font-size: calc(0.875rem * var(--font-scale)) !important;
             line-height: calc(1.35rem * var(--font-scale)) !important;
@@ -155,7 +155,7 @@
                             <option value="5">5問</option>
                             <option value="10" selected>10問</option>
                             <option value="20">20問</option>
-                            <option value="40">40問</option>
+                            <option value="30">30問</option>
                             <option value="all">全問（85問）</option>
                         </select>
                     </div>
@@ -290,7 +290,6 @@
         </div>
 
         <!-- ================= 結果画面 ================= -->
-        <!-- result-screen-font クラスを付与し、全体の表示サイズを少し小さく調整 -->
         <section id="result-screen" class="hidden result-screen-font">
             <div class="bg-white rounded-lg shadow-md p-6 md:p-8 text-center mb-6 border border-gray-200">
                 <h2 class="font-bold text-gray-800 mb-2 border-b-2 border-[#005b82] pb-2 res-title">採点結果</h2>
@@ -322,7 +321,6 @@
 
     <script>
         // --- データ定義 ---
-        // 過去分＋レベル12追加分(前半・後半合わせた計9問)を含む全85問（重複排除済）
         const baseQuestions = [
             // 日本国憲法26条1項
             { title: "日本国憲法第26条 第1項", text: "すべて国民は、法律の定めるところにより、その[HOLE]に応じて、ひとしく教育を受ける権利を有する。", correctAnswer: "能力" },
@@ -446,7 +444,7 @@
             { title: "学習指導要領", text: "教育課程を通して、これからの時代に求められる教育を実現していくためには、よりよい[HOLE]を通してよりよい社会を創るという理念を学校と社会とが共有し、それぞれの学校において、必要な学習内容をどのように学び、どのような資質・能力を身に付けられるようにするのかを教育課程において明確にしながら、社会との連携及び協働によりその実現を図っていくという、社会に開かれた教育課程の実現が重要となる。", correctAnswer: "学校教育" },
             { title: "地方教育行政の組織及び運営に関する法律", text: "教育委員会は、教育委員会規則で定めるところにより、その所管に属する学校ごとに、当該学校の運営及び当該運営への必要な支援に関して協議する機関として、[HOLE]を置くように努めなければならない。", correctAnswer: "学校運営協議会" },
 
-            // ==================== レベル12 新規追加 ====================
+            // レベル12 新規追加
             {
                 title: "地方公務員法",
                 text: "職員は、その職務を遂行するに当つて、法令、条例、地方公共団体の規則及び地方公共団体の機関の定める規程に従い、且つ、上司の[HOLE]に忠実に従わなければならない。",
@@ -494,8 +492,15 @@
             }
         ];
 
-        // --- 設定値 ---
-        const TIME_PER_QUESTION = 15; // 1問あたりの秒数
+        // 出題数に応じた制限時間（秒）を返す関数
+        function getTimeLimitInSeconds(count) {
+            if (count === 5) return 120;   // 2分
+            if (count === 10) return 180;  // 3分
+            if (count === 20) return 360;  // 6分
+            if (count === 30) return 540;  // 9分
+            // 全問などその他の場合は1問あたり18秒（10問で3分のペース）で算出
+            return count * 18;
+        }
 
         // --- グローバル変数 ---
         let testMode = 'descriptive'; 
@@ -598,7 +603,7 @@
             
             els.displayScore.textContent = `${count}点`;
             
-            totalTimeLimit = count * TIME_PER_QUESTION;
+            totalTimeLimit = getTimeLimitInSeconds(count);
             const minutes = Math.floor(totalTimeLimit / 60);
             const seconds = totalTimeLimit % 60;
             els.displayTestTime.textContent = `${minutes}分${seconds > 0 ? seconds + '秒' : ''}`;
