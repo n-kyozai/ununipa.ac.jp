@@ -12,13 +12,21 @@
         .status-active { background-color: #a0c832; } /* テスト受付中（黄緑） */
         .status-prep { background-color: #4bc0c8; }   /* テスト準備中（水色） */
         
-        /* ワーク・ワーク解答用のステータス表示 */
+        /* ワーク・ワーク解答・授業資料用のスタイリング */
         .work-btn-active {
             background-color: #005662;
             color: #ffffff;
         }
         .work-btn-active:hover {
             background-color: #003d46;
+        }
+
+        .material-btn {
+            background-color: #0d9488;
+            color: #ffffff;
+        }
+        .material-btn:hover {
+            background-color: #0f766e;
         }
 
         /* YouTubeボタン用スタイリング */
@@ -85,7 +93,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen p-2 sm:p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto p-2 sm:p-4 md:p-6">
+    <div class="max-w-7xl mx-auto p-2 sm:p-4 md:p-6">
         <div class="flex-grow pb-2">
             <!-- タイトルヘッダー -->
             <h1 class="text-lg sm:text-xl font-bold mb-3 sm:mb-6 pb-2 sm:pb-3 border-b-2 border-teal-800 text-teal-900">
@@ -94,7 +102,7 @@
 
             <!-- テスト一覧テーブル -->
             <div class="w-full custom-scrollbar pb-2">
-                <table class="w-full text-xs sm:text-sm border-collapse border border-gray-300 text-center min-w-[600px] mobile-compact-table bg-white">
+                <table class="w-full text-xs sm:text-sm border-collapse border border-gray-300 text-center min-w-[720px] mobile-compact-table bg-white">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
                             <!-- 1. テスト名（クリックでソート可能） -->
@@ -106,18 +114,20 @@
                                     </svg>
                                 </button>
                             </th>
-                            <!-- 2. YouTube（テスト名とステータスの間に追加） -->
+                            <!-- 2. YouTube -->
                             <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-20 sm:w-28 whitespace-nowrap">YouTube</th>
-                            <!-- 3. ステータス -->
+                            <!-- 3. 授業資料（追加） -->
+                            <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-20 sm:w-32 whitespace-nowrap">授業資料</th>
+                            <!-- 4. ステータス -->
                             <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-20 sm:w-28 whitespace-nowrap">ステータス</th>
-                            <!-- 4. 満点 -->
-                            <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-12 sm:w-20 whitespace-nowrap">満点</th>
                             <!-- 5. ワーク -->
                             <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-20 sm:w-32 whitespace-nowrap">ワーク</th>
                             <!-- 6. ワーク解答 -->
                             <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-20 sm:w-32 whitespace-nowrap">ワーク解答</th>
                             <!-- 7. テスト実施 -->
                             <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-24 sm:w-36 whitespace-nowrap">テスト実施</th>
+                            <!-- 8. 満点 -->
+                            <th class="border border-gray-300 p-1.5 sm:p-3 font-medium w-12 sm:w-20 whitespace-nowrap">満点</th>
                         </tr>
                     </thead>
                     <tbody id="test-list-body">
@@ -154,23 +164,23 @@
     <script>
         /**
          * 【テストデータ構成】
+         * ※ materialLink に授業資料のGoogleドライブリンクを指定できます（初期値は `#` ）。
          * ※ youtubeLink の部分にそれぞれのYouTube動画のURLを指定してください。
-         * ※ 第12回・第13回は機器不具合のため録画不可（クリック不可）を設定しています。
          */
         const testsData = [
-            { id: 1, name: "第1回授業の復習", youtubeLink: "https://youtu.be/CDHKvfU4jJM", status: "active", passScore: "10点", link: "./test01/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1clcHyDRbCSIpeDEjjygbmInqLDsUpfTg/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/15WcGYNMWsDGwKRTgBgp5LsvRgiydrNKJ/view?usp=sharing" },
-            { id: 2, name: "第2回授業の復習", youtubeLink: "https://youtu.be/2pI45wA5lKM", status: "active", passScore: "10点", link: "./test02/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1ibBQ8daxeypoLsgLE_HaiZS89ZZ115h3/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1UzlgBhsNeVFC9dPFXffltbImYiNAd4eI/view?usp=sharing" },
-            { id: 3, name: "第3回授業の復習", youtubeLink: "https://youtu.be/DCx59WrSR9E", status: "active", passScore: "10点", link: "./test03/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1_GW7zDm6OtVFomBdXFtGOptO3NjlAFEU/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1Ow66wGyE2V6PRuBAFsxpvPl5wZG8DPp7/view?usp=sharing" },
-            { id: 4, name: "第4回授業の復習", youtubeLink: "https://youtu.be/a8yN-LyQir4", status: "active", passScore: "10点", link: "./test04/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1O3TkmdcZTuIjHoyCWDtlKPNWtYyrEGO2/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1eWMZV4b-tydhxH_ol21Bgl5oAGAg7I_G/view?usp=sharing" },
-            { id: 5, name: "第5回授業の復習", youtubeLink: "https://youtu.be/2Q3QE9pXLlM", status: "active", passScore: "10点", link: "./test05/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1Yw96CTzq86cZ4sqoY1e4oEFs6u5YnVxt/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1tBb0GEkk9OXryY3hXAPitZGfqB7lvJXd/view?usp=sharing" },
-            { id: 6, name: "第6回授業の復習", youtubeLink: "https://youtu.be/qSFUxnLc6A0", status: "active", passScore: "10点", link: "./test06/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/10Zc5xUfTVkw-oaTkoQpdpNF4kTAM4H2-/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xpwmPccgA7mxLjyrbZUUmXahn24h8gN6/view?usp=sharing" },
-            { id: 7, name: "第7回授業の復習", youtubeLink: "https://youtu.be/NTonElZWepw", status: "active", passScore: "10点", link: "./test07/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1u8dgLOs9bLVtJsMHMGZcjQdRS7Tu8ttP/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1kpjBz4KJ5rDoREoCqdMqX2ieqaDZCH-C/view?usp=sharing" },
-            { id: 8, name: "第8回授業の復習", youtubeLink: "https://youtu.be/iH3DpSfbfg0", status: "active", passScore: "10点", link: "./test08/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1k12jSa7fP8hFxeIx657v3QcZHMcEsFOb/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/13RzoaY4LVd14aa4G9j_5ck1swUbf7CzH/view?usp=sharing" },
-            { id: 9, name: "第9回授業の復習", youtubeLink: "https://youtu.be/unXkqt-7dm0", status: "active", passScore: "10点", link: "./test09/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1c7X5WADna7YsNPTHiX-DvFepCsgZ4XXG/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1O_b6_IFBIx98othyWs_PKwyJqT9zX9Ar/view?usp=sharing" },
-            { id: 10, name: "第10回授業の復習", youtubeLink: "https://youtu.be/uJQm-GuhRN0", status: "active", passScore: "10点", link: "./test10/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/17hwidFEmSZeUFS32c0uRj5IkxxICMWgi/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1BW3OmGneeENo7BuR2His5rWtrQp--8aN/view?usp=sharing" },
-            { id: 11, name: "第11回授業の復習", youtubeLink: "https://youtu.be/LO7YvnniYWU", status: "active", passScore: "10点", link: "./test11/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1Iz95R4ny8Urm85Dgmf6xCO5KQPXHCxc3/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1dzgIb0cJJI42tLCROtUU5PhsTLqsI-y9/view?usp=sharing" },
-            { id: 12, name: "第12回授業の復習", youtubeLink: null, youtubeDisabled: true, youtubeReason: "機器不具合のため録画なし", status: "active", passScore: "10点", link: "./test12/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1S1tEI3ukNtx-P2NDboVuw2YB5QcNKyEB/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1OX3JJgXQ-h02j0r-RiyxymIdGTdAk5d2/view?usp=sharing" },
-            { id: 13, name: "第13回授業の復習", youtubeLink: null, youtubeDisabled: true, youtubeReason: "機器不具合のため録画なし", status: "active", passScore: "10点", link: "./test13/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1EgrLhnZKZU4HEo6kDacgyj3r7zz6cAtE/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1k4uXyNOuU_jq9E58aI7MlP9VyBJ5Dux2/view?usp=sharing" }
+            { id: 1, name: "第1回授業の復習", youtubeLink: "https://youtu.be/CDHKvfU4jJM", materialStatus: "active", materialLink: "https://n-kyozai.github.io/ununipa.ac.jp/corp-law/%E4%BC%9A%E7%A4%BE%E6%B3%95_%E7%AC%AC01%E5%9B%9E_%E3%83%AC%E3%82%B8%E3%83%A5%E3%83%A1.pdf", status: "active", passScore: "10点", link: "./test01/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1clcHyDRbCSIpeDEjjygbmInqLDsUpfTg/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/15WcGYNMWsDGwKRTgBgp5LsvRgiydrNKJ/view?usp=sharing" },
+            { id: 2, name: "第2回授業の復習", youtubeLink: "https://youtu.be/2pI45wA5lKM", materialStatus: "active", materialLink: "https://n-kyozai.github.io/ununipa.ac.jp/corp-law/CompanyLawLectureNotes,Part%202.pdf", status: "active", passScore: "10点", link: "./test02/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1ibBQ8daxeypoLsgLE_HaiZS89ZZ115h3/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1UzlgBhsNeVFC9dPFXffltbImYiNAd4eI/view?usp=sharing" },
+            { id: 3, name: "第3回授業の復習", youtubeLink: "https://youtu.be/DCx59WrSR9E", materialStatus: "active", materialLink: "https://n-kyozai.github.io/ununipa.ac.jp/corp-law/%E4%BC%9A%E7%A4%BE%E6%B3%95_%E7%AC%AC03%E5%9B%9E_%E3%83%AC%E3%82%B7%E3%82%99%E3%83%A5%E3%83%A1.pdf", status: "active", passScore: "10点", link: "./test03/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1_GW7zDm6OtVFomBdXFtGOptO3NjlAFEU/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1Ow66wGyE2V6PRuBAFsxpvPl5wZG8DPp7/view?usp=sharing" },
+            { id: 4, name: "第4回授業の復習", youtubeLink: "https://youtu.be/a8yN-LyQir4", materialStatus: "active", materialLink: "https://n-kyozai.github.io/ununipa.ac.jp/corp-law/%E4%BC%9A%E7%A4%BE%E6%B3%95_%E7%AC%AC04%E5%9B%9E_%E3%83%AC%E3%82%B7%E3%82%99%E3%83%A5%E3%83%A1.pdf", status: "active", passScore: "10点", link: "./test04/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1O3TkmdcZTuIjHoyCWDtlKPNWtYyrEGO2/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1eWMZV4b-tydhxH_ol21Bgl5oAGAg7I_G/view?usp=sharing" },
+            { id: 5, name: "第5回授業の復習", youtubeLink: "https://youtu.be/2Q3QE9pXLlM", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1rfBYJY88rYoWlR1FP6lUTmtYx5uHTKoE/view?usp=sharing", status: "active", passScore: "10点", link: "./test05/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1Yw96CTzq86cZ4sqoY1e4oEFs6u5YnVxt/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1tBb0GEkk9OXryY3hXAPitZGfqB7lvJXd/view?usp=sharing" },
+            { id: 6, name: "第6回授業の復習", youtubeLink: "https://youtu.be/qSFUxnLc6A0", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1XVmziu3V9vDMsx24USHzshYKWqhxRpTu/view?usp=sharing", status: "active", passScore: "10点", link: "./test06/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/10Zc5xUfTVkw-oaTkoQpdpNF4kTAM4H2-/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1xpwmPccgA7mxLjyrbZUUmXahn24h8gN6/view?usp=sharing" },
+            { id: 7, name: "第7回授業の復習", youtubeLink: "https://youtu.be/NTonElZWepw", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1FVn7sFNMWnV203FwHG42wAyHBQXvPTqY/view?usp=sharing", status: "active", passScore: "10点", link: "./test07/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1u8dgLOs9bLVtJsMHMGZcjQdRS7Tu8ttP/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1kpjBz4KJ5rDoREoCqdMqX2ieqaDZCH-C/view?usp=sharing" },
+            { id: 8, name: "第8回授業の復習", youtubeLink: "https://youtu.be/iH3DpSfbfg0", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1DN_hAx80ekMuY_XiWUFPhlhdbtOpWxZ4/view?usp=sharing", status: "active", passScore: "10点", link: "./test08/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1k12jSa7fP8hFxeIx657v3QcZHMcEsFOb/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/13RzoaY4LVd14aa4G9j_5ck1swUbf7CzH/view?usp=sharing" },
+            { id: 9, name: "第9回授業の復習", youtubeLink: "https://youtu.be/unXkqt-7dm0", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1ivQuETCOjl1CTODibLOkqypb4DyH3FvZ/view?usp=sharing", status: "active", passScore: "10点", link: "./test09/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1c7X5WADna7YsNPTHiX-DvFepCsgZ4XXG/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1O_b6_IFBIx98othyWs_PKwyJqT9zX9Ar/view?usp=sharing" },
+            { id: 10, name: "第10回授業の復習", youtubeLink: "https://youtu.be/uJQm-GuhRN0", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1-FA0okptyNYUuYTZ-eiL2Z603y6VK_BG/view?usp=sharing", status: "active", passScore: "10点", link: "./test10/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/17hwidFEmSZeUFS32c0uRj5IkxxICMWgi/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1BW3OmGneeENo7BuR2His5rWtrQp--8aN/view?usp=sharing" },
+            { id: 11, name: "第11回授業の復習", youtubeLink: "https://youtu.be/LO7YvnniYWU", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1ffNuaG3PP5mIGCB4Q9vho1xC09Dt7PWy/view?usp=sharing", status: "active", passScore: "10点", link: "./test11/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1Iz95R4ny8Urm85Dgmf6xCO5KQPXHCxc3/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1dzgIb0cJJI42tLCROtUU5PhsTLqsI-y9/view?usp=sharing" },
+            { id: 12, name: "第12回授業の復習", youtubeLink: null, youtubeDisabled: true, youtubeReason: "機器不具合のため録画なし", materialStatus: "active", materialLink: "https://drive.google.com/file/d/10ucoOYUhPtQ-rLF5Umun_n0wSSsEY46K/view?usp=sharing", status: "active", passScore: "10点", link: "./test12/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1S1tEI3ukNtx-P2NDboVuw2YB5QcNKyEB/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1OX3JJgXQ-h02j0r-RiyxymIdGTdAk5d2/view?usp=sharing" },
+            { id: 13, name: "第13回授業の復習", youtubeLink: null, youtubeDisabled: true, youtubeReason: "機器不具合のため録画なし", materialStatus: "active", materialLink: "https://drive.google.com/file/d/1IbfNN49Y3gwymweZBe5Cihsl3D_BiMtH/view?usp=sharing", status: "active", passScore: "10点", link: "./test13/index.html", workStatus: "active", workLink: "https://drive.google.com/file/d/1EgrLhnZKZU4HEo6kDacgyj3r7zz6cAtE/view?usp=sharing", workAnsStatus: "active", workAnsLink: "https://drive.google.com/file/d/1k4uXyNOuU_jq9E58aI7MlP9VyBJ5Dux2/view?usp=sharing" }
         ];
 
         let currentData = [...testsData];
@@ -198,7 +208,7 @@
                     ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold transition-colors">${test.name}</a>` 
                     : `<span class="text-gray-600">${test.name}</span>`;
 
-                // YouTubeボタンのHTML構成（録画不具合の対応を追加）
+                // 2. YouTubeボタン
                 let youtubeBtnHtml = "";
                 if (test.youtubeDisabled) {
                     youtubeBtnHtml = `<span title="${test.youtubeReason}" class="inline-block border border-gray-200 bg-gray-100 text-gray-400 text-xs px-1.5 sm:px-2 py-1 sm:py-1.5 rounded cursor-not-allowed select-none mobile-compact-btn whitespace-nowrap">
@@ -213,6 +223,16 @@
                     youtubeBtnHtml = `<span class="inline-block border border-gray-200 bg-gray-100 text-gray-400 text-xs px-2 sm:px-2.5 py-1 sm:py-1.5 rounded mobile-compact-btn">未設定</span>`;
                 }
 
+                // 3. 授業資料ボタン
+                const isMaterialActive = (test.materialStatus || "prep") === "active";
+                const materialBtnHtml = isMaterialActive
+                    ? `<a href="${test.materialLink || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-0.5 sm:gap-1 material-btn text-xs font-medium px-2 sm:px-3 py-1 sm:py-1.5 rounded transition shadow-sm mobile-compact-btn">
+                        <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 mobile-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        授業資料
+                       </a>`
+                    : `<span class="inline-block border border-gray-200 bg-gray-100 text-gray-400 text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded mobile-compact-btn">準備中</span>`;
+
+                // 5. ワークボタン
                 const isWorkActive = (test.workStatus || "prep") === "active";
                 const workBtnHtml = isWorkActive
                     ? `<a href="${test.workLink || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-0.5 sm:gap-1 work-btn-active text-xs font-medium px-2 sm:px-3 py-1 sm:py-1.5 rounded transition shadow-sm mobile-compact-btn">
@@ -221,6 +241,7 @@
                        </a>`
                     : `<span class="inline-block border border-gray-200 bg-gray-100 text-gray-400 text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded mobile-compact-btn">準備中</span>`;
 
+                // 6. ワーク解答ボタン
                 const isWorkAnsActive = (test.workAnsStatus || "prep") === "active";
                 const workAnsBtnHtml = isWorkAnsActive
                     ? `<a href="${test.workAnsLink || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-0.5 sm:gap-1 border border-teal-600 text-teal-700 hover:bg-teal-50 text-xs font-medium px-2 sm:px-3 py-1 sm:py-1.5 rounded transition shadow-sm mobile-compact-btn">
@@ -229,6 +250,7 @@
                        </a>`
                     : `<span class="inline-block border border-gray-200 bg-gray-100 text-gray-400 text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded mobile-compact-btn">準備中</span>`;
 
+                // 7. テスト実施ボタン
                 const testBtnHtml = isTestActive
                     ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 sm:px-4 py-1 sm:py-1.5 rounded text-xs font-bold transition shadow-sm mobile-compact-btn">テスト実施</a>`
                     : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-2 sm:px-4 py-1 sm:py-1.5 rounded text-xs cursor-not-allowed mobile-compact-btn">テスト実施</button>`;
@@ -240,13 +262,13 @@
                     <td class="border border-gray-300 p-1 sm:p-2">
                         ${youtubeBtnHtml}
                     </td>
+                    <td class="border border-gray-300 p-1 sm:p-2">
+                        ${materialBtnHtml}
+                    </td>
                     <td class="border border-gray-300 p-1 sm:p-2 whitespace-nowrap">
                         <span class="inline-block text-white text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium ${statusClass} mobile-badge">
                             ${statusLabel}
                         </span>
-                    </td>
-                    <td class="border border-gray-300 p-1 sm:p-2 text-gray-700 font-medium whitespace-nowrap">
-                        ${testPassScore(test.passScore)}
                     </td>
                     <td class="border border-gray-300 p-1 sm:p-2">
                         ${workBtnHtml}
@@ -256,6 +278,9 @@
                     </td>
                     <td class="border border-gray-300 p-1 sm:p-2">
                         ${testBtnHtml}
+                    </td>
+                    <td class="border border-gray-300 p-1 sm:p-2 text-gray-700 font-medium whitespace-nowrap">
+                        ${testPassScore(test.passScore)}
                     </td>
                 `;
 
