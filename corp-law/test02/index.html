@@ -216,7 +216,7 @@
                 inputCount: 1,
                 ordered: true,
                 text: "（　　　）にあてはまる適当な語句を述べなさい。\n合名会社は、（⑧　　　）を負う社員のみからなる会社である。社員の全員が会社の債権者に対して連帯して無限の責任を負う。\n※回答に⑧という番号は入力しないこと。", 
-                answer: ["直接無限責任"],
+                answer: "直接無限責任", // 修正: 配列から文字列へ変更
                 displayAnswer: "直接無限責任"
             },
             { 
@@ -424,7 +424,7 @@
             els.answerContainer.innerHTML = '';
             const label = document.createElement('label');
             label.className = 'block font-bold text-gray-700 mb-2 fs-sm';
-            label.innerText = q.inputCount > 1 ? '解答を順番に記述してください：' : '解答を記述してください：';
+            label.innerText = (q.inputCount && q.inputCount > 1) ? '解答を順番に記述してください：' : '解答を記述してください：';
             els.answerContainer.appendChild(label);
 
             if (q.inputCount && q.inputCount > 1) {
@@ -488,21 +488,26 @@
             const resultContainer = document.getElementById('result-list');
             resultContainer.innerHTML = '';
 
+            // 堅牢な文字列正規化関数（配列やnullも安全に処理）
+            const normalize = str => {
+                if (Array.isArray(str)) str = str[0] || "";
+                return String(str || "").replace(/[\s　]/g, '');
+            };
+
             questions.forEach((q, index) => {
                 totalPoints += q.point;
                 let earnedPoint = 0;
                 let isCorrect = false;
                 let displayUserAnswer = "";
 
-                const normalize = str => (str || "").replace(/[\s　]/g, '');
-
                 if (q.inputCount && q.inputCount > 1) {
                     const userAnsArray = userAnswers[q.id] || Array(q.inputCount).fill("");
                     let matchCount = 0;
+                    const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
 
                     if (q.ordered) {
                         // 順序どおりの判定
-                        q.answer.forEach((correctWord, i) => {
+                        correctAnswers.forEach((correctWord, i) => {
                             if (normalize(userAnsArray[i]) === normalize(correctWord)) {
                                 matchCount++;
                             }
@@ -510,7 +515,7 @@
                     } else {
                         // 順不同判定
                         const normalizedUserAns = [...new Set(userAnsArray.map(ans => normalize(ans)))].filter(ans => ans !== '');
-                        q.answer.forEach(correctWord => {
+                        correctAnswers.forEach(correctWord => {
                             if (normalizedUserAns.includes(normalize(correctWord))) {
                                 matchCount++;
                             }
@@ -523,7 +528,9 @@
 
                 } else {
                     const userAnswer = (userAnswers[q.id] || "").trim();
-                    isCorrect = normalize(userAnswer) === normalize(q.answer);
+                    const correctAnswer = Array.isArray(q.answer) ? q.answer[0] : q.answer;
+                    
+                    isCorrect = normalize(userAnswer) === normalize(correctAnswer);
                     earnedPoint = isCorrect ? q.point : 0;
                     displayUserAnswer = userAnswer === "" ? "<span class='text-gray-400'>未解答</span>" : userAnswer;
                 }
