@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教員採用試験対策 専門教科まとめ一覧</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 参考コードのカラーリングを再現 */
+        .header-bg { background-color: #005662; }
+        .tab-active { background-color: #e5f1f4; color: #005662; border-bottom: 2px solid #005662; }
+        .tab-inactive { background-color: #f3f4f6; color: #4b5563; }
+        .tab-inactive:hover { background-color: #e5e7eb; }
+        .status-active { background-color: #a0c832; } /* テスト受付中（黄緑） */
+        .status-prep { background-color: #4bc0c8; }   /* テスト準備中（水色） */
+        
+        /* モバイルでのスクロールを滑らかに */
+        .table-container {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 font-sans min-h-screen p-3 sm:p-6 md:p-8">
+    <div class="max-w-4xl mx-auto overflow-hidden">
+        <div class="flex-grow pb-6">
+            <h1 class="text-lg sm:text-xl font-bold mb-4 pb-2 border-b border-gray-300 flex justify-between items-end">
+                <span>教員採用試験対策 専門教科まとめ一覧</span>
+            </h1>
+            <!-- タブメニュー -->
+            <div class="flex flex-wrap gap-1 mb-3 sm:mb-4" id="tabs-container">
+                <!-- JavaScriptでタブが生成されます -->
+            </div>
+
+            <!-- テスト一覧テーブル -->
+            <div class="overflow-x-auto table-container border border-gray-300 rounded-sm">
+                <table class="w-full text-xs sm:text-sm border-collapse text-center min-w-[540px]">
+                    <thead class="bg-gray-100 text-gray-700 whitespace-nowrap select-none">
+                        <tr>
+                            <th class="border-b border-gray-300 p-2 sm:p-3 font-medium text-left pl-3 sm:pl-4">編・学習単元</th>
+                            <th class="border-b border-l border-gray-300 p-2 sm:p-3 font-medium w-16 sm:w-20">PDF</th>
+                            <th id="th-two-in-one" class="border-b border-l border-gray-300 p-2 sm:p-3 font-medium w-16 sm:w-20">2in1</th>
+                            <th class="border-b border-l border-gray-300 p-2 sm:p-3 font-medium w-28 sm:w-32">ステータス</th>
+                            <th class="border-b border-l border-gray-300 p-2 sm:p-3 font-medium w-24 sm:w-28">テスト実施</th>
+                        </tr>
+                    </thead>
+                    <tbody id="test-list-body" class="divide-y divide-gray-200">
+                        <!-- ここにJavaScriptでリストが生成されます -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ページネーション -->
+            <div class="bg-gray-200 p-2 mt-2 flex justify-center items-center text-xs sm:text-sm text-gray-600 gap-4 rounded-sm">
+                <span id="pagination-info">0件 (1/1)</span>
+                <div class="flex gap-3">
+                    <span class="text-gray-500 cursor-default">&lt;</span>
+                    <span class="text-gray-700 font-bold">1</span>
+                    <span class="text-gray-500 cursor-default">&gt;</span>
+                </div>
+            </div>
+
+            <!-- Google Drive リンク（仮置き #） -->
+            <div class="mt-6 sm:mt-8 flex justify-center">
+                <a href="#" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 hover:text-blue-600 active:bg-gray-100 transition-colors font-medium text-xs sm:text-sm text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                    <span>関連資料用 Google Drive フォルダを開く</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 【テストデータ管理】
+         * 全て準備中（prep）設定、リンクは '#' で仮置きしています。
+         */
+        const DRIVE_URL = "#";
+
+        const allTestsData = [
+            // ==========================================
+            // 中学社会（教員採用試験対策 ステップアップ問題集 2）
+            // ==========================================
+            { 
+                category: '中学社会', 
+                name: '第1編: 学習指導要領', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '中学社会', 
+                name: '第2編: 地理的分野', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '中学社会', 
+                name: '第3編: 歴史的分野', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '中学社会', 
+                name: '第4編: 公民的分野', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '中学社会', 
+                name: '第5編: 実践問題', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+
+            // ==========================================
+            // 高校地歴公民（教員採用試験対策 ステップアップ問題集 3）
+            // ==========================================
+            { 
+                category: '高校地歴公民', 
+                name: '第1編: 学習指導要領', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第2編: 世界史', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第3編: 日本史', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第4編: 地理', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第5編: 政治', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第6編: 経済', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第7編: 倫理', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            },
+            { 
+                category: '高校地歴公民', 
+                name: '第8編: 実践問題', 
+                status: 'prep', 
+                pdfStatus: 'prep', 
+                twoInOneStatus: 'prep', 
+                pdfLink: DRIVE_URL, 
+                twoInOneLink: DRIVE_URL, 
+                link: DRIVE_URL 
+            }
+        ];
+
+        const categories = ['中学社会', '高校地歴公民'];
+        let currentCategory = '中学社会';
+
+        // 初期化処理
+        function init() {
+            renderTabs();
+            renderTable(currentCategory);
+        }
+
+        // タブを描画する処理
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs-container');
+            tabsContainer.innerHTML = '';
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                const isActive = category === currentCategory;
+                
+                // アクティブか非アクティブかでスタイルを切り替え
+                button.className = `px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold rounded-t-md transition-colors ${isActive ? 'tab-active' : 'tab-inactive'}`;
+                button.textContent = category;
+                
+                // タブがクリックされた時の処理
+                button.onclick = () => {
+                    currentCategory = category;
+                    renderTabs(); // タブの見た目（色）を更新
+                    renderTable(category); // 選択されたカテゴリのテーブルを再描画
+                };
+                
+                tabsContainer.appendChild(button);
+            });
+        }
+
+        // テーブル本体を生成・描画する処理
+        function renderTable(category) {
+            const tbody = document.getElementById('test-list-body');
+            tbody.innerHTML = '';
+
+            // 現在選択されているカテゴリのデータのみを抽出
+            const filteredData = allTestsData.filter(test => test.category === category);
+
+            filteredData.forEach(test => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors";
+                const isTestActive = test.status === "active";
+                const isPdfActive = test.pdfStatus === "active";
+                const isTwoInOneActive = test.twoInOneStatus === "active";
+                
+                const statusLabel = isTestActive ? "テスト受付中" : "テスト準備中";
+                const statusClass = isTestActive ? "status-active" : "status-prep";
+                
+                // 単元名のリンク（active時はリンク、prep時は非活性表示）
+                const linkTagOpen = isTestActive 
+                    ? `<a href="${test.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline hover:text-blue-800 font-bold block py-1">` 
+                    : `<span class="text-gray-400 underline cursor-not-allowed block py-1">`;
+                const linkTagClose = isTestActive ? `</a>` : `</span>`;
+
+                // PDF列のHTML生成
+                const pdfHtml = isPdfActive
+                    ? `<a href="${test.pdfLink}" target="_blank" rel="noopener noreferrer" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-1 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        PDF
+                       </a>`
+                    : `<span class="text-gray-300 flex items-center justify-center gap-1 py-1 cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        PDF
+                       </span>`;
+
+                // 2in1列のHTML生成
+                const twoInOneHtml = isTwoInOneActive
+                    ? `<a href="${test.twoInOneLink}" target="_blank" rel="noopener noreferrer" class="text-orange-500 hover:text-orange-700 font-bold flex items-center justify-center gap-1 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                        </svg>
+                        2in1
+                       </a>`
+                    : `<span class="text-gray-300 flex items-center justify-center gap-1 py-1 cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                        </svg>
+                        2in1
+                       </span>`;
+
+                // 実施ボタンのHTML生成
+                const btnHtml = isTestActive
+                    ? `<a href="${test.link}" target="_blank" rel="noopener noreferrer" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-bold transition">テスト実施</a>`
+                    : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-3 py-1 rounded text-xs cursor-not-allowed">テスト実施</button>`;
+
+                tr.innerHTML = `
+                    <td class="p-2 sm:p-3 text-left pl-3 sm:pl-4 whitespace-nowrap">
+                        ${linkTagOpen}${test.name}${linkTagClose}
+                    </td>
+                    <td class="border-l border-gray-200 p-2 sm:p-3 whitespace-nowrap">
+                        ${pdfHtml}
+                    </td>
+                    <td class="border-l border-gray-200 p-2 sm:p-3 whitespace-nowrap">
+                        ${twoInOneHtml}
+                    </td>
+                    <td class="border-l border-gray-200 p-2 sm:p-3 whitespace-nowrap">
+                        <span class="inline-block text-white text-xs px-2 sm:px-3 py-1 rounded ${statusClass} whitespace-nowrap">
+                            ${statusLabel}
+                        </span>
+                    </td>
+                    <td class="border-l border-gray-200 p-2 sm:p-3 whitespace-nowrap">
+                        ${btnHtml}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // ページネーションの件数表示を更新
+            document.getElementById('pagination-info').textContent = `${filteredData.length}件 (1/1)`;
+        }
+
+        // ページ読み込み完了時に初期化処理を実行
+        window.onload = init;
+    </script>
+</body>
+</html>
