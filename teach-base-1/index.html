@@ -66,7 +66,7 @@
                             data-course="chugaku-syakai"
                             class="course-switch-btn course-btn-inactive py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
                         <span class="truncate">中学社会</span>
                         <span class="text-[10px] py-0.5 px-1.5 rounded bg-slate-200/70 text-slate-600 font-normal hidden lg:inline">専門</span>
@@ -112,8 +112,8 @@
                 <!-- JavaScriptでタブが動的に生成されます -->
             </div>
 
-            <!-- デスクトップ用：テスト一覧テーブル (md以上で表示) -->
-            <div class="hidden md:block overflow-x-auto">
+            <!-- テスト一覧テーブル（全画面幅で表形式を維持） -->
+            <div class="overflow-x-auto">
                 <table class="w-full text-sm border-collapse border border-gray-300 text-center min-w-[600px]">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
@@ -129,11 +129,6 @@
                         <!-- ここにJavaScriptでリストが生成されます -->
                     </tbody>
                 </table>
-            </div>
-
-            <!-- モバイル用：カードレイアウト (md未満で表示) -->
-            <div id="mobile-cards-container" class="space-y-3 md:hidden">
-                <!-- ここにJavaScriptでモバイル用カードが生成されます -->
             </div>
 
             <!-- ページネーション -->
@@ -197,9 +192,7 @@
     <script>
         // =========================================================================
         // 【画像ファイル設定エリア】
-        // 写真ファイルをGitHub等に配置した後、各書籍のパスを以下の '#' に入力してください。
-        // （例: './images/IMG_1879.jpg' または 'IMG_1879.jpg'）
-        // ※ '#' のままにしておけば、自動的にCSSによる美麗な表紙が描画されます。
+        // 写真ファイルをGitHub等に配置した後、各書籍のパスを以下の変数に入力してください。
         // =========================================================================
         const BOOK_IMAGES = {
             kyoshoku_1: '1tea-opensesame-2026.webp', // 教職教養Ⅰ [教育原理・教育法規] 
@@ -606,7 +599,6 @@
             }
 
             // 安全なDOM生成による画像フォールバック処理
-            // actualImage が '#' または未指定の場合は直接CSSカバーを表示
             const coverContainer = document.getElementById('book-cover-container');
             if (book.actualImage && book.actualImage !== '#') {
                 const imgWrap = document.createElement('div');
@@ -666,9 +658,7 @@
 
         function renderTable(category) {
             const tbody = document.getElementById('test-list-body');
-            const mobileCardsContainer = document.getElementById('mobile-cards-container');
             tbody.innerHTML = '';
-            mobileCardsContainer.innerHTML = '';
 
             const showTwoInOne = (category !== '教職教養基礎Ⅱ' && currentCourse !== 'chukou-kanzen');
             const thTwoInOne = document.getElementById('th-two-in-one');
@@ -693,8 +683,6 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td colspan="${showTwoInOne ? 6 : 5}" class="border border-gray-300 p-6 text-gray-400">登録されているテストデータはありません</td>`;
                 tbody.appendChild(tr);
-
-                mobileCardsContainer.innerHTML = `<div class="p-6 text-center text-sm text-gray-400 bg-gray-50 rounded-lg border border-gray-200">登録されているテストデータはありません</div>`;
                 document.getElementById('pagination-info').textContent = '0件 (1/1)';
                 return;
             }
@@ -727,7 +715,6 @@
                        </span>`;
 
                 let twoInOneTd = '';
-                let twoInOneMobileHtml = '';
                 if (showTwoInOne) {
                     const twoInOneHtml = isTwoInOneActive
                         ? `<a href="${test.twoInOneLink}" target="_blank" class="text-orange-500 hover:text-orange-700 font-bold flex items-center justify-center gap-1">
@@ -743,15 +730,6 @@
                             2in1
                            </span>`;
                     twoInOneTd = `<td class="border border-gray-300 p-2 whitespace-nowrap">${twoInOneHtml}</td>`;
-                    
-                    twoInOneMobileHtml = isTwoInOneActive
-                        ? `<a href="${test.twoInOneLink}" target="_blank" class="flex-1 py-1.5 px-2 bg-orange-50 border border-orange-200 rounded text-orange-600 font-semibold text-xs flex items-center justify-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
-                            2in1
-                           </a>`
-                        : `<span class="flex-1 py-1.5 px-2 bg-gray-50 border border-gray-200 rounded text-gray-300 text-xs flex items-center justify-center gap-1 cursor-not-allowed">
-                            2in1
-                           </span>`;
                 }
 
                 const btnHtml = isTestActive
@@ -781,41 +759,6 @@
                     </td>
                 `;
                 tbody.appendChild(tr);
-
-                const mobilePdfBtn = isPdfActive
-                    ? `<a href="${test.pdfLink}" target="_blank" class="flex-1 py-1.5 px-2 bg-red-50 border border-red-200 rounded text-red-600 font-semibold text-xs flex items-center justify-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                        PDF
-                       </a>`
-                    : `<span class="flex-1 py-1.5 px-2 bg-gray-50 border border-gray-200 rounded text-gray-300 text-xs flex items-center justify-center gap-1 cursor-not-allowed">PDF</span>`;
-
-                const mobileExecuteBtn = isTestActive
-                    ? `<a href="${test.link}" class="w-full py-2.5 bg-[#005662] hover:bg-[#00424c] text-white rounded-lg text-sm font-bold text-center flex items-center justify-center gap-1 shadow-sm transition active:scale-[0.99]">テストを実施する</a>`
-                    : `<div class="w-full py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg text-xs font-medium text-center">準備中</div>`;
-
-                const card = document.createElement('div');
-                card.className = "bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm space-y-2.5";
-                card.innerHTML = `
-                    <div class="flex items-start justify-between gap-2">
-                        <div class="font-bold text-gray-800 text-sm leading-snug">
-                            ${linkTagOpen}${test.name}${linkTagClose}
-                        </div>
-                        <span class="text-white text-[11px] px-2 py-0.5 rounded font-medium shrink-0 ${statusClass}">
-                            ${statusLabel}
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-100">
-                        <span>合計配点: <strong class="text-gray-700 font-semibold">${test.totalScore}</strong></span>
-                        <div class="flex items-center gap-1.5 w-1/2">
-                            ${mobilePdfBtn}
-                            ${twoInOneMobileHtml}
-                        </div>
-                    </div>
-                    <div>
-                        ${mobileExecuteBtn}
-                    </div>
-                `;
-                mobileCardsContainer.appendChild(card);
             });
 
             document.getElementById('pagination-info').textContent = `${filteredData.length}件 (1/1)`;
