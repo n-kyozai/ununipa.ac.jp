@@ -195,6 +195,20 @@
     </div>
 
     <script>
+        // =========================================================================
+        // 【画像ファイル設定エリア】
+        // 写真ファイルをGitHub等に配置した後、各書籍のパスを以下の '#' に入力してください。
+        // （例: './images/IMG_1879.jpg' または 'IMG_1879.jpg'）
+        // ※ '#' のままにしておけば、自動的にCSSによる美麗な表紙が描画されます。
+        // =========================================================================
+        const BOOK_IMAGES = {
+            kyoshoku_1: '#', // 教職教養Ⅰ [教育原理・教育法規] （例: './images/IMG_1879.jpg'）
+            kyoshoku_2: '#', // 教職教養Ⅱ [教育史・教育心理] （例: './images/IMG_1880.jpg'）
+            chugaku:    '#', // ステップアップ問題集② 中学社会 （例: './images/IMG_1877.jpg'）
+            koukou:     '#', // ステップアップ問題集③ 高校社会 （例: './images/IMG_1878.jpg'）
+            buildup:    '#'  // 中高社会の完全攻略 Build Up② （例: './images/buildup.jpg'）
+        };
+
         /**
          * 【テストデータ管理】
          * 教職教養、専門教科（中学社会・高校地歴公民・中高社会完全攻略）の全データを保持
@@ -214,7 +228,7 @@
                             description: '教育原理・教育法規の知識をすみずみまで徹底解説。確認テストおよび2in1レジュメと完全連動した必携参考書。',
                             tags: ['オープンセサミ', '教育原理', '教育法規', '東京アカデミー七賢出版', '2in1対応'],
                             type: 'sesame-1',
-                            actualImage: './images/IMG_1879.jpg',
+                            actualImage: BOOK_IMAGES.kyoshoku_1,
                             badgeVolume: '教職教養 Ⅰ'
                         };
                     } else {
@@ -225,7 +239,7 @@
                             description: '西洋教育史・日本教育史・教育心理を網羅。各単元の体系的理解から基礎復習問題までをフォローした必携参考書。',
                             tags: ['オープンセサミ', '教育史', '教育心理', '東京アカデミー七賢出版', '2in1対応'],
                             type: 'sesame-2',
-                            actualImage: './images/IMG_1880.jpg',
+                            actualImage: BOOK_IMAGES.kyoshoku_2,
                             badgeVolume: '教職教養 Ⅱ'
                         };
                     }
@@ -242,7 +256,7 @@
                     description: '基礎から実践へ段階的に得点力を付ける！合格レベルまでステップアップできる中学校学習指導要領対応の必携問題集。',
                     tags: ['東京アカデミー編', '中学社会', '地理・歴史・公民', '実践問題', '段階別学習'],
                     type: 'step-chugaku',
-                    actualImage: './images/IMG_1877.jpg',
+                    actualImage: BOOK_IMAGES.chugaku,
                     badgeVolume: 'ステップアップ②'
                 })
             },
@@ -257,7 +271,7 @@
                     description: '基礎から実践へ段階的に得点力を付ける！世界史・日本史・地理・政治・経済・倫理の全分野を網羅した教員採用試験必携の問題集。',
                     tags: ['東京アカデミー編', '高校社会', '地歴公民', '全8編網羅', '実践問題'],
                     type: 'step-koukou',
-                    actualImage: './images/IMG_1878.jpg',
+                    actualImage: BOOK_IMAGES.koukou,
                     badgeVolume: 'ステップアップ③'
                 })
             },
@@ -272,7 +286,7 @@
                     description: '共同実施にも対応！要点整理と典型問題、合格トレーニングで中高社会の実戦力アップに最適な直前完成問題集。',
                     tags: ['時事通信社', 'Build Upシリーズ', '共同実施対応', '要点整理', '合格トレーニング'],
                     type: 'buildup',
-                    actualImage: './images/buildup.jpg',
+                    actualImage: BOOK_IMAGES.buildup,
                     badgeVolume: 'Build Up②'
                 })
             }
@@ -591,9 +605,10 @@
                 `;
             }
 
-            // 安全なDOM生成による画像フォールバック処理（SyntaxErrorの防止）
+            // 安全なDOM生成による画像フォールバック処理
+            // actualImage が '#' または未指定の場合は直接CSSカバーを表示
             const coverContainer = document.getElementById('book-cover-container');
-            if (book.actualImage) {
+            if (book.actualImage && book.actualImage !== '#') {
                 const imgWrap = document.createElement('div');
                 imgWrap.className = "relative w-24 sm:w-28 h-32 sm:h-36 rounded-md book-spine-shadow shrink-0 select-none overflow-hidden bg-white border border-slate-200 transform hover:scale-105 transition-transform duration-200";
                 
