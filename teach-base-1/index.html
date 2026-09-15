@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教職教養 対策メニュー</title>
+    <title>教職・専門教科 対策メニュー</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ヘッダーやアクセントのカラー */
@@ -13,23 +13,107 @@
         .tab-inactive:hover { background-color: #e5e7eb; }
         .status-active { background-color: #a0c832; } /* テスト受付中（黄緑） */
         .status-prep { background-color: #4bc0c8; }   /* テスト準備中（水色） */
+        
+        /* 洗練されたセグメントコントロール */
+        .course-btn-active {
+            background-color: #ffffff;
+            color: #005662;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            font-weight: 700;
+        }
+        .course-btn-inactive {
+            background-color: transparent;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .course-btn-inactive:hover {
+            color: #1e293b;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+        /* スクロールバーの非表示（モバイル横スクロール用） */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* 本の立体風ジャケットのスタイル */
+        .book-spine-shadow {
+            box-shadow: inset 4px 0 6px -2px rgba(0, 0, 0, 0.35), 2px 4px 10px rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
-<body class="bg-white text-gray-800 font-sans min-h-screen p-4 md:p-8">
+<body class="bg-white text-gray-800 font-sans min-h-screen p-3 sm:p-6 md:p-8">
 
     <div class="max-w-4xl mx-auto overflow-hidden">
-        <div class="flex-grow pb-6 overflow-y-auto">
-            <h1 class="text-xl font-bold mb-4 pb-2 border-b border-gray-300 flex justify-between items-end">
-                <span>教職教養 対策メニュー</span>
-            </h1>
-
-            <!-- タブメニュー -->
-            <div class="flex flex-wrap gap-1 mb-4" id="tabs-container">
-                <!-- JavaScriptでタブが生成されます -->
+        <div class="flex-grow pb-6">
+            <!-- 区分・教科の選択（洗練されたシンプルセグメント） -->
+            <div class="mb-4 sm:mb-6 flex justify-center sm:justify-start">
+                <nav class="grid grid-cols-2 sm:flex p-1 bg-slate-100 rounded-xl border border-slate-200/80 w-full sm:w-auto gap-1" id="course-switcher" aria-label="教科選択">
+                    <button type="button" 
+                            onclick="changeCourse('kyoshoku')" 
+                            data-course="kyoshoku"
+                            class="course-switch-btn course-btn-active py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        </svg>
+                        <span class="truncate">教職教養</span>
+                    </button>
+                    <button type="button" 
+                            onclick="changeCourse('chugaku-syakai')" 
+                            data-course="chugaku-syakai"
+                            class="course-switch-btn course-btn-inactive py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <span class="truncate">中学社会</span>
+                        <span class="text-[10px] py-0.5 px-1.5 rounded bg-slate-200/70 text-slate-600 font-normal hidden lg:inline">専門</span>
+                    </button>
+                    <button type="button" 
+                            onclick="changeCourse('koukou-chirekikoumin')" 
+                            data-course="koukou-chirekikoumin"
+                            class="course-switch-btn course-btn-inactive py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span class="truncate">高校社会</span>
+                        <span class="text-[10px] py-0.5 px-1.5 rounded bg-slate-200/70 text-slate-600 font-normal hidden lg:inline">専門</span>
+                    </button>
+                    <button type="button" 
+                            onclick="changeCourse('chukou-kanzen')" 
+                            data-course="chukou-kanzen"
+                            class="course-switch-btn course-btn-inactive py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        </svg>
+                        <span class="truncate">中高社会 完全攻略</span>
+                        <span class="text-[10px] py-0.5 px-1.5 rounded bg-purple-100 text-purple-700 font-semibold hidden lg:inline">特訓</span>
+                    </button>
+                </nav>
             </div>
 
-            <!-- テスト一覧テーブル -->
-            <div class="overflow-x-auto">
+            <!-- タイトル表示エリア -->
+            <div class="mb-4 pb-2 border-b border-gray-300 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2" id="main-title">
+                        教職教養 対策メニュー
+                    </h1>
+                    <p class="text-xs text-gray-500 mt-0.5" id="sub-title">オープンセサミシリーズ 参考書 教職教養Ⅰ・Ⅱ 確認テスト・教材一覧</p>
+                </div>
+                <div class="text-[11px] sm:text-xs text-gray-500 font-medium">
+                    分野別タブから単元を選択してください
+                </div>
+            </div>
+
+            <!-- タブメニュー（モバイルでは横スワイプ対応） -->
+            <div class="flex overflow-x-auto no-scrollbar gap-1.5 mb-4 pb-1 border-b border-gray-200 sm:border-none sm:flex-wrap" id="tabs-container">
+                <!-- JavaScriptでタブが動的に生成されます -->
+            </div>
+
+            <!-- デスクトップ用：テスト一覧テーブル (md以上で表示) -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-sm border-collapse border border-gray-300 text-center min-w-[600px]">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
@@ -47,8 +131,13 @@
                 </table>
             </div>
 
+            <!-- モバイル用：カードレイアウト (md未満で表示) -->
+            <div id="mobile-cards-container" class="space-y-3 md:hidden">
+                <!-- ここにJavaScriptでモバイル用カードが生成されます -->
+            </div>
+
             <!-- ページネーション -->
-            <div class="bg-gray-200 p-2 mt-2 flex justify-center items-center text-sm text-gray-600 gap-4">
+            <div class="bg-gray-200 p-2 mt-3 flex justify-center items-center text-xs sm:text-sm text-gray-600 gap-4 rounded-md">
                 <span id="pagination-info">0件 (1/1)</span>
                 <div class="flex gap-3">
                     <span class="text-gray-500">&lt;</span>
@@ -57,426 +146,605 @@
                 </div>
             </div>
 
-            <!-- Google Drive リンク -->
-            <div class="mt-8 flex justify-center">
-                <a href="https://drive.google.com/drive/folders/1NIaw61nmVBGx6mrTeka5hLPLf-yAF6ZU?usp=drive_link" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 hover:text-blue-600 transition-colors font-medium text-sm text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 group-hover:text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                    </svg>
-                    関連資料用 Google Drive フォルダを開く
-                </a>
-            </div>
+            <!-- 現在選択中の書籍セクション（モバイル最適化） -->
+            <section class="mt-6 pt-5 border-t border-slate-200" aria-label="選択中の書籍情報">
+                <div class="flex items-center justify-between mb-2.5">
+                    <h2 class="text-xs sm:text-sm font-bold text-slate-700 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#005662]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        現在選択中の書籍
+                    </h2>
+                    <span class="text-[11px] text-slate-400">対応教材・シラバス</span>
+                </div>
+
+                <!-- 書籍情報カード本体（レスポンシブ） -->
+                <div id="selected-book-card" class="bg-gradient-to-br from-slate-50 to-slate-100/70 border border-slate-200 rounded-xl p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 transition-all">
+                    <!-- 書籍カバー画像（JavaScriptで動的に更新） -->
+                    <div id="book-cover-container" class="shrink-0 flex justify-center">
+                        <!-- ここに書籍のブックジャケットが描画されます -->
+                    </div>
+
+                    <!-- 書籍詳細テキスト -->
+                    <div class="flex-grow text-center sm:text-left space-y-1.5 w-full">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
+                            <span id="book-publisher-badge" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white border border-slate-200 text-slate-600 shadow-2xs">
+                                東京アカデミー七賢出版
+                            </span>
+                            <span id="book-series-badge" class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-200/80 text-slate-700">
+                                専門教養
+                            </span>
+                        </div>
+
+                        <h3 id="book-title" class="text-sm sm:text-base font-bold text-slate-800 leading-snug">
+                            書籍名
+                        </h3>
+
+                        <p id="book-description" class="text-xs text-slate-600 leading-relaxed">
+                            書籍の説明文
+                        </p>
+
+                        <!-- 分野・特徴タグ一覧 -->
+                        <div id="book-tags" class="flex flex-wrap items-center justify-center sm:justify-start gap-1 pt-1">
+                            <!-- JSでタグ生成 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
     <script>
         /**
          * 【テストデータ管理】
-         * ・教育原理および教育心理の先頭に「テスト対策」を配置
-         * ・確認テストのリンクおよび合計点数は教職教養基礎Ⅰの内容を優先して移行
-         * ・PDFおよび2in1は既存の教育原理・教育心理のPDFリンクを維持
+         * 教職教養、専門教科（中学社会・高校地歴公民・中高社会完全攻略）の全データを保持
          */
-        const allTestsData = [
-            // --- 教育原理 (テスト対策 + 01〜13) ---
-            { 
-                category: '教育原理', 
-                name: 'テスト対策「教育原理」', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'prep', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/test-genri/%E6%95%99%E8%81%B7%E6%95%99%E9%A4%8A%E2%85%A0%20%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%86%20%E7%B7%8F%E5%90%88%E3%83%86%E3%82%B9%E3%83%88.pdf', 
-                twoInOneLink: '#', 
-                link: './test-genri/index.html', 
-                totalScore: '28' 
+        const courseConfig = {
+            'kyoshoku': {
+                title: '教職教養 対策メニュー',
+                subtitle: 'オープンセサミシリーズ 参考書 教職教養Ⅰ・Ⅱ 確認テスト・教材一覧',
+                categories: ['教育原理', '教育心理', '教育法規', '西洋教育史', '日本教育史', '教職教養基礎Ⅱ'],
+                getBook: (category) => {
+                    const isBook1 = (category === '教育原理' || category === '教育法規');
+                    if (isBook1) {
+                        return {
+                            title: 'オープンセサミシリーズ 参考書 教員採用試験対策 教職教養Ⅰ [教育原理 教育法規]',
+                            series: 'オープンセサミシリーズ 2027年度 参考書',
+                            publisher: '東京アカデミー編 / 東京アカデミー七賢出版',
+                            description: '教育原理・教育法規の知識をすみずみまで徹底解説。確認テストおよび2in1レジュメと完全連動した必携参考書。',
+                            tags: ['オープンセサミ', '教育原理', '教育法規', '東京アカデミー七賢出版', '2in1対応'],
+                            type: 'sesame-1',
+                            actualImage: './images/IMG_1879.jpg',
+                            badgeVolume: '教職教養 Ⅰ'
+                        };
+                    } else {
+                        return {
+                            title: 'オープンセサミシリーズ 参考書 教員採用試験対策 教職教養Ⅱ [教育史 教育心理]',
+                            series: 'オープンセサミシリーズ 参考書',
+                            publisher: '東京アカデミー編 / 東京アカデミー七賢出版',
+                            description: '西洋教育史・日本教育史・教育心理を網羅。各単元の体系的理解から基礎復習問題までをフォローした必携参考書。',
+                            tags: ['オープンセサミ', '教育史', '教育心理', '東京アカデミー七賢出版', '2in1対応'],
+                            type: 'sesame-2',
+                            actualImage: './images/IMG_1880.jpg',
+                            badgeVolume: '教職教養 Ⅱ'
+                        };
+                    }
+                }
             },
-            { 
-                category: '教育原理', 
-                name: '教育原理01 教育の意義と目的', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class8/index.html', 
-                totalScore: '9' 
+            'chugaku-syakai': {
+                title: '専門教科 中学社会 対策メニュー',
+                subtitle: 'ステップアップ問題集② 専門教科 中学 社会 確認テスト・教材一覧',
+                categories: ['第1編 学習指導要領', '第2編 地理的分野', '第3編 歴史的分野', '第4編 公民的分野', '第5編 実践問題'],
+                getBook: () => ({
+                    title: 'ステップアップ問題集② 専門教科 中学 社会',
+                    series: '教員採用試験対策 ステップアップ問題集',
+                    publisher: '東京アカデミー編 / 東京アカデミー七賢出版',
+                    description: '基礎から実践へ段階的に得点力を付ける！合格レベルまでステップアップできる中学校学習指導要領対応の必携問題集。',
+                    tags: ['東京アカデミー編', '中学社会', '地理・歴史・公民', '実践問題', '段階別学習'],
+                    type: 'step-chugaku',
+                    actualImage: './images/IMG_1877.jpg',
+                    badgeVolume: 'ステップアップ②'
+                })
             },
-            { 
-                category: '教育原理', 
-                name: '教育原理02 教育方法', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class9/index.html', 
-                totalScore: '12' 
+            'koukou-chirekikoumin': {
+                title: '専門教科 高校社会 対策メニュー',
+                subtitle: 'ステップアップ問題集③ 専門教科 高校 社会 確認テスト・教材一覧',
+                categories: ['第1編 学習指導要領', '第2編 世界史', '第3編 日本史', '第4編 地理', '第5編 政治', '第6編 経済', '第7編 倫理', '第8編 実践問題'],
+                getBook: () => ({
+                    title: 'ステップアップ問題集③ 専門教科 高校 社会',
+                    series: '教員採用試験対策 ステップアップ問題集',
+                    publisher: '東京アカデミー編 / 東京アカデミー七賢出版',
+                    description: '基礎から実践へ段階的に得点力を付ける！世界史・日本史・地理・政治・経済・倫理の全分野を網羅した教員採用試験必携の問題集。',
+                    tags: ['東京アカデミー編', '高校社会', '地歴公民', '全8編網羅', '実践問題'],
+                    type: 'step-koukou',
+                    actualImage: './images/IMG_1878.jpg',
+                    badgeVolume: 'ステップアップ③'
+                })
             },
-            { 
-                category: '教育原理', 
-                name: '教育原理03 教育課程', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class10/index.html', 
-                totalScore: '16' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理04 学習指導要領', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class11/index.html', 
-                totalScore: '30' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理05 道徳教育', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8605.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8605%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class12/index.html', 
-                totalScore: '18' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理06 特別活動', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8606.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8606%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class13/index.html', 
-                totalScore: '10' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理07 生徒指導', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育原理07_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8607%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class14/index.html', 
-                totalScore: '17' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理08 特別支援教育', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8608_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8608%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class15/index.html', 
-                totalScore: '21' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理09 人権教育・同和教育', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8609_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8609%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class16/index.html', 
-                totalScore: '12' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理10 社会教育', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8610_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8610%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class17/index.html', 
-                totalScore: '11' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理11 生涯学習', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8611.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8611%EF%BC%BD2in1%EF%BC%BD.pdf', 
-                link: './class18/index.html', 
-                totalScore: '10' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理12 学校と学級の運営', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8612_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8612%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class19/index.html', 
-                totalScore: '11' 
-            },
-            { 
-                category: '教育原理', 
-                name: '教育原理13 教育時事', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8613_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8613%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class20/index.html', 
-                totalScore: '22' 
-            },
+            'chukou-kanzen': {
+                title: '専門教科 中高社会の完全攻略 対策メニュー',
+                subtitle: '専門教養 Build Upシリーズ② 中高社会の完全攻略 確認テスト・教材一覧',
+                categories: ['全項目', '本編（要点・典型問題）', '合格トレーニング'],
+                getBook: () => ({
+                    title: "専門教養 Build Upシリーズ② 中高社会の完全攻略 ('28年度)",
+                    series: "専門教養 Build Upシリーズ② '28年度 教員採用試験",
+                    publisher: '時事通信社',
+                    description: '共同実施にも対応！要点整理と典型問題、合格トレーニングで中高社会の実戦力アップに最適な直前完成問題集。',
+                    tags: ['時事通信社', 'Build Upシリーズ', '共同実施対応', '要点整理', '合格トレーニング'],
+                    type: 'buildup',
+                    actualImage: './images/buildup.jpg',
+                    badgeVolume: 'Build Up②'
+                })
+            }
+        };
 
-            // --- 教育心理 (テスト対策 + 01〜06) ---
-            { 
-                category: '教育心理', 
-                name: 'テスト対策「教育心理」', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'prep', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/test-sinri/%E6%95%99%E8%81%B7%E6%95%99%E9%A4%8A%E2%85%A1%20%E6%95%99%E8%82%B2%E5%BF%83%E7%90%86%20%E7%B7%8F%E5%90%88%E3%83%86%E3%82%B9%E3%83%88.pdf', 
-                twoInOneLink: '#', 
-                link: './test-sinri/index.html', 
-                totalScore: '31' 
-            },
-            { 
-                category: '教育心理', 
-                name: '教育心理01 教育心理学の歴史・意義・定義', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8601.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8601%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class2/index.html', 
-                totalScore: '11' 
-            },
-            { 
-                category: '教育心理', 
-                name: '教育心理02 発達の理論', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8602.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育心理02［2in1］.pdf', 
-                link: './class3/index.html', 
-                totalScore: '15' 
-            },
-            { 
-                category: '教育心理', 
-                name: '教育心理03 学習の理論', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8603.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8603%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class4/index.html', 
-                totalScore: '32' 
-            },
-            { 
-                category: '教育心理', 
-                name: '教育心理04 人格と適応', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8604_compressed.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8604%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', 
-                link: './class5/index.html', 
-                totalScore: '47' 
-            },
-            { 
-                category: '教育心理', 
-                name: '教育心理05 学級集団', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8605.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8605%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class6/index.html', 
-                totalScore: '15' 
-            },
-            { 
-                category: '教育心理', 
-                name: '教育心理06 教育評価', 
-                status: 'active', 
-                pdfStatus: 'active', 
-                twoInOneStatus: 'active', 
-                pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8606.pdf', 
-                twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8606%EF%BC%BB2in1%EF%BC%BD.pdf', 
-                link: './class7/index.html', 
-                totalScore: '13' 
-            },
-
-            // --- 教職教養基礎Ⅰ ---
-            { category: '教職教養基礎Ⅰ', name: 'テスト対策「教育心理」', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/test-sinri/%E6%95%99%E8%81%B7%E6%95%99%E9%A4%8A%E2%85%A1%20%E6%95%99%E8%82%B2%E5%BF%83%E7%90%86%20%E7%B7%8F%E5%90%88%E3%83%86%E3%82%B9%E3%83%88.pdf', link: './test-sinri/index.html', totalScore: '31' },
-            { category: '教職教養基礎Ⅰ', name: 'テスト対策「教育原理」', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/test-genri/%E6%95%99%E8%81%B7%E6%95%99%E9%A4%8A%E2%85%A0%20%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%86%20%E7%B7%8F%E5%90%88%E3%83%86%E3%82%B9%E3%83%88.pdf', link: './test-genri/index.html', totalScore: '28' },
-            { category: '教職教養基礎Ⅰ', name: '教育心理学の歴史・意義・定義', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/class2/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8601%EF%BC%BB2in1%EF%BC%BD260422.pdf', link: './class2/index.html', totalScore: '11' },
-            { category: '教職教養基礎Ⅰ', name: '発達の理論', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/class3/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8602%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class3/index.html', totalScore: '15' },
-            { category: '教職教養基礎Ⅰ', name: '学習の理論', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/class4/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8603%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class4/index.html', totalScore: '32' },
-            { category: '教職教養基礎Ⅰ', name: '人格と適応', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8604%EF%BC%BB2in1%EF%BC%BD%201_compressed.pdf', link: './class5/index.html', totalScore: '47' },
-            { category: '教職教養基礎Ⅰ', name: '学級集団', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8605%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class6/index.html', totalScore: '15' },
-            { category: '教職教養基礎Ⅰ', name: '教育評価', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8606%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class7/index.html', totalScore: '13' },
-            { category: '教職教養基礎Ⅰ', name: '教育の意義と目的', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/class8/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class8/index.html', totalScore: '9' },
-            { category: '教職教養基礎Ⅰ', name: '教育方法', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/class9/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602%EF%BC%BB2in1%EF%BC%BD17.pdf', link: './class9/index.html', totalScore: '12' },
-            { category: '教職教養基礎Ⅰ', name: '教育課程', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603%EF%BC%BB2in1%EF%BC%BD0624.pdf', link: './class10/index.html', totalScore: '16' },
-            { category: '教職教養基礎Ⅰ', name: '学習指導要領', status: 'active', pdfStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604%EF%BC%BB2in1%EF%BC%BD0701_compressed.pdf', link: './class11/index.html', totalScore: '30' },
-            { category: '教職教養基礎Ⅰ', name: '道徳教育', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class12/index.html', totalScore: '18' },
-            { category: '教職教養基礎Ⅰ', name: '特別活動', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class13/index.html', totalScore: '10' },
-            { category: '教職教養基礎Ⅰ', name: '生徒指導', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class14/index.html', totalScore: '17' },
-            { category: '教職教養基礎Ⅰ', name: '特別支援教育', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class15/index.html', totalScore: '21' },
-            { category: '教職教養基礎Ⅰ', name: '人権教育・同和教育', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class16/index.html', totalScore: '12' },
-            { category: '教職教養基礎Ⅰ', name: '社会教育', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class17/index.html', totalScore: '11' },
-            { category: '教職教養基礎Ⅰ', name: '生涯学習', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class18/index.html', totalScore: '10' },
-            { category: '教職教養基礎Ⅰ', name: '学校と学級の運営', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class19/index.html', totalScore: '11' },
-            { category: '教職教養基礎Ⅰ', name: '教育時事', status: 'active', pdfStatus: 'prep', pdfLink: '#', link: './class20/index.html', totalScore: '22' },
-
-            // --- 教職教養基礎Ⅱ ---
-            { category: '教職教養基礎Ⅱ', name: '#', status: 'prep', pdfStatus: 'prep', pdfLink: '#', link: '#', totalScore: '-' },
-
-            // --- 教育法規 ---
-            { category: '教育法規', name: '教育法規01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F01.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F01%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F02.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F02%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F03_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F03%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F04_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F04%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F05_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F05%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F06_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F06%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
-            { category: '教育法規', name: '教育法規07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F07.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F07%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-
-            // --- 西洋教育史 ---
-            { category: '西洋教育史', name: '西洋教育史01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B201.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B201%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B202.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B202%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B203.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B203%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B204.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B204%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B205.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B205%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B206.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B206%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B207.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B207%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '西洋教育史', name: '西洋教育史08', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B208.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B208%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-
-            // --- 日本教育史 ---
-            { category: '日本教育史', name: '日本教育史01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B201.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B201%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B202.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B202%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B203.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B203%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B204.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B204%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B205.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B205%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B206.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B206%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B207.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B207%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史08', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B208.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B208%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
-            { category: '日本教育史', name: '日本教育史09', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B209.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B209%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' }
-        ];
-
-        // タブとして表示するカテゴリのリスト
-        const categories = ['教育原理', '教育心理', '教職教養基礎Ⅰ', '教職教養基礎Ⅱ', '教育法規', '西洋教育史', '日本教育史'];
+        let currentCourse = 'kyoshoku';
         let currentCategory = '教育原理';
 
-        // 初期化処理
+        const allTestsData = [
+            // ==========================================
+            // 1. 教職教養 (kyoshoku)
+            // ==========================================
+            // --- 教育原理 ---
+            { course: 'kyoshoku', category: '教育原理', name: 'テスト対策「教育原理」', status: 'active', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/test-genri/%E6%95%99%E8%81%B7%E6%95%99%E9%A4%8A%E2%85%A0%20%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%86%20%E7%B7%8F%E5%90%88%E3%83%86%E3%82%B9%E3%83%88.pdf', twoInOneLink: '#', link: './test-genri/index.html', totalScore: '28' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理01 教育の意義と目的', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8601%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class8/index.html', totalScore: '9' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理02 教育方法', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8602%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class9/index.html', totalScore: '12' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理03 教育課程', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8603%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class10/index.html', totalScore: '16' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理04 学習指導要領', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8604%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class11/index.html', totalScore: '30' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理05 道徳教育', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8605.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8605%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class12/index.html', totalScore: '18' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理06 特別活動', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8606.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8606%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class13/index.html', totalScore: '10' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理07 生徒指導', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育原理07_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8607%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class14/index.html', totalScore: '17' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理08 特別支援教育', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8608_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8608%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class15/index.html', totalScore: '21' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理09 人権教育・同和教育', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8609_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8609%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class16/index.html', totalScore: '12' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理10 社会教育', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8610_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8610%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class17/index.html', totalScore: '11' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理11 生涯学習', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8611.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8611%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class18/index.html', totalScore: '10' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理12 学校と学級の運営', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8612_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8612%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class19/index.html', totalScore: '11' },
+            { course: 'kyoshoku', category: '教育原理', name: '教育原理13 教育時事', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8613_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%8E%9F%E7%90%8613%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class20/index.html', totalScore: '22' },
+
+            // --- 教育心理 ---
+            { course: 'kyoshoku', category: '教育心理', name: 'テスト対策「教育心理」', status: 'active', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/test-sinri/%E6%95%99%E8%81%B7%E6%95%99%E9%A4%8A%E2%85%A1%20%E6%95%99%E8%82%B2%E5%BF%83%E7%90%86%20%E7%B7%8F%E5%90%88%E3%83%86%E3%82%B9%E3%83%88.pdf', twoInOneLink: '#', link: './test-sinri/index.html', totalScore: '31' },
+            { course: 'kyoshoku', category: '教育心理', name: '教育心理01 教育心理学の歴史・意義・定義', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8601.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8601%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class2/index.html', totalScore: '11' },
+            { course: 'kyoshoku', category: '教育心理', name: '教育心理02 発達の理論', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8602.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/教育心理02［2in1］.pdf', link: './class3/index.html', totalScore: '15' },
+            { course: 'kyoshoku', category: '教育心理', name: '教育心理03 学習の理論', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8603.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8603%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class4/index.html', totalScore: '32' },
+            { course: 'kyoshoku', category: '教育心理', name: '教育心理04 人格と適応', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8604_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8604%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: './class5/index.html', totalScore: '47' },
+            { course: 'kyoshoku', category: '教育心理', name: '教育心理05 学級集団', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8605.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8605%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class6/index.html', totalScore: '15' },
+            { course: 'kyoshoku', category: '教育心理', name: '教育心理06 教育評価', status: 'active', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8606.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E5%BF%83%E7%90%8606%EF%BC%BB2in1%EF%BC%BD.pdf', link: './class7/index.html', totalScore: '13' },
+
+            // --- 教育法規 ---
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F01.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F01%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F02.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F02%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F03_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F03%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F04_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F04%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F05_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F05%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F06_compressed.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F06%EF%BC%BB2in1%EF%BC%BD_compressed.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教育法規', name: '教育法規07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F07.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%95%99%E8%82%B2%E6%B3%95%E8%A6%8F07%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+
+            // --- 西洋教育史 ---
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B201.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B201%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B202.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B202%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B203.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B203%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B204.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B204%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B205.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B205%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B206.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B206%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B207.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B207%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '西洋教育史', name: '西洋教育史08', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B208.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E8%A5%BF%E6%B4%8B%E6%95%99%E8%82%B2%E5%8F%B208%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+
+            // --- 日本教育史 ---
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史01', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B201.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B201%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史02', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B202.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B202%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史03', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B203.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B203%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史04', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B204.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B204%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史05', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B205.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B205%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史06', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B206.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B206%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史07', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B207.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B207%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史08', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B208.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B208%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '日本教育史', name: '日本教育史09', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B209.pdf', twoInOneLink: 'https://n-kyozai.github.io/ununipa.ac.jp/teach-base-1/%E6%97%A5%E6%9C%AC%E6%95%99%E8%82%B2%E5%8F%B209%EF%BC%BB2in1%EF%BC%BD.pdf', link: '#', totalScore: '-' },
+
+            // --- 教職教養基礎Ⅱ ---
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第1回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第2回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第3回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第4回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第5回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第6回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第7回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第8回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'kyoshoku', category: '教職教養基礎Ⅱ', name: '第9回復習問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+
+            // ==========================================
+            // 2. 中学社会 (chugaku-syakai)
+            // ==========================================
+            // 第1編 学習指導要領
+            { course: 'chugaku-syakai', category: '第1編 学習指導要領', name: '1 学習指導要領', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第2編 地理的分野
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '1 世界地図・地形図と地理情報', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '2 自然環境', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '3 資源・エネルギー，産業', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '4 民族・生活文化・人口', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '5 世界の中の日本', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '6 アジア・アフリカ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '7 ヨーロッパ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '8 南北アメリカ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '9 オセアニア', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第3編 歴史的分野
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '1 日本史―原始・古代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '2 日本史―中世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '3 日本史―近世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '4 日本史―近代・現代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '[資料] 日本史―年表', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '5 世界史―古代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '6 世界史―中世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '7 世界史―近世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '8 世界史―近代・現代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '9 世界史―中国史', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '[資料] 世界史―年表', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第4編 公民的分野
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '1 政治―民主政治の基本原理', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '2 政治―日本国憲法と基本的人権', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '3 政治―日本の政治機構', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '4 政治―国際政治', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '5 経済―資本主義経済のしくみ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '6 経済―日本経済の発展と福祉', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '7 経済―国際経済', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '8 倫理―西洋の思想', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '9 倫理―東洋の思想', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第5編 実践問題
+            { course: 'chugaku-syakai', category: '第5編 実践問題', name: '1 実践問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+
+            // ==========================================
+            // 3. 高校社会 (koukou-chirekikoumin)
+            // ==========================================
+            // 第1編 学習指導要領
+            { course: 'koukou-chirekikoumin', category: '第1編 学習指導要領', name: '1 地理歴史編', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第1編 学習指導要領', name: '2 公民編', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第2編 世界史
+            { course: 'koukou-chirekikoumin', category: '第2編 世界史', name: '1 古代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第2編 世界史', name: '2 中世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第2編 世界史', name: '3 近世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第2編 世界史', name: '4 近代・現代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第2編 世界史', name: '5 中国史', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第2編 世界史', name: '年表', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第3編 日本史
+            { course: 'koukou-chirekikoumin', category: '第3編 日本史', name: '1 原始・古代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第3編 日本史', name: '2 中世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第3編 日本史', name: '3 近世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第3編 日本史', name: '4 近代・現代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第3編 日本史', name: '年表', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第4編 地理
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '1 世界地図・地形図と地理情報', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '2 自然環境', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '3 資源・エネルギー，産業', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '4 民族・生活文化・人口', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '5 アジア・アフリカ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '6 ヨーロッパ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '7 南北アメリカ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第4編 地理', name: '8 オセアニア', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第5編 政治
+            { course: 'koukou-chirekikoumin', category: '第5編 政治', name: '1 民主政治の基本原理', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第5編 政治', name: '2 日本国憲法と政治', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第5編 政治', name: '3 日本の政治機構', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第5編 政治', name: '4 国際政治', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第6編 経済
+            { course: 'koukou-chirekikoumin', category: '第6編 経済', name: '1 資本主義経済のしくみ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第6編 経済', name: '2 日本経済の発展と福祉', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第6編 経済', name: '3 国際経済', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第7編 倫理
+            { course: 'koukou-chirekikoumin', category: '第7編 倫理', name: '1 西洋の思想', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第7編 倫理', name: '2 東洋の思想', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            // 第8編 実践問題
+            { course: 'koukou-chirekikoumin', category: '第8編 実践問題', name: '1 地理歴史分野', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'koukou-chirekikoumin', category: '第8編 実践問題', name: '2 公民分野', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+
+            // ==========================================
+            // 4. 中高社会 完全攻略 (chukou-kanzen)
+            // ==========================================
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '01 学習指導要領・指導法', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '01 学習指導要領・指導法（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '02 日本史①', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '02 日本史①（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '03 日本史②', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '03 日本史②（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '04 世界史①', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '04 世界史①（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '05 世界史②', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '05 世界史②（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '06 地理①', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '06 地理①（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '07 地理②', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '07 地理②（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '08 政治', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '08 政治（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '09 経済', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '09 経済（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '10 倫理', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '10 倫理（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' }
+        ];
+
         function init() {
+            updateCourseButtons();
             renderTabs();
             renderTable(currentCategory);
+            renderBookInfo();
         }
 
-        // タブを描画する処理
+        function changeCourse(newCourse) {
+            currentCourse = newCourse;
+            const config = courseConfig[newCourse];
+            
+            document.getElementById('main-title').textContent = config.title;
+            document.getElementById('sub-title').textContent = config.subtitle;
+            
+            currentCategory = config.categories[0];
+            
+            updateCourseButtons();
+            renderTabs();
+            renderTable(currentCategory);
+            renderBookInfo();
+        }
+
+        function renderBookInfo() {
+            const config = courseConfig[currentCourse];
+            const book = config.getBook(currentCategory);
+
+            document.getElementById('book-title').textContent = book.title;
+            document.getElementById('book-publisher-badge').textContent = book.publisher;
+            document.getElementById('book-series-badge').textContent = book.series;
+            document.getElementById('book-description').textContent = book.description;
+
+            const tagsContainer = document.getElementById('book-tags');
+            tagsContainer.innerHTML = '';
+            book.tags.forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = "px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/80 border border-slate-200 text-slate-600";
+                tagEl.textContent = `#${tag}`;
+                tagsContainer.appendChild(tagEl);
+            });
+
+            let cssCoverHtml = '';
+            if (book.type === 'sesame-1' || book.type === 'sesame-2') {
+                const isVol1 = book.type === 'sesame-1';
+                const volTitle = isVol1 ? '教職教養 Ⅰ' : '教職教養 Ⅱ';
+                const subFields = isVol1 ? '[教育原理 教育法規]' : '[教育史 教育心理]';
+
+                cssCoverHtml = `
+                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-[#00a396] rounded-r-md rounded-l-xs p-1 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200">
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ffffff 1.5px, transparent 1.5px); background-size: 6px 6px;"></div>
+                        <div class="absolute left-1 top-0 bottom-0 w-[1.5px] bg-black/10 z-10"></div>
+                        <div class="relative z-10 pl-1.5 pt-0.5 flex justify-between items-center text-[7px] text-white font-bold tracking-tighter">
+                            <span>2027年度</span>
+                            <span class="text-[6.5px] bg-white/20 px-1 rounded">オープンセサミ</span>
+                        </div>
+                        <div class="relative z-10 bg-white rounded-md mx-1 py-1 px-1 text-center shadow-xs border border-slate-100">
+                            <span class="text-[10px] sm:text-[11px] font-black text-slate-800 leading-none tracking-tight block">教 員</span>
+                            <span class="text-[8px] sm:text-[9px] font-black text-slate-700 leading-none tracking-tighter block mt-0.5">採用試験対策</span>
+                        </div>
+                        <div class="relative z-10 bg-[#006e65] text-white rounded p-1 text-center mx-0.5">
+                            <span class="text-[10px] sm:text-[11px] font-black leading-tight block tracking-tight text-white">${volTitle}</span>
+                            <span class="text-[6px] sm:text-[6.5px] font-semibold text-emerald-100 block tracking-tighter">${subFields}</span>
+                        </div>
+                        <div class="relative z-10 text-center pb-0.5">
+                            <span class="text-[6px] text-white/90 font-medium tracking-tighter">東京アカデミー編</span>
+                        </div>
+                    </div>
+                `;
+            } else if (book.type === 'step-chugaku' || book.type === 'step-koukou') {
+                const isChugaku = book.type === 'step-chugaku';
+                const stepNum = isChugaku ? '②' : '③';
+                const subjectName = isChugaku ? '中学 社会' : '高校 社会';
+
+                cssCoverHtml = `
+                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-white border border-slate-300 rounded-r-md rounded-l-xs p-1.5 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200">
+                        <div class="absolute right-1.5 top-0 flex gap-0.5 h-16 w-3.5 pointer-events-none">
+                            <div class="w-1 bg-[#84cc16] h-full"></div>
+                            <div class="w-1 bg-[#84cc16] h-full"></div>
+                            <div class="w-1 bg-[#7e22ce] h-full"></div>
+                        </div>
+                        <div class="absolute left-1 top-0 bottom-0 w-[1.5px] bg-black/10 z-10"></div>
+                        <div class="relative z-10 pl-1">
+                            <span class="text-[11px] sm:text-[12px] font-black text-slate-800 leading-none tracking-tight block">教 員</span>
+                            <span class="text-[7.5px] font-bold text-red-600 leading-none tracking-tight block mt-0.5 border-l-2 border-red-500 pl-0.5">採用試験対策</span>
+                            <span class="text-[6.5px] font-semibold text-slate-500 block mt-0.5">ステップアップ問題集${stepNum}</span>
+                        </div>
+                        <div class="relative z-10 pl-1 my-0.5">
+                            <span class="text-[10px] sm:text-[11px] font-black text-[#5ba515] leading-none block">専門教科</span>
+                            <span class="text-[9px] sm:text-[10px] font-extrabold text-[#5ba515] tracking-tight leading-tight block">${subjectName}</span>
+                        </div>
+                        <div class="relative z-10 space-y-0.5">
+                            <div class="bg-[#78b828] text-white text-[5.5px] font-medium py-0.5 px-1 rounded text-center leading-tight">
+                                段階的に得点力を付ける！
+                            </div>
+                            <div class="text-[6px] text-slate-500 font-bold text-center tracking-tighter">
+                                東京アカデミー編
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (book.type === 'buildup') {
+                cssCoverHtml = `
+                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-[#6b1b82] rounded-r-md rounded-l-xs p-1.5 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200 text-white">
+                        <div class="absolute right-1 top-0 bg-black text-white px-1 py-0.5 rounded-b text-[6.5px] font-black tracking-tighter text-center leading-none">
+                            '28<br><span class="text-[5px] font-normal">年度</span>
+                        </div>
+                        <div class="absolute left-1 top-0 bottom-0 w-[1.5px] bg-black/20 z-10"></div>
+                        <div class="relative z-10 pl-1">
+                            <span class="text-[5.5px] font-medium text-pink-200 block">専門教養 Build Up②</span>
+                            <span class="text-[7px] font-bold text-white block leading-none">教員採用試験</span>
+                        </div>
+                        <div class="relative z-10 pl-1 my-0.5 text-center">
+                            <span class="text-[13px] sm:text-[15px] font-black text-[#facc15] leading-none tracking-tight block">中高社会</span>
+                            <div class="flex justify-center gap-0.5 mt-0.5">
+                                <span class="bg-black text-white text-[7px] font-bold px-0.5 py-0.2 rounded-xs">完</span>
+                                <span class="bg-black text-white text-[7px] font-bold px-0.5 py-0.2 rounded-xs">全</span>
+                                <span class="bg-black text-white text-[7px] font-bold px-0.5 py-0.2 rounded-xs">攻</span>
+                                <span class="bg-black text-white text-[7px] font-bold px-0.5 py-0.2 rounded-xs">略</span>
+                            </div>
+                        </div>
+                        <div class="relative z-10 space-y-0.5 text-center">
+                            <div class="bg-[#facc15] text-[#6b1b82] text-[5.5px] font-extrabold py-0.5 px-1 rounded-full inline-block leading-tight">
+                                要点整理と典型問題
+                            </div>
+                            <div class="text-[6.5px] text-pink-100 font-bold tracking-tighter">
+                                時事通信社
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 安全なDOM生成による画像フォールバック処理（SyntaxErrorの防止）
+            const coverContainer = document.getElementById('book-cover-container');
+            if (book.actualImage) {
+                const imgWrap = document.createElement('div');
+                imgWrap.className = "relative w-24 sm:w-28 h-32 sm:h-36 rounded-md book-spine-shadow shrink-0 select-none overflow-hidden bg-white border border-slate-200 transform hover:scale-105 transition-transform duration-200";
+                
+                const img = document.createElement('img');
+                img.src = book.actualImage;
+                img.alt = book.title;
+                img.className = "w-full h-full object-cover";
+                img.onerror = function() {
+                    coverContainer.innerHTML = cssCoverHtml;
+                };
+                
+                imgWrap.appendChild(img);
+                coverContainer.innerHTML = '';
+                coverContainer.appendChild(imgWrap);
+            } else {
+                coverContainer.innerHTML = cssCoverHtml;
+            }
+        }
+
+        function updateCourseButtons() {
+            const buttons = document.querySelectorAll('.course-switch-btn');
+            buttons.forEach(btn => {
+                const course = btn.getAttribute('data-course');
+                if (course === currentCourse) {
+                    btn.className = "course-switch-btn course-btn-active py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all";
+                } else {
+                    btn.className = "course-switch-btn course-btn-inactive py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all";
+                }
+            });
+        }
+
         function renderTabs() {
             const tabsContainer = document.getElementById('tabs-container');
             tabsContainer.innerHTML = '';
+            
+            const categories = courseConfig[currentCourse].categories;
 
             categories.forEach(category => {
                 const button = document.createElement('button');
                 const isActive = category === currentCategory;
                 
-                button.className = `px-4 py-2 text-sm font-bold rounded-t-md transition-colors ${isActive ? 'tab-active' : 'tab-inactive'}`;
+                button.className = `shrink-0 px-3 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-t-md transition-colors ${isActive ? 'tab-active' : 'tab-inactive'}`;
                 button.textContent = category;
                 
                 button.onclick = () => {
                     currentCategory = category;
                     renderTabs();
                     renderTable(category);
+                    renderBookInfo();
                 };
                 
                 tabsContainer.appendChild(button);
             });
         }
 
-        // テーブル本体を生成・描画する処理
         function renderTable(category) {
             const tbody = document.getElementById('test-list-body');
+            const mobileCardsContainer = document.getElementById('mobile-cards-container');
             tbody.innerHTML = '';
+            mobileCardsContainer.innerHTML = '';
 
-            // 2in1列の表示/非表示をカテゴリで判定
-            const showTwoInOne = !(category === '教職教養基礎Ⅰ' || category === '教職教養基礎Ⅱ');
+            const showTwoInOne = (category !== '教職教養基礎Ⅱ' && currentCourse !== 'chukou-kanzen');
             const thTwoInOne = document.getElementById('th-two-in-one');
-            if (showTwoInOne) {
-                thTwoInOne.style.display = '';
-            } else {
-                thTwoInOne.style.display = 'none';
+            if (thTwoInOne) {
+                thTwoInOne.style.display = showTwoInOne ? '' : 'none';
             }
 
-            // 現在選択されているカテゴリのデータのみを抽出
-            const filteredData = allTestsData.filter(test => test.category === category);
+            let filteredData = [];
+            if (currentCourse === 'chukou-kanzen') {
+                if (category === '全項目') {
+                    filteredData = allTestsData.filter(test => test.course === currentCourse);
+                } else if (category === '本編（要点・典型問題）') {
+                    filteredData = allTestsData.filter(test => test.course === currentCourse && test.subCategory === 'main');
+                } else if (category === '合格トレーニング') {
+                    filteredData = allTestsData.filter(test => test.course === currentCourse && test.subCategory === 'training');
+                }
+            } else {
+                filteredData = allTestsData.filter(test => test.course === currentCourse && test.category === category);
+            }
+
+            if (filteredData.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="${showTwoInOne ? 6 : 5}" class="border border-gray-300 p-6 text-gray-400">登録されているテストデータはありません</td>`;
+                tbody.appendChild(tr);
+
+                mobileCardsContainer.innerHTML = `<div class="p-6 text-center text-sm text-gray-400 bg-gray-50 rounded-lg border border-gray-200">登録されているテストデータはありません</div>`;
+                document.getElementById('pagination-info').textContent = '0件 (1/1)';
+                return;
+            }
 
             filteredData.forEach(test => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition-colors";
-
                 const isTestActive = test.status === "active";
                 const isPdfActive = test.pdfStatus === "active";
+                const isTwoInOneActive = test.twoInOneStatus === "active";
                 
                 const statusLabel = isTestActive ? "テスト受付中" : "テスト準備中";
                 const statusClass = isTestActive ? "status-active" : "status-prep";
                 
-                // 確認テスト名のリンク生成
                 const linkTagOpen = isTestActive 
                     ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold">` 
                     : `<span class="text-gray-400 underline cursor-not-allowed">`;
                 const linkTagClose = isTestActive ? `</a>` : `</span>`;
 
-                // PDF列のHTML生成
                 const pdfHtml = isPdfActive
                     ? `<a href="${test.pdfLink}" target="_blank" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                         PDF
                        </a>`
                     : `<span class="text-gray-300 flex items-center justify-center gap-1 cursor-not-allowed">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                         PDF
                        </span>`;
 
-                // 2in1列のHTML生成
                 let twoInOneTd = '';
+                let twoInOneMobileHtml = '';
                 if (showTwoInOne) {
-                    const isTwoInOneActive = test.twoInOneStatus === "active";
                     const twoInOneHtml = isTwoInOneActive
                         ? `<a href="${test.twoInOneLink}" target="_blank" class="text-orange-500 hover:text-orange-700 font-bold flex items-center justify-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                             2in1
                            </a>`
                         : `<span class="text-gray-300 flex items-center justify-center gap-1 cursor-not-allowed">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                             2in1
                            </span>`;
                     twoInOneTd = `<td class="border border-gray-300 p-2 whitespace-nowrap">${twoInOneHtml}</td>`;
+                    
+                    twoInOneMobileHtml = isTwoInOneActive
+                        ? `<a href="${test.twoInOneLink}" target="_blank" class="flex-1 py-1.5 px-2 bg-orange-50 border border-orange-200 rounded text-orange-600 font-semibold text-xs flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+                            2in1
+                           </a>`
+                        : `<span class="flex-1 py-1.5 px-2 bg-gray-50 border border-gray-200 rounded text-gray-300 text-xs flex items-center justify-center gap-1 cursor-not-allowed">
+                            2in1
+                           </span>`;
                 }
 
-                // 実施ボタンのHTML生成
                 const btnHtml = isTestActive
                     ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-xs font-bold transition">テスト実施</a>`
                     : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-4 py-1 rounded text-xs cursor-not-allowed">テスト実施</button>`;
 
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors";
                 tr.innerHTML = `
                     <td class="border border-gray-300 p-2 text-left pl-4 whitespace-nowrap">
                         ${linkTagOpen}${test.name}${linkTagClose}
@@ -497,15 +765,47 @@
                         ${btnHtml}
                     </td>
                 `;
-
                 tbody.appendChild(tr);
+
+                const mobilePdfBtn = isPdfActive
+                    ? `<a href="${test.pdfLink}" target="_blank" class="flex-1 py-1.5 px-2 bg-red-50 border border-red-200 rounded text-red-600 font-semibold text-xs flex items-center justify-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                        PDF
+                       </a>`
+                    : `<span class="flex-1 py-1.5 px-2 bg-gray-50 border border-gray-200 rounded text-gray-300 text-xs flex items-center justify-center gap-1 cursor-not-allowed">PDF</span>`;
+
+                const mobileExecuteBtn = isTestActive
+                    ? `<a href="${test.link}" class="w-full py-2.5 bg-[#005662] hover:bg-[#00424c] text-white rounded-lg text-sm font-bold text-center flex items-center justify-center gap-1 shadow-sm transition active:scale-[0.99]">テストを実施する</a>`
+                    : `<div class="w-full py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg text-xs font-medium text-center">準備中</div>`;
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm space-y-2.5";
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="font-bold text-gray-800 text-sm leading-snug">
+                            ${linkTagOpen}${test.name}${linkTagClose}
+                        </div>
+                        <span class="text-white text-[11px] px-2 py-0.5 rounded font-medium shrink-0 ${statusClass}">
+                            ${statusLabel}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-100">
+                        <span>合計配点: <strong class="text-gray-700 font-semibold">${test.totalScore}</strong></span>
+                        <div class="flex items-center gap-1.5 w-1/2">
+                            ${mobilePdfBtn}
+                            ${twoInOneMobileHtml}
+                        </div>
+                    </div>
+                    <div>
+                        ${mobileExecuteBtn}
+                    </div>
+                `;
+                mobileCardsContainer.appendChild(card);
             });
 
-            // ページネーションの件数表示をタブごとに動的更新
             document.getElementById('pagination-info').textContent = `${filteredData.length}件 (1/1)`;
         }
 
-        // ページ読み込み完了時に初期化処理を実行
         window.onload = init;
     </script>
 </body>
