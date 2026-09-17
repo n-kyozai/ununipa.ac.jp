@@ -62,14 +62,29 @@
         .book-spine-shadow {
             box-shadow: inset 4px 0 6px -2px rgba(0, 0, 0, 0.35), 2px 4px 10px rgba(0, 0, 0, 0.15);
         }
+        /* モバイルタッチ操作の最適化 */
+        .touch-action-manipulation {
+            touch-action: manipulation;
+        }
     </style>
 </head>
-<body class="bg-white text-gray-800 font-sans min-h-screen p-3 sm:p-6 md:p-8">
+<body class="bg-white text-gray-800 font-sans min-h-screen p-3 sm:p-6 md:p-8 touch-action-manipulation">
 
     <div class="max-w-4xl mx-auto overflow-hidden">
         <div class="flex-grow pb-6">
+            <!-- サイト最上部ヘッダー（タイトル＆キャッチコピー） -->
+            <header class="mb-4 sm:mb-5 pb-3 border-b border-slate-200">
+                <h1 class="text-lg sm:text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2" id="site-main-heading">
+                    <span class="w-2 sm:w-2.5 h-5 sm:h-6 rounded bg-[#005662] inline-block shrink-0"></span>
+                    教職・専門教科 対策メニュー
+                </h1>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-1 font-normal leading-relaxed pl-4 sm:pl-4.5 tracking-tight">
+                    いつでもどこでも重いテキストを持ち歩かずに問題演習ができ、確認テストもオンラインで手軽に実施できます。
+                </p>
+            </header>
+
             <!-- 区分・教科の選択（スリム＆コンパクトな独立ボタングリッド） -->
-            <div class="mb-4 pt-1">
+            <div class="mb-4 pt-0.5">
                 <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 pl-0.5 flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#005662]"></span>
                     教科・対策区分の選択
@@ -118,39 +133,86 @@
                 </nav>
             </div>
 
-            <!-- タイトル表示エリア（説明文を削除し題名のみにスッキリ化） -->
-            <div class="mb-4 pb-2 border-b border-gray-300">
+            <!-- タイトル表示エリア（題名のみにスッキリ化） -->
+            <div class="mb-3.5 pb-2 border-b border-gray-300">
                 <h1 class="text-lg sm:text-xl font-bold text-gray-800" id="main-title">
                     教職教養 対策メニュー
                 </h1>
             </div>
 
             <!-- タブメニュー（独立したチップボタンで横スクロール） -->
-            <div class="flex overflow-x-auto no-scrollbar gap-2 mb-4 pb-2 pt-0.5 sm:flex-wrap items-center" id="tabs-container">
+            <div class="flex overflow-x-auto no-scrollbar gap-2 mb-3.5 pb-1.5 pt-0.5 sm:flex-wrap items-center" id="tabs-container">
                 <!-- JavaScriptでタブが動的に生成されます -->
             </div>
 
-            <!-- テスト一覧テーブル（全画面幅で表形式を維持） -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm border-collapse border border-gray-300 text-center min-w-[600px]">
+            <!-- 教職教養基礎Ⅱ専用：復習問題 / PDF資料 切替サブタブ（モバイル折り返し防止） -->
+            <div id="kiso2-subtabs-container" class="hidden mb-4 p-1 bg-slate-100/90 rounded-xl border border-slate-200 flex items-center max-w-sm gap-1">
+                <button type="button" 
+                        id="kiso2-subtab-tests" 
+                        onclick="switchKiso2SubTab('tests')" 
+                        class="flex-1 py-1.5 px-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-white text-[#005662] shadow-xs whitespace-nowrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    復習問題
+                </button>
+                <button type="button" 
+                        id="kiso2-subtab-pdf" 
+                        onclick="switchKiso2SubTab('pdf')" 
+                        class="flex-1 py-1.5 px-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1 text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    <span>PDF資料一覧</span>
+                    <span class="px-1.5 py-0.2 text-[9px] font-extrabold rounded-full bg-red-100 text-red-600 shrink-0">全6教材</span>
+                </button>
+            </div>
+
+            <!-- 教職教養基礎Ⅱ専用：PDF資料グリッド（6つのボタン） -->
+            <div id="kiso2-pdf-grid-container" class="hidden mb-6">
+                <div class="text-xs font-semibold text-slate-500 mb-2.5 flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    PDF教材一覧（閲覧・ダウンロード）
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5" id="kiso2-pdf-buttons">
+                    <!-- JavaScriptで動的生成されます -->
+                </div>
+            </div>
+
+            <!-- モバイル向け横スクロール案内ヒント（PCでは非表示） -->
+            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 px-0.5 sm:hidden" id="mobile-scroll-hint">
+                <span class="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                    表は左右にスクロールできます
+                </span>
+                <span class="text-[10px] text-slate-400">右端: テスト実施</span>
+            </div>
+
+            <!-- テスト一覧テーブル（全画面幅で表形式を維持・横スクロール対応） -->
+            <div class="overflow-x-auto rounded-lg border border-gray-300 shadow-2xs" id="table-container">
+                <table class="w-full text-sm border-collapse text-center min-w-[620px]">
                     <thead class="bg-gray-100 text-gray-700 whitespace-nowrap">
                         <tr>
-                            <th class="border border-gray-300 p-3 font-normal w-1/4">確認テスト</th>
-                            <th class="border border-gray-300 p-3 font-normal w-20">PDF</th>
-                            <th id="th-two-in-one" class="border border-gray-300 p-3 font-normal w-20">2in1</th>
-                            <th class="border border-gray-300 p-3 font-normal">ステータス</th>
-                            <th class="border border-gray-300 p-3 font-normal">合計点数</th>
-                            <th class="border border-gray-300 p-3 font-normal">テスト実施</th>
+                            <th class="border-b border-r border-gray-300 p-2.5 sm:p-3 font-normal w-1/4">確認テスト</th>
+                            <th class="border-b border-r border-gray-300 p-2.5 sm:p-3 font-normal w-20">PDF</th>
+                            <th id="th-two-in-one" class="border-b border-r border-gray-300 p-2.5 sm:p-3 font-normal w-20">2in1</th>
+                            <th class="border-b border-r border-gray-300 p-2.5 sm:p-3 font-normal">ステータス</th>
+                            <th class="border-b border-r border-gray-300 p-2.5 sm:p-3 font-normal">合計点数</th>
+                            <th class="border-b border-gray-300 p-2.5 sm:p-3 font-normal">テスト実施</th>
                         </tr>
                     </thead>
-                    <tbody id="test-list-body">
+                    <tbody id="test-list-body" class="divide-y divide-gray-200">
                         <!-- ここにJavaScriptでリストが生成されます -->
                     </tbody>
                 </table>
             </div>
 
             <!-- ページネーション -->
-            <div class="bg-gray-200 p-2 mt-3 flex justify-center items-center text-xs sm:text-sm text-gray-600 gap-4 rounded-md">
+            <div class="bg-gray-200 p-2 mt-3 flex justify-center items-center text-xs sm:text-sm text-gray-600 gap-4 rounded-md" id="pagination-container">
                 <span id="pagination-info">0件 (1/1)</span>
                 <div class="flex gap-3">
                     <span class="text-gray-500">&lt;</span>
@@ -171,7 +233,7 @@
                 </div>
 
                 <!-- 書籍情報カード本体（レスポンシブ） -->
-                <div id="selected-book-card" class="bg-gradient-to-br from-slate-50 to-slate-100/70 border border-slate-200 rounded-xl p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 transition-all">
+                <div id="selected-book-card" class="bg-gradient-to-br from-slate-50 to-slate-100/70 border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 transition-all">
                     <!-- 書籍カバー画像（JavaScriptで動的に更新） -->
                     <div id="book-cover-container" class="shrink-0 flex justify-center">
                         <!-- ここに書籍のブックジャケットが描画されます -->
@@ -319,6 +381,18 @@
 
         let currentCourse = 'kyoshoku';
         let currentCategory = '教職教養基礎Ⅱ';
+        let kiso2CurrentSubTab = 'tests'; // 'tests' または 'pdf'
+
+        // 教職教養基礎Ⅱ PDF資料（6つのPDFボタン）の設定データ
+        // URLを変更する場合は、以下の pdfLink を直接書き換えてください。
+        const kiso2PdfData = [
+            { id: 1, name: '1 教育原理', pdfLink: '#' },
+            { id: 2, name: '2 西洋教育史', pdfLink: '#' },
+            { id: 3, name: '3 日本教育史', pdfLink: '#' },
+            { id: 4, name: '4 教育心理', pdfLink: '#' },
+            { id: 5, name: '5 教育法規', pdfLink: '#' },
+            { id: 6, name: '解答解説', pdfLink: '#' }
+        ];
 
         const allTestsData = [
             // ==========================================
@@ -504,6 +578,7 @@
             renderTabs();
             renderTable(currentCategory);
             renderBookInfo();
+            renderKiso2SubTabUI();
         }
 
         function changeCourse(newCourse) {
@@ -513,11 +588,25 @@
             document.getElementById('main-title').textContent = config.title;
             
             currentCategory = config.categories[0];
+            kiso2CurrentSubTab = 'tests';
             
             updateCourseButtons();
             renderTabs();
             renderTable(currentCategory);
             renderBookInfo();
+            renderKiso2SubTabUI();
+        }
+
+        function updateCourseButtons() {
+            const buttons = document.querySelectorAll('.course-switch-btn');
+            buttons.forEach(btn => {
+                const course = btn.getAttribute('data-course');
+                if (course === currentCourse) {
+                    btn.className = "course-switch-btn course-btn-active relative px-2.5 sm:px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all";
+                } else {
+                    btn.className = "course-switch-btn course-btn-inactive relative px-2.5 sm:px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all";
+                }
+            });
         }
 
         function renderBookInfo() {
@@ -541,39 +630,22 @@
             let cssCoverHtml = '';
             if (book.type === 'sesame-problem') {
                 cssCoverHtml = `
-                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-[#f0eef9] border border-slate-300 rounded-r-md rounded-l-xs p-1 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200">
-                        <!-- ラベンダードット背景 -->
-                        <div class="absolute inset-0 opacity-40" style="background-image: radial-gradient(#6366f1 1px, transparent 1px); background-size: 4px 4px;"></div>
-                        <div class="absolute left-1 top-0 bottom-0 w-[1.5px] bg-black/15 z-10"></div>
-                        
-                        <!-- 上部：2028年度バッジ ＆ シリーズ名 -->
-                        <div class="relative z-10 pl-1 pt-0.5 flex items-center justify-between">
-                            <span class="bg-[#e11d48] text-white text-[6.5px] font-black px-1 py-0.2 rounded-xs shadow-xs tracking-tighter">2028<span class="text-[5px] font-normal">年度</span></span>
-                            <div class="text-right leading-none pr-0.5">
-                                <span class="text-[4.5px] text-slate-500 block">オープンセサミ</span>
-                                <span class="text-[6.5px] font-black text-slate-800 tracking-tighter">問題集</span>
-                            </div>
+                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-[#e0e2f5] border border-indigo-200 rounded-r-md rounded-l-xs p-1 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200">
+                        <div class="absolute inset-0 opacity-40" style="background-image: radial-gradient(#818cf8 1px, transparent 1px); background-size: 5px 5px;"></div>
+                        <div class="absolute left-1 top-0 bottom-0 w-[1.5px] bg-black/10 z-10"></div>
+                        <div class="relative z-10 pl-1.5 pt-0.5 flex justify-between items-center text-[7px] text-indigo-900 font-bold tracking-tighter">
+                            <span class="bg-[#f43f5e] text-white px-1 py-0.2 rounded text-[6.5px]">2028年度</span>
+                            <span class="text-[6.5px] bg-indigo-100/80 text-indigo-800 px-1 rounded">問題集</span>
                         </div>
-
-                        <!-- 中央：教員採用試験対策カード -->
-                        <div class="relative z-10 bg-white rounded-md mx-0.5 py-1 px-1 text-center shadow-xs border border-slate-200">
-                            <span class="text-[11px] sm:text-[12px] font-black text-slate-900 leading-none tracking-tight block">教 員</span>
-                            <span class="text-[7.5px] sm:text-[8px] font-black text-slate-800 leading-none tracking-tighter block mt-0.5">採用試験対策</span>
+                        <div class="relative z-10 bg-white rounded-md mx-1 py-1 px-1 text-center shadow-xs border border-indigo-100">
+                            <span class="text-[10px] sm:text-[11px] font-black text-slate-800 leading-none tracking-tight block">教 員</span>
+                            <span class="text-[8px] sm:text-[9px] font-black text-slate-700 leading-none tracking-tighter block mt-0.5">採用試験対策</span>
                         </div>
-
-                        <!-- 下部：シェブロン矢印 ＋ 教職教養 帯 -->
-                        <div class="relative z-10 px-0.5 space-y-0.5 text-center">
-                            <div class="flex justify-center text-[#252b6b] text-[6px] font-black tracking-widest leading-none">
-                                &gt;&gt;&gt;
-                            </div>
-                            <div class="bg-[#252b6b] text-white rounded py-1 px-0.5 text-center shadow-xs">
-                                <span class="text-[10px] sm:text-[11px] font-black leading-none block tracking-tight">教職教養</span>
-                            </div>
+                        <div class="relative z-10 bg-[#2e3170] text-white rounded p-1 text-center mx-0.5 shadow-xs">
+                            <span class="text-[11px] sm:text-[12px] font-black leading-tight block tracking-tight text-white">教職教養</span>
                         </div>
-
-                        <!-- 最下部：東京アカデミー編 -->
                         <div class="relative z-10 text-center pb-0.5">
-                            <span class="text-[5.5px] text-slate-600 font-bold tracking-tighter">東京アカデミー七賢出版</span>
+                            <span class="text-[6px] text-indigo-950 font-semibold tracking-tighter">東京アカデミー七賢出版</span>
                         </div>
                     </div>
                 `;
@@ -667,7 +739,6 @@
                 `;
             }
 
-            // 安全なDOM生成による画像フォールバック処理
             const coverContainer = document.getElementById('book-cover-container');
             if (book.actualImage && book.actualImage !== '#') {
                 const imgWrap = document.createElement('div');
@@ -689,16 +760,94 @@
             }
         }
 
-        function updateCourseButtons() {
-            const buttons = document.querySelectorAll('.course-switch-btn');
-            buttons.forEach(btn => {
-                const course = btn.getAttribute('data-course');
-                const baseClasses = "course-switch-btn relative px-2.5 sm:px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all";
-                if (course === currentCourse) {
-                    btn.className = `${baseClasses} course-btn-active`;
-                } else {
-                    btn.className = `${baseClasses} course-btn-inactive`;
+        function switchKiso2SubTab(subTab) {
+            kiso2CurrentSubTab = subTab;
+            renderKiso2SubTabUI();
+        }
+
+        function renderKiso2SubTabUI() {
+            const isKiso2 = (currentCourse === 'kyoshoku' && currentCategory === '教職教養基礎Ⅱ');
+            const subtabsContainer = document.getElementById('kiso2-subtabs-container');
+            const pdfGridContainer = document.getElementById('kiso2-pdf-grid-container');
+            const tableContainer = document.getElementById('table-container');
+            const mobileScrollHint = document.getElementById('mobile-scroll-hint');
+            const paginationContainer = document.getElementById('pagination-container');
+            const btnTests = document.getElementById('kiso2-subtab-tests');
+            const btnPdf = document.getElementById('kiso2-subtab-pdf');
+
+            if (!isKiso2) {
+                if (subtabsContainer) subtabsContainer.classList.add('hidden');
+                if (pdfGridContainer) pdfGridContainer.classList.add('hidden');
+                if (tableContainer) tableContainer.classList.remove('hidden');
+                if (mobileScrollHint) mobileScrollHint.classList.remove('hidden');
+                if (paginationContainer) paginationContainer.classList.remove('hidden');
+                return;
+            }
+
+            // 教職教養基礎Ⅱの場合、サブタブを表示
+            if (subtabsContainer) subtabsContainer.classList.remove('hidden');
+
+            if (kiso2CurrentSubTab === 'tests') {
+                // 復習問題タブアクティブ
+                btnTests.className = "flex-1 py-1.5 px-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 bg-white text-[#005662] shadow-xs whitespace-nowrap";
+                btnPdf.className = "flex-1 py-1.5 px-2.5 text-xs sm:text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-1 text-slate-600 hover:text-slate-900 whitespace-nowrap";
+                
+                if (pdfGridContainer) pdfGridContainer.classList.add('hidden');
+                if (tableContainer) tableContainer.classList.remove('hidden');
+                if (mobileScrollHint) mobileScrollHint.classList.remove('hidden');
+                if (paginationContainer) paginationContainer.classList.remove('hidden');
+            } else {
+                // PDF資料タブアクティブ
+                btnPdf.className = "flex-1 py-1.5 px-2.5 text-xs sm:text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-1 bg-white text-red-600 shadow-xs ring-1 ring-red-200 whitespace-nowrap";
+                btnTests.className = "flex-1 py-1.5 px-2.5 text-xs sm:text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900 whitespace-nowrap";
+                
+                if (pdfGridContainer) {
+                    pdfGridContainer.classList.remove('hidden');
+                    renderKiso2PdfButtons();
                 }
+                if (tableContainer) tableContainer.classList.add('hidden');
+                if (mobileScrollHint) mobileScrollHint.classList.add('hidden');
+                if (paginationContainer) paginationContainer.classList.add('hidden');
+            }
+        }
+
+        function renderKiso2PdfButtons() {
+            const container = document.getElementById('kiso2-pdf-buttons');
+            if (!container) return;
+            container.innerHTML = '';
+
+            kiso2PdfData.forEach(item => {
+                const isReady = (item.pdfLink && item.pdfLink !== '#');
+                const btn = document.createElement('a');
+                btn.href = isReady ? item.pdfLink : 'javascript:void(0)';
+                if (isReady) btn.target = '_blank';
+                
+                // 強調されたボタンデザイン（シャドウ、レッドアクセント、ホバー時の立体感）
+                btn.className = isReady 
+                    ? "flex items-center justify-between p-3.5 rounded-xl border border-red-200/90 bg-gradient-to-r from-white via-red-50/20 to-white hover:border-red-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group shadow-xs cursor-pointer"
+                    : "flex items-center justify-between p-3.5 rounded-xl border-2 border-dashed border-red-200/60 bg-gradient-to-r from-white to-red-50/10 hover:border-red-400 hover:bg-red-50/20 transition-all group shadow-xs";
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isReady ? 'bg-red-500 text-white shadow-xs group-hover:scale-105' : 'bg-red-100 text-red-600 group-hover:bg-red-200'} transition-transform duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0 text-left">
+                            <span class="text-xs sm:text-sm font-bold truncate block ${isReady ? 'text-slate-800 group-hover:text-red-700' : 'text-slate-700'}">
+                                ${item.name}
+                            </span>
+                            <span class="text-[10px] font-medium text-slate-400 block leading-tight mt-0.5">
+                                教職教養基礎Ⅱ PDF教材
+                            </span>
+                        </div>
+                    </div>
+                    <span class="text-[11px] font-black px-2.5 py-1 rounded-lg shrink-0 ${isReady ? 'bg-red-600 text-white shadow-xs group-hover:bg-red-700' : 'bg-red-50 text-red-600 border border-red-200'} transition-colors">
+                        ${isReady ? '開く ↗' : '準備中'}
+                    </span>
+                `;
+                container.appendChild(btn);
             });
         }
 
@@ -720,6 +869,7 @@
                     renderTabs();
                     renderTable(category);
                     renderBookInfo();
+                    renderKiso2SubTabUI();
                 };
                 
                 tabsContainer.appendChild(button);
@@ -766,18 +916,18 @@
                 const statusClass = isTestActive ? "status-active" : "status-prep";
                 
                 const linkTagOpen = isTestActive 
-                    ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold">` 
-                    : `<span class="text-gray-400 underline cursor-not-allowed">`;
+                    ? `<a href="${test.link}" class="text-blue-600 underline hover:text-blue-800 font-bold py-1 inline-block">` 
+                    : `<span class="text-gray-400 underline cursor-not-allowed py-1 inline-block">`;
                 const linkTagClose = isTestActive ? `</a>` : `</span>`;
 
                 const pdfHtml = isPdfActive
-                    ? `<a href="${test.pdfLink}" target="_blank" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-1">
+                    ? `<a href="${test.pdfLink}" target="_blank" class="text-red-500 hover:text-red-700 font-bold flex items-center justify-center gap-1 py-1.5 px-2 rounded hover:bg-red-50 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
                         PDF
                        </a>`
-                    : `<span class="text-gray-300 flex items-center justify-center gap-1 cursor-not-allowed">
+                    : `<span class="text-gray-300 flex items-center justify-center gap-1 py-1.5 px-2 cursor-not-allowed">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
@@ -787,44 +937,44 @@
                 let twoInOneTd = '';
                 if (showTwoInOne) {
                     const twoInOneHtml = isTwoInOneActive
-                        ? `<a href="${test.twoInOneLink}" target="_blank" class="text-orange-500 hover:text-orange-700 font-bold flex items-center justify-center gap-1">
+                        ? `<a href="${test.twoInOneLink}" target="_blank" class="text-orange-500 hover:text-orange-700 font-bold flex items-center justify-center gap-1 py-1.5 px-2 rounded hover:bg-orange-50 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                             2in1
                            </a>`
-                        : `<span class="text-gray-300 flex items-center justify-center gap-1 cursor-not-allowed">
+                        : `<span class="text-gray-300 flex items-center justify-center gap-1 py-1.5 px-2 cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                             </svg>
                             2in1
                            </span>`;
-                    twoInOneTd = `<td class="border border-gray-300 p-2 whitespace-nowrap">${twoInOneHtml}</td>`;
+                    twoInOneTd = `<td class="border-r border-gray-300 p-2 whitespace-nowrap">${twoInOneHtml}</td>`;
                 }
 
                 const btnHtml = isTestActive
-                    ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1 rounded text-xs font-bold transition">テスト実施</a>`
-                    : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-4 py-1 rounded text-xs cursor-not-allowed">テスト実施</button>`;
+                    ? `<a href="${test.link}" class="inline-block border border-gray-400 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 px-3.5 sm:px-4 py-1.5 rounded-lg text-xs font-bold transition shadow-2xs">テスト実施</a>`
+                    : `<button disabled class="border border-gray-200 bg-gray-50 text-gray-300 px-3.5 sm:px-4 py-1.5 rounded-lg text-xs cursor-not-allowed">テスト実施</button>`;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition-colors";
                 tr.innerHTML = `
-                    <td class="border border-gray-300 p-2 text-left pl-4 whitespace-nowrap">
+                    <td class="border-r border-gray-300 p-2.5 text-left pl-3 sm:pl-4 whitespace-nowrap">
                         ${linkTagOpen}${test.name}${linkTagClose}
                     </td>
-                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                    <td class="border-r border-gray-300 p-2 whitespace-nowrap">
                         ${pdfHtml}
                     </td>
                     ${twoInOneTd}
-                    <td class="border border-gray-300 p-2 whitespace-nowrap">
-                        <span class="inline-block text-white text-xs px-3 py-1 rounded ${statusClass}">
+                    <td class="border-r border-gray-300 p-2 whitespace-nowrap">
+                        <span class="inline-block text-white text-xs px-2.5 py-0.5 rounded font-medium ${statusClass}">
                             ${statusLabel}
                         </span>
                     </td>
-                    <td class="border border-gray-300 p-2 text-gray-600 whitespace-nowrap">
+                    <td class="border-r border-gray-300 p-2 text-gray-600 whitespace-nowrap text-xs sm:text-sm">
                         ${test.totalScore}
                     </td>
-                    <td class="border border-gray-300 p-2 whitespace-nowrap">
+                    <td class="p-2 whitespace-nowrap">
                         ${btnHtml}
                     </td>
                 `;
