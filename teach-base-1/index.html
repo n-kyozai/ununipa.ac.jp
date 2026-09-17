@@ -210,14 +210,15 @@
         // =========================================================================
         // 【画像ファイル設定エリア】
         // 写真ファイルをGitHub等に配置した後、各書籍のパスを以下の変数に入力してください。
+        // （未配置・不明の場合は '#' にしておくと、自動で実物デザインのCSS表紙が描画されます）
         // =========================================================================
         const BOOK_IMAGES = {
-            kyoshoku_1: '1tea-opensesame-2026.webp', // 教職教養Ⅰ [教育原理・教育法規] 
-            kyoshoku_2: '8122h1W2SBL._AC_UF1000,1000_QL80_.jpg', // 教職教養Ⅱ [教育史・教育心理] 
-            kyoshoku_kiso2: 'image_c8d4ce.png', // オープンセサミシリーズ 2028年度 問題集 教職教養
-            chugaku:    '261CTsyiGPxL._AC_UF1000,1000_QL80_.jpg', // ステップアップ問題集② 中学社会 
-            koukou:     '361i4E4WYvFL.jpg', // ステップアップ問題集③ 高校社会 
-            buildup:    '28BuildUp2.jpg'  // 中高社会の完全攻略 Build Up② 
+            kyoshoku_1:     '1tea-opensesame-2026.webp', // 教職教養Ⅰ [教育原理・教育法規] 
+            kyoshoku_2:     '8122h1W2SBL._AC_UF1000,1000_QL80_.jpg', // 教職教養Ⅱ [教育史・教育心理] 
+            kyoshoku_kiso2: 'image_c8d4ce.png', // オープンセサミシリーズ 2028年度 問題集 教職教養（ファイルがない場合は '#'）
+            chugaku:        '261CTsyiGPxL._AC_UF1000,1000_QL80_.jpg', // ステップアップ問題集② 中学社会 
+            koukou:         '361i4E4WYvFL.jpg', // ステップアップ問題集③ 高校社会 
+            buildup:        '28BuildUp2.jpg'  // 中高社会の完全攻略 Build Up② 
         };
 
         /**
@@ -393,41 +394,41 @@
             // 2. 中学社会 (chugaku-syakai)
             // ==========================================
             // 第1編 学習指導要領
-            { course: 'chugaku-syakai', category: '第1編 学習指導要領', name: '1 学習指導要領', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第1編 学習指導要領', name: '1 学習指導要領', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1r2JbkuAF-n_hMFbClcY5JEWqc5Q7eIde/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/134VfDXeMCbw4kLRwITK71Q4R6aRV3fNr/view?usp=sharing', link: '#', totalScore: '-' },
             // 第2編 地理的分野
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '1 世界地図・地形図と地理情報', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '2 自然環境', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '3 資源・エネルギー，産業', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '4 民族・生活文化・人口', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '5 世界の中の日本', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '6 アジア・アフリカ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '7 ヨーロッパ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '8 南北アメリカ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '9 オセアニア', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '1 世界地図・地形図と地理情報', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1tlf0ggOzCOd-vB7GsJcmm8PJIPk7VfDU/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1bZzOPLmu5VhCAMF1BPPJbWy4gnmorl1K/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '2 自然環境', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1vfy9sEthswua0BaroSrxyy6aefh9kFLm/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1TTw1FI1LeLEk9lO5wVRoZWnWDNJJX2dj/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '3 資源・エネルギー，産業', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1aznBnO5qrO5ELd8_5WvsyOsB--E3uc7a/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1eVKB7Otie5tWzjkN8MG3mqXJ7AXFRQCu/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '4 民族・生活文化・人口', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/19GWfm4JA0UCr428wO1meH-1SZJ2hBjZw/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1nV0B7Kd7FZEtTeCmYIAYDJQUOYa144rH/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '5 世界の中の日本', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1Q9SOK1dBIWbxE47BZjKU1RoI380XNuRd/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/10O1B3UjWgDmhsKAxz1PFjwzUM_G_5zfg/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '6 アジア・アフリカ', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1-13w4QL-QiW5JMtJmaRr4ccd-A4eCBof/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1OXx5vkjeiPFRneSF4dEP57WkDDt4A1VW/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '7 ヨーロッパ', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/16JN44aRg4g64H_NJiuBLihLvdnY2fbyt/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1Wrf12F9h-e7RtHJ9IrxPKwLN-1DLPcfu/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '8 南北アメリカ', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1kN1MJscU3qdb7piu9ega4b58RStND4Q_/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/147pfOjoNeV8gxZfyHCF9KRuBFx6-M_NN/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第2編 地理的分野', name: '9 オセアニア', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1PVDR4vv5DPYbVD9STrqorbsZki2iqgLT/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1VlQpMhm0awJd5BEdUaaWwLZKewTPQ56u/view?usp=sharing', link: '#', totalScore: '-' },
             // 第3編 歴史的分野
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '1 日本史―原始・古代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '2 日本史―中世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '3 日本史―近世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '4 日本史―近代・現代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '[資料] 日本史―年表', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '5 世界史―古代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '6 世界史―中世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '7 世界史―近世', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '8 世界史―近代・現代', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '9 世界史―中国史', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '[資料] 世界史―年表', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '1 日本史―原始・古代', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1fiHUFMSYLzLc5oGVBjeXMs1qN3S3b9UD/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1FAJc3x303p_IFTclbuDHqEFBhGX8tRoX/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '2 日本史―中世', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1ljO86B-jsmmCH-T3RD_ukKDa5NryA-SN/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1ImGYIf2ZIkVWXWabfOX1YeqO_d8pIHKk/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '3 日本史―近世', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1dugQR7PNr3ssjSF3xS9YheE0H1uapuMv/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1ISisklotXri09WxRLsAedqwhW-6g_xUV/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '4 日本史―近代・現代', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1SYMuhzMtiDYkSrQRfZxFHCkdAhV5-Vsr/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1Z14FqyKLyPkX24KoN1NLzv0JKrOOAd4o/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '[資料] 日本史―年表', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/19P0MFPrbqYlSj03VpD8C76rq494J2xHD/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1lzur1VX5mBgI3bffjmJZfjqap_KjZV9L/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '5 世界史―古代', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1JHRiDgWKQh5js9-mzfqBV5i5nuZFpp3t/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1iVYsC-sjs0Z42jE1TtLQ1eagRwN_dclj/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '6 世界史―中世', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1_CXRsIIhTqGtuELWVs7lmTkElr_oxu9L/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1PTofahgqdoQhjfypN0zFlsYqUHu33M8I/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '7 世界史―近世', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1qM0Epg-F3DzXXNxmgKqZHuZHR021T3U_/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1aGB-JETmMzKvkY31S3I0YX_A8t45qp6i/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '8 世界史―近代・現代', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1249gMU1-Cp8VUO8pygTaZNlJASBXP3io/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1QE1ww7r059h02Kc6ZNiv85S76xjV2zZE/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '9 世界史―中国史', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1kshmdYccBfwMQsrRoS56L46-IV83B3eV/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1Z2ENbpXjepzkMZTGMUdK1s8LeZAiJNVl/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第3編 歴史的分野', name: '[資料] 世界史―年表', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1XzxJpfMIvmZB-h64SRyEoxXsOnqXAhDn/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1S6K2ytO1K0hVFQaITa7BjkVH04koHmO8/view?usp=sharing', link: '#', totalScore: '-' },
             // 第4編 公民的分野
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '1 政治―民主政治の基本原理', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '2 政治―日本国憲法と基本的人権', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '3 政治―日本の政治機構', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '4 政治―国際政治', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '5 経済―資本主義経済のしくみ', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '6 経済―日本経済の発展と福祉', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '7 経済―国際経済', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '8 倫理―西洋の思想', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '9 倫理―東洋の思想', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '1 政治―民主政治の基本原理', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1SRDh5NFKDq02tV5ghtAhthLCTibjR7K3/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/11HFfNzL4PkhhBsPbOsg9OLM014PEK2hF/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '2 政治―日本国憲法と基本的人権', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1DnZi3VcfhLjdjrnaZC6hYMvqcdH-FPmp/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1nPJzFbt_fb3mY4I4F95WI9q1z7hnHG2Y/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '3 政治―日本の政治機構', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1xF4N9DJJzrz2uYyyhuIekasSulVqh5zd/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1sESUguuLfOhjISZ35wcHQge4F6hIhlI2/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '4 政治―国際政治', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/10lO9SZDQMBbJS3pGjN0Zxd5UR3zanaaS/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1qo1UXTXWOPV7Jnf_2fokqT49NxTfcflN/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '5 経済―資本主義経済のしくみ', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1SyY7YcXtdb1H3AEbDIzrCizysAx-ArH9/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1GvCK8xjKBcK8YYKoh3UCTNx0IfVgSuUk/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '6 経済―日本経済の発展と福祉', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1YgjLpC2VrMaBrCQBD6LwfPI1nWf3NzzH/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1-IB8VMI8nYXC8evP_kVimhUSNC6Q_H5x/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '7 経済―国際経済', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1WAdEw3egchn4Z6TlQ64GjPfaTH1E2GGe/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/11j1ujrTTxdEtZqqy4zuyuaJpN8VrXyyC/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '8 倫理―西洋の思想', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1FFbONOdGTjrnbLbxPiFdIt1ZqndSniLH/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1hEi0wks3HP7csMr8a6BEbMnfsoO7mcqb/view?usp=sharing', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第4編 公民的分野', name: '9 倫理―東洋の思想', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1Yk4SZ6mCYwzfsPWiPRGa7YdnKV_sRtZz/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1kLtYMXa597EiWX1gSdZFxkU6bpaiPt8e/view?usp=sharing', link: '#', totalScore: '-' },
             // 第5編 実践問題
-            { course: 'chugaku-syakai', category: '第5編 実践問題', name: '1 実践問題', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chugaku-syakai', category: '第5編 実践問題', name: '1 実践問題', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'active', pdfLink: 'https://drive.google.com/file/d/1kCkpZ5RuxgOjls4SaNezxz-cKTgTRRGp/view?usp=sharing', twoInOneLink: 'https://drive.google.com/file/d/1K4ZD8DDfhpM8eHxRSJVkmHIQLIyYmKt-/view?usp=sharing', link: '#', totalScore: '-' },
 
             // ==========================================
             // 3. 高校社会 (koukou-chirekikoumin)
@@ -476,26 +477,26 @@
             // ==========================================
             // 4. 中高社会 完全攻略 (chukou-kanzen)
             // ==========================================
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '01 学習指導要領・指導法', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '01 学習指導要領・指導法（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '02 日本史①', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '02 日本史①（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '03 日本史②', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '03 日本史②（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '04 世界史①', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '04 世界史①（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '05 世界史②', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '05 世界史②（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '06 地理①', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '06 地理①（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '07 地理②', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '07 地理②（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '08 政治', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '08 政治（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '09 経済', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '09 経済（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '10 倫理', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' },
-            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '10 倫理（合格トレーニング）', status: 'prep', pdfStatus: 'prep', twoInOneStatus: 'prep', pdfLink: '#', twoInOneLink: '#', link: '#', totalScore: '-' }
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '01 学習指導要領・指導法', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1IBlRMQYokKyX-6d1jC8egJGsNYel4EkL/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '01 学習指導要領・指導法（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1s35idV7hXXlhnAaN6pCkmR5x2qbM1KNT/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '02 日本史①', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1ihG96beqkBW8_k2llcXphp_4wXIVTB9g/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '02 日本史①（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1deGHzN2CP4pwcSweiLj-R5SUeTJZcga0/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '03 日本史②', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/12bfzthMzjbD0GmdvkCVHbtK8QAsbZ13b/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '03 日本史②（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1IFSDexcKMrTXeRgbRyrnZ8yu8nUAwmVy/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '04 世界史①', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1O-KWWuHqy4M5u58rPq-3KP0UX_4kVeJQ/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '04 世界史①（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1oZzSv3PV9kL8G-kCIZjNr6E_HqTsrijS/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '05 世界史②', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1ZYn5lRRSNYcxFCRvc-KHHoJdP2ygQJtN/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '05 世界史②（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/19F_iuQIcDK7pIBsY2L6kuvlrOB2RpiWZ/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '06 地理①', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1BRELvOXHv3GQlCRxkaFtrr8vrDqJjn_k/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '06 地理①（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1I97uxFEzSiKMl_k8BLYClh7vylT10Bmb/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '07 地理②', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/11YQqpYh2Vp8dVsTtjPgq30IUZC59YLg1/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '07 地理②（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1Q7VsGSU-P-VDpt2CUk-DcV1BAR1hoQG2/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '08 政治', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1E_Axgkof6Q_p1-gsTSni-nNBpcYTy1Is/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '08 政治（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1Vq-gxvsyNZ_Ixvq4ixcJJp4_RDilo3Jq/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '09 経済', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1aofFY97purvJypWXe7Gypj6FKF8ARr96/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '09 経済（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1_Gi5XXUvLE-pNEm-coyyZmTrQhkV_Lh2/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'main', name: '10 倫理', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1dEoZ2jBnRquQjjMQaT2yfSS8hDhbpE7Z/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' },
+            { course: 'chukou-kanzen', category: '全項目', subCategory: 'training', name: '10 倫理（合格トレーニング）', status: 'prep', pdfStatus: 'active', twoInOneStatus: 'prep', pdfLink: 'https://drive.google.com/file/d/1DmLdb68wb6Ko1irrLNkxyyHvzC4qwXws/view?usp=sharing', twoInOneLink: '#', link: '#', totalScore: '-' }
         ];
 
         function init() {
@@ -540,23 +541,39 @@
             let cssCoverHtml = '';
             if (book.type === 'sesame-problem') {
                 cssCoverHtml = `
-                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-[#323b70] rounded-r-md rounded-l-xs p-1 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200">
-                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ffffff 1.5px, transparent 1.5px); background-size: 5px 5px;"></div>
+                    <div class="relative w-24 sm:w-28 h-32 sm:h-36 bg-[#f0eef9] border border-slate-300 rounded-r-md rounded-l-xs p-1 flex flex-col justify-between book-spine-shadow shrink-0 select-none overflow-hidden transform hover:scale-105 transition-transform duration-200">
+                        <!-- ラベンダードット背景 -->
+                        <div class="absolute inset-0 opacity-40" style="background-image: radial-gradient(#6366f1 1px, transparent 1px); background-size: 4px 4px;"></div>
                         <div class="absolute left-1 top-0 bottom-0 w-[1.5px] bg-black/15 z-10"></div>
-                        <div class="relative z-10 pl-1.5 pt-0.5 flex justify-between items-center text-[7px] text-white font-bold tracking-tighter">
-                            <span>2028年度</span>
-                            <span class="text-[6.5px] bg-white/20 px-1 rounded">問題集</span>
+                        
+                        <!-- 上部：2028年度バッジ ＆ シリーズ名 -->
+                        <div class="relative z-10 pl-1 pt-0.5 flex items-center justify-between">
+                            <span class="bg-[#e11d48] text-white text-[6.5px] font-black px-1 py-0.2 rounded-xs shadow-xs tracking-tighter">2028<span class="text-[5px] font-normal">年度</span></span>
+                            <div class="text-right leading-none pr-0.5">
+                                <span class="text-[4.5px] text-slate-500 block">オープンセサミ</span>
+                                <span class="text-[6.5px] font-black text-slate-800 tracking-tighter">問題集</span>
+                            </div>
                         </div>
-                        <div class="relative z-10 bg-white rounded-md mx-1 py-1 px-1 text-center shadow-xs border border-slate-100">
-                            <span class="text-[10px] sm:text-[11px] font-black text-slate-800 leading-none tracking-tight block">教 員</span>
-                            <span class="text-[8px] sm:text-[9px] font-black text-slate-700 leading-none tracking-tighter block mt-0.5">採用試験対策</span>
+
+                        <!-- 中央：教員採用試験対策カード -->
+                        <div class="relative z-10 bg-white rounded-md mx-0.5 py-1 px-1 text-center shadow-xs border border-slate-200">
+                            <span class="text-[11px] sm:text-[12px] font-black text-slate-900 leading-none tracking-tight block">教 員</span>
+                            <span class="text-[7.5px] sm:text-[8px] font-black text-slate-800 leading-none tracking-tighter block mt-0.5">採用試験対策</span>
                         </div>
-                        <div class="relative z-10 bg-[#232952] text-white rounded p-1 text-center mx-0.5">
-                            <span class="text-[10px] sm:text-[11px] font-black leading-tight block tracking-tight text-white">教職教養</span>
-                            <span class="text-[6px] sm:text-[6.5px] font-semibold text-indigo-100 block tracking-tighter">オープンセサミ</span>
+
+                        <!-- 下部：シェブロン矢印 ＋ 教職教養 帯 -->
+                        <div class="relative z-10 px-0.5 space-y-0.5 text-center">
+                            <div class="flex justify-center text-[#252b6b] text-[6px] font-black tracking-widest leading-none">
+                                &gt;&gt;&gt;
+                            </div>
+                            <div class="bg-[#252b6b] text-white rounded py-1 px-0.5 text-center shadow-xs">
+                                <span class="text-[10px] sm:text-[11px] font-black leading-none block tracking-tight">教職教養</span>
+                            </div>
                         </div>
+
+                        <!-- 最下部：東京アカデミー編 -->
                         <div class="relative z-10 text-center pb-0.5">
-                            <span class="text-[6px] text-white/90 font-medium tracking-tighter">東京アカデミー編</span>
+                            <span class="text-[5.5px] text-slate-600 font-bold tracking-tighter">東京アカデミー七賢出版</span>
                         </div>
                     </div>
                 `;
